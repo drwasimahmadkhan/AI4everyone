@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for Everyone: Workshop Slides</title>
+    
+    <!-- Fonts: Outfit (Modern) & Noto Nastaliq Urdu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Vibrant Workshop Theme */
+            --primary: #4f46e5;       /* Indigo 600 */
+            --primary-dark: #3730a3;  /* Indigo 800 */
+            --accent: #0ea5e9;        /* Sky 500 */
+            --accent-pink: #db2777;   /* Pink 600 */
+            
+            --bg-body: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            
+            --radius: 10px; /* STRICT REQUEST */
+            
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --gradient-header: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        * { box-sizing: border_box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-body);
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Scrollbar Magic --- */
+        .scroller {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent; 
+            transition: scrollbar-color 0.3s;
+        }
+        .scroller:hover {
+            scrollbar-color: #cbd5e1 transparent;
+        }
+        .scroller::-webkit-scrollbar { width: 6px; }
+        .scroller::-webkit-scrollbar-track { background: transparent; }
+        .scroller::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 10px; }
+        .scroller:hover::-webkit-scrollbar-thumb { background-color: #cbd5e1; }
+
+        /* --- UI Controls --- */
+        .top-nav {
+            background: var(--card-bg);
+            height: 64px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 24px;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .brand-logo {
+            font-weight: 800;
+            font-size: 1.25rem;
+            background: var(--gradient-header);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill-badge {
+            background: #e0e7ff;
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { background: var(--primary-dark); box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); }
+        .btn:active { transform: scale(0.98); }
+
+        .btn-ghost {
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: var(--text-muted);
+        }
+        .btn-ghost:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #fdfcff;
+        }
+
+        /* --- Slide Stage --- */
+        .stage {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+            position: relative;
+        }
+
+        .slide-card {
+            width: 100%;
+            max-width: 1300px;
+            height: 100%;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            border: 1px solid #ffffff;
+            position: relative;
+        }
+
+        .slide-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: var(--gradient-header);
+            z-index: 5;
+        }
+
+        .col-left, .col-right {
+            /* FIXED: Padding set to 50px as requested */
+            padding: 50px; 
+            height: 100%;
+            overflow-y: auto; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-left {
+            border-right: 1px solid #f3f4f6;
+        }
+
+        .col-right {
+            background: #f9fafb;
+            direction: rtl;
+            font-family: 'Noto Nastaliq Urdu', serif;
+            line-height: 2.2;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 16px; 
+            line-height: 1.1;
+            color: var(--primary-dark);
+        }
+        .col-right h1 { font-size: 2.2rem; }
+
+        p, li {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+        li { margin-left: 20px; padding-left: 8px; }
+        .col-right li { margin-right: 24px; margin-left: 0; }
+
+        /* --- Components --- */
+        .box-highlight {
+            background: #eef2ff;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 20px 0;
+            color: var(--primary-dark);
+        }
+
+        .box-interaction {
+            margin-top: 20px; 
+            background: #fff1f2;
+            border: 2px dashed var(--accent-pink);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            color: #be185d;
+        }
+
+        .code-snippet {
+            background: #111827;
+            color: #10b981;
+            font-family: monospace;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            position: relative;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .copy-tag {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .copy-tag:hover { background: rgba(255,255,255,0.2); }
+
+        /* --- Video Resources Styling --- */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .video-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .video-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #fdfcff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .video-icon { color: #ef4444; }
+
+        /* --- Footer --- */
+        .controls-bar {
+            height: 70px;
+            background: var(--card-bg);
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            justify-content: space-between;
+        }
+
+        /* --- Drawers --- */
+        .notes-area {
+            height: 0;
+            overflow: hidden;
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+            transition: height 0.3s ease;
+        }
+        .notes-area.open { height: 160px; }
+        .notes-inner { padding: 20px 24px; color: var(--text-muted); font-size: 1.1rem; }
+
+        .modal-wrap {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center; justify-content: center;
+            z-index: 50;
+        }
+        .modal-box {
+            background: white; width: 90%; max-width: 850px; height: 85%;
+            border-radius: var(--radius);
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <nav class="top-nav">
+        <div class="brand-logo">
+            <!-- Icon -->
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#4f46e5" /><stop offset="100%" style="stop-color:#0ea5e9" /></linearGradient></defs>
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            AI Workshop
+        </div>
+        
+        <div style="display:flex; gap:15px; align-items:center;">
+            <button class="btn btn-ghost" onclick="toggleModal()">
+                <span>📂 Resources</span>
+            </button>
+            <div class="pill-badge" id="slide-num">1 / 19</div>
+        </div>
+    </nav>
+
+    <!-- Slide Canvas -->
+    <main class="stage">
+        <div class="slide-card" id="slide-viewer">
+            <!-- Dynamic Content -->
+        </div>
+    </main>
+
+    <!-- Speaker Notes -->
+    <div class="notes-area" id="notes-drawer">
+        <div class="notes-inner">
+            <div style="font-size:0.8rem; text-transform:uppercase; color:#4f46e5; font-weight:700; margin-bottom:5px;">Speaker Script</div>
+            <div id="notes-content"></div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <footer class="controls-bar">
+        <button class="btn btn-ghost" onclick="toggleNotes()">Toggle Notes</button>
+        
+        <div style="display:flex; gap:12px;">
+            <button class="btn btn-ghost" onclick="prevSlide()">← Back</button>
+            <button class="btn" onclick="nextSlide()">Next Slide →</button>
+        </div>
+        
+        <div style="width:100px"></div>
+    </footer>
+
+        <!-- Modal Overlay (FAQ Only) -->
+    <div class="modal-wrap" id="modal-overlay">
+        <div class="modal-box scroller" role="dialog" aria-modal="true" aria-labelledby="trainerModalTitle">
+            <button class="modal-close" onclick="toggleModal()" aria-label="Close">✕</button>
+
+            <div class="modal-title-wrap">
+                <h2 id="trainerModalTitle" class="modal-title">
+                    Trainer Resources &amp; FAQ
+                    <span class="modal-title-ur">ٹرینر ریسورسز اور سوالات</span>
+                </h2>
+            </div>
+
+            <!-- Section-local styles (kept here to avoid breaking global CSS) -->
+            <style>
+                .modal-close{
+                    position:absolute; top:20px; right:20px;
+                    border:none; background:none; font-size:1.5rem; cursor:pointer;
+                }
+                .modal-title{
+                    color:var(--primary);
+                    margin:0 0 18px 0;
+                    display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end;
+                }
+                .modal-title-ur{
+                    direction:rtl;
+                    font-family:'Noto Nastaliq Urdu', serif;
+                    font-weight:700;
+                    color:var(--primary-dark);
+                    font-size:1.15rem;
+                }
+
+                .modal-grid{
+                    display:grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap:22px;
+                }
+                @media (max-width: 900px){
+                    .modal-grid{ grid-template-columns: 1fr; }
+                }
+
+                .modal-card{
+                    background:#fff;
+                    border:1px solid #e5e7eb;
+                    border-radius:var(--radius);
+                    padding:16px;
+                }
+                .modal-card h3{
+                    border-bottom:2px solid #e5e7eb;
+                    padding-bottom:6px;
+                    margin:0 0 12px 0;
+                }
+
+                /* Run of Show */
+                .runofshow{
+                    display:grid;
+                    grid-template-columns: 1fr;
+                    gap:6px;
+                    font-size:0.95rem;
+                }
+                .ros-row{
+                    display:grid;
+                    grid-template-columns: 72px 1fr;
+                    gap:10px;
+                    padding:7px 0;
+                    border-bottom:1px dashed #e5e7eb;
+                }
+                .ros-row:last-child{ border-bottom:none; }
+                .ros-time{ font-weight:800; color:var(--primary-dark); }
+                .ros-hot{ color:var(--accent-pink); font-weight:800; }
+
+                /* FAQ (stable accordion using <details>) */
+                .faq-accordion details{
+                    border:1px solid #e5e7eb;
+                    border-radius:var(--radius);
+                    padding:10px 12px;
+                    margin-bottom:10px;
+                    background:#f9fafb;
+                }
+                .faq-accordion summary{
+                    cursor:pointer;
+                    list-style:none;
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                    gap:12px;
+                    font-weight:800;
+                    color:var(--text-main);
+                }
+                .faq-accordion summary::-webkit-details-marker{ display:none; }
+                .faq-accordion summary::after{
+                    content:"+";
+                    color:var(--primary);
+                    font-weight:900;
+                    flex:0 0 auto;
+                }
+                .faq-accordion details[open] summary::after{ content:"–"; }
+
+                .faq-q{
+                    display:grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap:12px;
+                    width:100%;
+                }
+                .faq-q .q-ur{
+                    direction:rtl;
+                    font-family:'Noto Nastaliq Urdu', serif;
+                    font-weight:800;
+                    text-align:right;
+                }
+
+                .faq-body{
+                    margin-top:10px;
+                    display:grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap:14px;
+                }
+                @media (max-width: 900px){
+                    .faq-body{ grid-template-columns: 1fr; }
+                }
+
+                .faq-col{
+                    background:#fff;
+                    border:1px solid #e5e7eb;
+                    border-radius:var(--radius);
+                    padding:12px;
+                    font-size:0.98rem;
+                    line-height:1.55;
+                }
+                .faq-col .label{
+                    font-size:0.75rem;
+                    font-weight:900;
+                    letter-spacing:0.06em;
+                    text-transform:uppercase;
+                    color:var(--text-muted);
+                    margin-bottom:6px;
+                }
+                .faq-col.ur{
+                    direction:rtl;
+                    font-family:'Noto Nastaliq Urdu', serif;
+                    line-height:2.0;
+                    text-align:right;
+                }
+                .faq-col.ur .label{
+                    text-transform:none;
+                    letter-spacing:0;
+                    font-size:0.85rem;
+                }
+                .faq-tip{
+                    margin-top:10px;
+                    font-size:0.9rem;
+                    color:var(--text-muted);
+                }
+                .kbd{
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+                    background:#111827;
+                    color:#fff;
+                    padding:2px 8px;
+                    border-radius:8px;
+                    font-size:0.8rem;
+                }
+            </style>
+
+            <div class="modal-grid">
+                <!-- LEFT: Run of Show -->
+                <section class="modal-card">
+                    <h3>Run of Show</h3>
+                    <div class="runofshow">
+                        <div class="ros-row"><div class="ros-time">0:00</div><div>Welcome + Poll</div></div>
+                        <div class="ros-row"><div class="ros-time">0:05</div><div>AI Basics</div></div>
+                        <div class="ros-row"><div class="ros-time">0:15</div><div>AI vs ML</div></div>
+                        <div class="ros-row"><div class="ros-time">0:25</div><div>How LLMs Work</div></div>
+                        <div class="ros-row"><div class="ros-time">0:35</div><div>Prompt Engineering</div></div>
+                        <div class="ros-row"><div class="ros-time ros-hot">0:48</div><div class="ros-hot">Live Demo #1 (Email)</div></div>
+                        <div class="ros-row"><div class="ros-time">0:58</div><div>Safety &amp; Risks</div></div>
+                        <div class="ros-row"><div class="ros-time ros-hot">1:08</div><div class="ros-hot">Live Demo #2 (Structure)</div></div>
+                        <div class="ros-row"><div class="ros-time">1:18</div><div>Roadmap + Closing</div></div>
+                    </div>
+
+                    <div class="faq-tip">
+                        Tip: Use keyboard arrows <span class="kbd">←</span> <span class="kbd">→</span> to move slides. Keep 1–2 mins buffer for Q/A.
+                    </div>
+                </section>
+
+                <!-- RIGHT: FAQ -->
+                <section class="modal-card">
+                    <h3>FAQ (English + اردو)</h3>
+
+                    <div class="faq-accordion" id="faqModal">
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Will AI replace me?</div>
+                                    <div class="q-ur">کیا اے آئی میری جگہ لے لے گی؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    AI usually replaces <b>tasks</b>, not entire roles. People who learn to use AI will often outperform people who ignore it.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    عموماً اے آئی <b>کام</b> بدلتی ہے، پورا کردار نہیں۔ جو لوگ اے آئی کو صحیح استعمال کرنا سیکھتے ہیں وہ زیادہ بہتر نتیجہ دیتے ہیں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Is ChatGPT “private” or safe?</div>
+                                    <div class="q-ur">کیا ChatGPT “پرائیویٹ” یا محفوظ ہے؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Treat prompts like public text. Don’t paste passwords, CNIC, bank info, private student data, or confidential documents.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    پرامپٹ کو “پبلک ٹیکسٹ” سمجھیں۔ پاس ورڈ، سی این آئی سی، بینک معلومات، طلباء کا نجی ڈیٹا، یا خفیہ ڈاکومنٹس کبھی نہ پیسٹ کریں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Can I trust it 100%?</div>
+                                    <div class="q-ur">کیا میں اس پر 100% بھروسہ کر سکتا ہوں؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    No. AI can sound confident even when wrong. Use it for drafts and structure—verify facts.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    نہیں۔ اے آئی غلط بات بھی پراعتماد انداز میں کہہ سکتی ہے۔ ڈرافٹ اور اسٹرکچر کے لیے استعمال کریں، حقائق ضرور چیک کریں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">What is the best verification method?</div>
+                                    <div class="q-ur">سب سے بہتر تصدیقی طریقہ کیا ہے؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Use <b>3C</b>: <b>Claim</b> (what it said), <b>Check</b> (verify from trusted sources), <b>Cite</b> (record the source).
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    <b>3C</b> استعمال کریں: <b>دعویٰ</b> (کیا کہا)، <b>چیک</b> (معتبر ذریعہ سے تصدیق)، <b>حوالہ</b> (سورس نوٹ کریں)۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">What should I NOT paste into AI?</div>
+                                    <div class="q-ur">میں کون سی چیزیں اے آئی میں نہ ڈالوں؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Passwords, OTPs, private emails, medical info, client contracts, exam papers, internal university letters, or anything confidential.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    پاس ورڈ، او ٹی پی، ذاتی ای میلز، میڈیکل معلومات، کلائنٹ کنٹریکٹس، امتحانی پیپرز، یونیورسٹی کے اندرونی خطوط—یا کوئی بھی خفیہ چیز۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Does it understand Urdu well?</div>
+                                    <div class="q-ur">کیا یہ اردو اچھی سمجھتی ہے؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Yes—especially for translation, summarization, and drafting. For critical info (dates, names, references), still verify.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    جی ہاں—خاص طور پر ترجمہ، خلاصہ، اور ڈرافٹنگ میں۔ لیکن اہم چیزیں (تاریخیں، نام، حوالہ جات) لازماً چیک کریں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">How do I write a strong prompt?</div>
+                                    <div class="q-ur">اچھا پرامپٹ کیسے لکھیں؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Use <b>Role + Task + Context + Format</b>. Also provide 1 short example when possible.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    <b>کردار + کام + پس منظر + فارمیٹ</b> دیں۔ اور اگر ممکن ہو تو 1 چھوٹی مثال بھی شامل کریں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Is it okay for assignments?</div>
+                                    <div class="q-ur">کیا اسائنمنٹس میں استعمال کرنا ٹھیک ہے؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    If your institution allows it: use it as a helper (outline, feedback, grammar). Don’t submit blindly—make it your own.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    اگر ادارہ اجازت دے: اسے مددگار کے طور پر استعمال کریں (آؤٹ لائن، فیڈبیک، گرامر)۔ بغیر سمجھے کاپی پیسٹ نہ کریں—اپنی محنت شامل کریں۔
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="faq-tip">
+                        Tip: Click any question to expand. This works reliably (no blinking).
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const slides = [
+            {
+                en: {
+                    title: "AI for Everyone",
+                    body: "<ul><li>We will demystify Artificial Intelligence and its core concepts.</li><li>No complex math, just practical skills you can use today.</li><li>Learn how to use AI safely and effectively in your daily routine.</li></ul><div style='margin-top:30px; border-top:1px solid #e5e7eb; padding-top:20px;'><p style='font-weight:700; color:#4f46e5; margin-bottom:5px; font-size:1.3rem;'>Dr. Wasim Ahmad Khan</p><p style='font-size:1rem; color:#6b7280; line-height:1.4;'>PhD Computer Science, Specialization in Artificial General Intelligence<br>AI Trainer - Associate Professor - AI Research Scientist</p></div>",
+                    interact: "Type in chat: Student / Teacher / Business / Developer"
+                },
+                ur: {
+                    title: "ہر خاص و عام کے لیے مصنوعی ذہانت",
+                    body: "<ul><li>آج ہم مصنوعی ذہانت (AI) کو آسان الفاظ میں سمجھیں گے۔</li><li>کوئی مشکل ریاضی نہیں، صرف وہ عملی مہارتیں جو آپ آج ہی استعمال کر سکتے ہیں۔</li><li>AI کو محفوظ اور مؤثر طریقے سے استعمال کرنا سیکھیں۔</li></ul><div style='margin-top:30px; border-top:1px solid #e5e7eb; padding-top:20px;'><p style='font-weight:700; color:#4f46e5; margin-bottom:5px; font-size:1.4rem;'>ڈاکٹر وسیم احمد خان</p><p style='font-size:1.1rem; color:#6b7280; line-height:1.6;'>پی ایچ ڈی کمپیوٹر سائنس، مصنوعی عمومی ذہانت میں تخصص<br>اے آئی ٹرینر - ایسوسی ایٹ پروفیسر - اے آئی ریسرچ سائنٹسٹ</p></div>",
+                    interact: "چیٹ میں لکھیں: آپ کیا کرتے ہیں؟"
+                },
+                note: "Welcome everyone! Introduce Dr. Wasim and set the stage for a practical session."
+            },
+            {
+                en: {
+                    title: "Agenda",
+                    body: "<ol><li>What AI is (and is not)</li><li>How modern AI works</li><li>Prompting patterns that work</li><li>Safety & Verification</li><li>Live Demos & Q&A</li></ol>",
+                    interact: ""
+                },
+                ur: {
+                    title: "آج کا ایجنڈا",
+                    body: "<ol><li>AI کیا ہے (اور کیا نہیں ہے)</li><li>جدید AI کیسے کام کرتی ہے</li><li>پرامپٹنگ (Prompting) کے بہترین طریقے</li><li>سیفٹی اور تصدیق (Safety & Verification)</li><li>لائیو ڈیمو اور سوال و جواب</li></ol>",
+                    interact: ""
+                },
+                note: "Quickly outline the 90 minutes. Mention the live demos to keep them excited."
+            },
+            {
+                en: {
+                    title: "Poll: Your Experience?",
+                    body: "<p>Please vote in chat:</p><ul><li>1️⃣ Total Beginner</li><li>2️⃣ Used ChatGPT a bit</li><li>3️⃣ I use AI weekly</li><li>4️⃣ I build AI stuff</li></ul>",
+                    interact: "Type 1, 2, 3 or 4"
+                },
+                ur: {
+                    title: "پول: آپ کا تجربہ؟",
+                    body: "<p>براہ کرم چیٹ میں ووٹ دیں:</p><ul><li>1️⃣ بالکل ابتدائی (Beginner)</li><li>2️⃣ کبھی کبھار ChatGPT استعمال کیا</li><li>3️⃣ میں ہر ہفتے AI استعمال کرتا ہوں</li><li>4️⃣ میں AI ٹولز بناتا ہوں</li></ul>",
+                    interact: "نمبر لکھیں: 1، 2، 3 یا 4"
+                },
+                note: "Pause for 30 seconds. Adjust your speed based on the results."
+            },
+            {
+                en: {
+                    title: "What is AI?",
+                    body: "<p><b>Definition:</b> Systems that perform tasks that normally need human intelligence.</p><div class='box-highlight'>It is like a very fast assistant—but not a wise human.</div><p><b>Examples:</b> Spam filters, Face ID, Netflix Suggestions.</p>",
+                    interact: ""
+                },
+                ur: {
+                    title: "مصنوعی ذہانت (AI) کیا ہے؟",
+                    body: "<p><b>تعریف:</b> وہ کمپیوٹر سسٹم جو ایسے کام کرے جن کے لیے انسانی عقل کی ضرورت ہوتی ہے۔</p><div class='box-highlight'>یہ ایک بہت تیز اسسٹنٹ کی طرح ہے، لیکن انسان کی طرح عقلمند نہیں۔</div><p><b>مثالیں:</b> ای میل فلٹر، فیس آئی ڈی، نیٹ فلکس۔</p>",
+                    interact: ""
+                },
+                note: "Keep it simple. It's math, not magic."
+            },
+            {
+                en: {
+                    title: "AI vs ML vs Deep Learning",
+                    body: "<ul><li><b>AI:</b> The big umbrella (Any smart machine).</li><li><b>Machine Learning (ML):</b> Learning from data, not just rules.</li><li><b>Generative AI:</b> Creates <i>new</i> content (Images, Text).</li></ul>",
+                    interact: ""
+                },
+                ur: {
+                    title: "AI، مشین لرننگ اور ڈیپ لرننگ",
+                    body: "<ul><li><b>AI (بڑی چھتری):</b> کوئی بھی ذہین مشین۔</li><li><b>مشین لرننگ (ML):</b> جو ڈیٹا سے سیکھتا ہے۔</li><li><b>Generative AI:</b> یہ وہ قسم ہے جو <i>نیا مواد</i> بناتی ہے (جیسے ChatGPT)۔</li></ul>",
+                    interact: ""
+                },
+                note: "Use the nested circles analogy. GenAI is just a small, exciting part of AI."
+            },
+            {
+                en: {
+                    title: "Real Life Use Cases",
+                    body: "<ul><li><b>Students:</b> Summaries, quizzes.</li><li><b>Teachers:</b> Lesson plans, rubrics.</li><li><b>Business:</b> Emails, proposals.</li><li><b>Devs:</b> Writing/fixing code.</li></ul>",
+                    interact: "Comment your use-case in 5 words."
+                },
+                ur: {
+                    title: "روزمرہ زندگی میں استعمال",
+                    body: "<ul><li><b>طلباء:</b> نوٹس کا خلاصہ، امتحانی پریکٹس۔</li><li><b>اساتذہ:</b> سبق کا منصوبہ، کوئز۔</li><li><b>کاروبار:</b> ای میل، پروپوزل۔</li><li><b>ڈویلپرز:</b> کوڈ لکھنا، غلطیاں ٹھیک کرنا۔</li></ul>",
+                    interact: "کمنٹ: آپ کس کام کے لیے استعمال کریں گے؟"
+                },
+                note: "Ask them to visualize AI helping them tomorrow morning."
+            },
+            {
+                en: {
+                    title: "How LLMs Work",
+                    body: "<p><b>Large Language Model (LLM):</b> Trained on internet text to predict the <i>next word</i>.</p><div class='box-highlight'>It doesn't 'know' facts. It predicts patterns.</div><p>Think: Autocomplete on Steroids.</p>",
+                    interact: ""
+                },
+                ur: {
+                    title: "LLM کیسے کام کرتا ہے؟",
+                    body: "<p>یہ انٹرنیٹ کے مواد سے سیکھتا ہے کہ <i>اگلا لفظ</i> کیا ہونا چاہیے۔</p><div class='box-highlight'>یہ حقائق کو 'جانتا' نہیں، پیٹرن کی پیشین گوئی کرتا ہے۔</div><p>مثال: موبائل کا Autocomplete لیکن بہت طاقتور۔</p>",
+                    interact: ""
+                },
+                note: "Explain 'Prediction'. If I say 'Peanut Butter and...', you say 'Jelly'. AI does that with math."
+            },
+            {
+                en: {
+                    title: "Why They Feel Smart",
+                    body: "<ul><li>They know language structures perfectly.</li><li>They can summarize and translate fast.</li><li><b>Risk:</b> Confidence ≠ Correctness.</li></ul><p>A fluent wrong answer is dangerous.</p>",
+                    interact: ""
+                },
+                ur: {
+                    title: "یہ ہوشیار کیوں لگتے ہیں؟",
+                    body: "<ul><li>انہوں نے بات کرنے کے طریقے سیکھ لیے ہیں۔</li><li>یہ خلاصہ اور ترجمہ میں ماہر ہیں۔</li><li><b>خطرہ:</b> پراعتماد ہونا سچ ہونے کی دلیل نہیں۔</li></ul><p>روانی سے بولا گیا جھوٹ سب سے خطرناک ہے۔</p>",
+                    interact: ""
+                },
+                note: "Warn them about 'Hallucinations' here."
+            },
+            {
+                en: {
+                    title: "3 Truths & 3 Myths",
+                    body: "<p>✅ <b>Truths:</b> Great at drafting, explaining, formatting.</p><p>❌ <b>Myths:</b> Always true? No. Conscious? No. Replaces learning? No (it enhances it).</p>",
+                    interact: ""
+                },
+                ur: {
+                    title: "3 سچائیاں اور 3 غلط فہمیاں",
+                    body: "<p>✅ <b>سچ:</b> لکھنے، سمجھانے اور فارمیٹنگ میں بہترین۔</p><p>❌ <b>غلط فہمیاں:</b> ہمیشہ سچ؟ نہیں۔ شعور ہے؟ نہیں۔ پڑھائی ختم؟ نہیں (یہ مددگار ہے)۔</p>",
+                    interact: ""
+                },
+                note: "Clear up the hype. It's a tool."
+            },
+            {
+                en: {
+                    title: "Prompting: The 4 Parts",
+                    body: "<p>Garbage in, Garbage out. Use this formula:</p><ol><li><b>Role:</b> 'Act as a...'</li><li><b>Task:</b> 'Write a...'</li><li><b>Context:</b> 'For beginners...'</li><li><b>Format:</b> 'Bullet points, short.'</li></ol>",
+                    interact: ""
+                },
+                ur: {
+                    title: "پرامپٹنگ کے 4 اصول",
+                    body: "<p>جیسا سوال، ویسا جواب۔ یہ فارمولا استعمال کریں:</p><ol><li><b>کردار:</b> 'ایک ماہر بنیں...'</li><li><b>کام:</b> 'ایک مضمون لکھیں...'</li><li><b>پس منظر:</b> 'مبتدی لوگوں کے لیے...'</li><li><b>فارمیٹ:</b> 'بلٹ پوائنٹس، مختصر۔'</li></ol>",
+                    interact: ""
+                },
+                note: "If you are lazy with the prompt, the AI will be lazy with the answer."
+            },
+            {
+                en: {
+                    title: "Pattern 1: Structure",
+                    body: "<p>Don't just ask 'Explain AI'. Be specific.</p><div class='code-snippet'>Act as a trainer.\nExplain AI to kids.\nUse:\n- 3 short points\n- 1 fun analogy\n- A quiz</div>",
+                    interact: ""
+                },
+                ur: {
+                    title: "طریقہ 1: اسٹرکچر",
+                    body: "<p>صرف 'AI سمجھاؤ' مت کہیں۔ تفصیل بتائیں:</p><div class='code-snippet'>ٹرینر بنیں۔\nبچوں کو AI سمجھائیں۔\nاستعمال کریں:\n- 3 مختصر نکات\n- 1 دلچسپ مثال\n- ایک کوئز</div>",
+                    interact: ""
+                },
+                note: "Structure forces the AI to think clearly."
+            },
+            {
+                en: {
+                    title: "Pattern 2: Examples (Few-Shot)",
+                    body: "<p>Show, don't just tell.</p><div class='box-highlight'>User: 'Convert to colors:'<br>Apple -> Red<br>Banana -> Yellow<br>Grass -> ?<br><br>AI: Green</div>",
+                    interact: ""
+                },
+                ur: {
+                    title: "طریقہ 2: مثالیں دیں",
+                    body: "<p>صرف بتائیں نہیں، کر کے دکھائیں۔</p><div class='box-highlight'>آپ: 'رنگوں میں بدلیں:'<br>سیب -> سرخ<br>کیلا -> پیلا<br>گھاس -> ؟<br><br>AI: سبز</div>",
+                    interact: ""
+                },
+                note: "This is the most powerful trick. Giving 1 or 2 examples fixes most errors."
+            },
+            {
+                en: {
+                    title: "Pattern 3: Critique",
+                    body: "<p>Use AI as an Editor.</p><div class='code-snippet'>Here is my email draft.\nCritique it for clarity.\nRemove fluff.\nKeep it polite.</div>",
+                    interact: ""
+                },
+                ur: {
+                    title: "طریقہ 3: اصلاح (Critique)",
+                    body: "<p>AI کو ایڈیٹر بنائیں۔</p><div class='code-snippet'>یہ میرا ای میل ڈرافٹ ہے۔\nاسے بہتر بنائیں۔\nفالتو الفاظ نکال دیں۔\nشائستہ رکھیں۔</div>",
+                    interact: ""
+                },
+                note: "It's easier to edit than to write from scratch."
+            },
+            {
+                en: {
+                    title: "Live Demo #1: The Fixer",
+                    body: "<p><b>Goal:</b> Turn messy, informal notes into a professional email using a specific scenario.</p><div class='code-snippet' id='p1'>Act as a comms expert.\nConvert these rough notes into:\n1. A professional email\n2. A summary list\n\nNotes: \"I work at ABC Company. I have 12 leaves remaining for this year. I want to take today off, but I don't want to lie to get leave. I want you to write me a professional email that will help me get leave without involving any lies. I just want to rest today and I have one or two personal tasks that I need to take care of, but I don't understand what to write in the email. Please write me an email in both Urdu and English. My job designation is 'Senior Teacher'.\"<button class='copy-tag' onclick='copyT(\"p1\")'>Copy</button></div>",
+                    interact: "Give me a messy sentence in chat!"
+                },
+                ur: {
+                    title: "لائیو ڈیمو #1: دی فکسر",
+                    body: "<p><b>مقصد:</b> بکھرے نوٹس کو پروفیشنل بنائیں:</p><div class='code-snippet' style='direction:rtl; text-align:right; font-family:Noto Nastaliq Urdu;'>میں اے بی سی کمپنی میں ملازمت کرتا ہوں، اور اس سال میری 12 چھٹیاں ابھی باقی ہیں۔ میں آج چھٹی کرنا چاہتا ہوں، مگر میں کسی قسم کا جھوٹ بول کر چھٹی نہیں لینا چاہتا۔ میں چاہتا ہوں کہ آپ مجھے ایسی پیشہ ورانہ ای میل لکھ دیں جس سے مجھے چھٹی بھی مل جائے اور جھوٹ بھی نہ ہو۔ میں بس آج آرام کرنا چاہتا ہوں اور اپنے ایک دو ذاتی کام بھی نمٹانا چاہتا ہوں، لیکن مجھے سمجھ نہیں آ رہی کہ ای میل میں کیا لکھوں۔ آپ مجھے اردو اور انگریزی دونوں میں ای میل لکھ کر دے دیں۔ میری ملازمت کا عہدہ “سینئر ٹیچر” ہے۔</div>",
+                    interact: "چیٹ میں کوئی جملہ لکھیں!"
+                },
+                note: "SWITCH TABS NOW. Show ChatGPT in action."
+            },
+            {
+                en: {
+                    title: "Safety: The 5 Risks",
+                    body: "<ol><li><b>Hallucinations:</b> Wrong info.</li><li><b>Privacy:</b> No secrets in AI!</li><li><b>Bias:</b> Internet bias.</li><li><b>Copyright:</b> Be careful.</li><li><b>Lazy thinking:</b> Don't stop thinking.</li></ol>",
+                    interact: ""
+                },
+                ur: {
+                    title: "سیفٹی: 5 بڑے خطرات",
+                    body: "<ol><li><b>غلط بیانی:</b> غلط معلومات۔</li><li><b>رازداری:</b> اپنا راز مت لکھیں!</li><li><b>تعصب:</b> انٹرنیٹ کا تعصب۔</li><li><b>کاپی رائٹ:</b> احتیاط کریں۔</li><li><b>سستی:</b> سوچنا مت چھوڑیں۔</li></ol>",
+                    interact: ""
+                },
+                note: "Emphasize privacy. If it's free, you are the training data."
+            },
+            {
+                en: {
+                    title: "Verification Workflow (3C)",
+                    body: "<div class='box-highlight'><p><b>1. Claim:</b> What did it say?</p><p><b>2. Check:</b> Google it.</p><p><b>3. Cite:</b> Note the source.</p></div><p>Use AI for speed, yourself for trust.</p>",
+                    interact: ""
+                },
+                ur: {
+                    title: "تصدیق کا طریقہ (3C)",
+                    body: "<div class='box-highlight'><p><b>1. دعویٰ:</b> کیا کہا؟</p><p><b>2. چیک:</b> گوگل کریں یا کتاب دیکھیں۔</p><p><b>3. حوالہ:</b> ذریعہ نوٹ کریں۔</p></div><p>AI رفتار کے لیے، آپ بھروسے کے لیے۔</p>",
+                    interact: ""
+                },
+                note: "Always verify facts, dates, and medical/legal info."
+            },{
+    en: {
+        title: "Problem: Missed Deadline",
+        body: "<div class='box-highlight'><p>We missed the deadline because requirements changed late and reviews were slow.</p></div>",
+        interact: ""
+    },
+    ur: {
+        title: "ڈیڈ لائن مس ہو گئی",
+        body: "<div class='box-highlight'><p>ہم نے ڈیڈ لائن اس لیے مس کر دی کیونکہ ضروریات آخری وقت میں بدل گئیں اور جائزہ لینے کا عمل سست رہا۔</p></div>",
+        interact: ""
+    },
+    note: "Not specified."
+},
+            {
+                en: {
+                    title: "Live Demo #2: The Organizer",
+                    body: `
+<p><b>Goal:</b> Turn long text into clean, usable outputs.</p>
+<div class='code-snippet' id='p2'>
+You are an expert organizer. Use ONLY the information given in the text (no new facts).
+
+Convert the text into:
+A) A checklist (actionable bullet points)
+B) A Markdown table: Issue | Action
+C) A 60-second spoken script (≈120–140 words)
+
+Rules:
+- Do not invent details. If something is missing, write: Not specified.
+- Keep language simple and clear.
+- Keep A and B concise.
+
+TEXT:
+Our team missed the deadline because requirements changed late and reviews were slow. Next time we will freeze scope, set review  Service Level Agreement (SLAs), and track risks weekly.
+
+<button class='copy-tag' onclick='copyT("p2")'>Copy</button></div>
+`,
+                    interact: "I'll organize any long text into a checklist, a table, and a 60-second script."
+                },
+                ur: {
+                    title: "لائیو ڈیمو #2: آرگنائزر",
+                    body: `
+<p><b>مقصد:</b> لمبے متن کو واضح اور قابلِ استعمال فارمیٹ میں تبدیل کرنا۔</p>
+<div class='code-snippet' id='p2u'>
+آپ ایک ماہر آرگنائزر ہیں۔ صرف اسی متن کی معلومات استعمال کریں (کوئی نئی بات نہ گھڑیں)۔
+
+اس متن کو تبدیل کریں:
+A) چیک لسٹ (ایکشن والے پوائنٹس)
+B) ٹیبل (مسئلہ | حل) — مارک ڈاؤن ٹیبل
+C) 60 سیکنڈ کی بولنے والی اسکرپٹ (تقریباً 120–140 الفاظ)
+
+قواعد:
+- اگر کوئی چیز متن میں موجود نہیں تو لکھیں: موجود نہیں
+- زبان سادہ اور واضح رکھیں
+- A اور B مختصر رکھیں
+
+متن:
+
+متن: "ہماری ڈیڈ لائن اس لیے مس ہوئی کیونکہ ریکوائرمنٹس آخری وقت میں بدلیں اور ریویوز سست تھے۔ اگلی بار ہم اسکوپ فریز کریں گے، ریویو SLA رکھیں گے، اور ہفتہ وار رسک ٹریک کریں گے۔"
+
+<button class='copy-tag' onclick='copyT("p2u")'>Copy</button></div>
+`,
+                    interact: "میں آپ کے متن کو چیک لسٹ، ٹیبل، اور 60 سیکنڈ اسکرپٹ میں بدل دوں گا۔"
+                },
+                note: "Grab a news article or Wikipedia page and paste it."
+            },
+{
+                en: {
+                    title: "Roadmap & Closing",
+                    body: "<ul><li><b>Week 1:</b> Prompting Basics.</li><li><b>Week 2:</b> Practice tasks.</li><li><b>Week 3:</b> Verification habits.</li><li><b>Week 4:</b> Mini Project.</li></ul>",
+                    interact: "Comment 'PART 2' for next workshop!"
+                },
+                ur: {
+                    title: "روڈ میپ اور اختتام",
+                    body: "<ul><li><b>ہفتہ 1:</b> پرامپٹنگ اصول۔</li><li><b>ہفتہ 2:</b> پریکٹس۔</li><li><b>ہفتہ 3:</b> تصدیق کی عادت۔</li><li><b>ہفتہ 4:</b> چھوٹا پراجیکٹ۔</li></ul>",
+                    interact: "اگلی ورکشاپ کے لیے 'PART 2' لکھیں!"
+                },
+                note: "End on high energy. Thank them!"
+            },
+            {
+                en: {
+                    title: "Recommended Videos",
+                    body: `
+                    <div style="margin-bottom:20px;">
+                        <h3 style="color:#4f46e5; margin-bottom:10px;">Soban Attari (AI Tutorials)</h3>
+                        <div class="video-grid">
+                            <a href="https://www.youtube.com/watch?v=8SmP-07QozU" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 1. The Future of Artificial Intelligence | Will ChatGPT Take Your Job? | Power of AI
+                            </a>
+                            <a href="https://youtu.be/AyldjCiPIS4" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 2. Will AI Destroy Humanity in the Next 5 Years? (SHOCKING)
+                            </a>
+                            <a href="https://youtu.be/hRvZgJi1gVI" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 3. The Truth About ChatGPT You're Not Being Told
+                            </a>
+                            <a href="https://youtu.be/9uyPXEJckvA" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 4. Will AI Replace Humans in Your Job Forever? | AI vs YOU
+                            </a>
+                            <a href="https://youtu.be/fKZDhdr5Pzs" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 5. The Future of AI
+                            </a>
+                            <a href="https://youtu.be/TDcQwxvz7V0" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 6. How to Use Chatgpt - Best Chatgpt Uses
+                            </a>
+                            <a href="https://youtu.be/NSZmmHLjFPM" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 7. Will AI Replace Humans?
+                            </a>
+                            <a href="https://youtu.be/oacbMDKv0Ec" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 8. The Truth About Islam and AI in 2025
+                            </a>
+                            <a href="https://youtu.be/Lua8rDymc4I" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 9. NEW AI MODEL THAT WILL CHANGE YOUR LIFE
+                            </a>
+                            <a href="https://youtu.be/azBLqysXQSU" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 10. Why Our Lives with AI Are About to Change FOREVER
+                            </a>
+                            <a href="https://youtu.be/VoduQ4lygts" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 11. AI Will Replace These Jobs – But Not Yours If You Know This!
+                            </a>
+                            <a href="https://youtu.be/6vpIWRiO7F0" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> 12. AI Changed Everything! The New Formula of Success You Must Know!
+                            </a>
+                        </div>
+                    </div>
+                    `,
+                    interact: ""
+                },
+                ur: {
+                    title: "تجویز کردہ ویڈیوز",
+                    body: `
+                    <div style="margin-bottom:20px;">
+                        <h3 style="color:#4f46e5; margin-bottom:10px;">مفتی قاسم عطاری (اسلامی نقطہ نظر)</h3>
+                        <div class="video-grid">
+                            <a href="https://youtu.be/uG8sfzVy-VY" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> Mufti Qasim Attari - ChatGPT Say Masail Pochan Kasa
+                            </a>
+                            <a href="https://youtu.be/R-HpCVu318E" target="_blank" class="video-btn">
+                                <span class="video-icon">▶</span> Artificial intelligence in Islam | Mufti Qasim Attari
+                            </a>
+                        </div>
+                    </div>
+                    `,
+                    interact: ""
+                },
+                note: "Share these resources for continued learning."
+            }
+        ];
+
+        let index = 0;
+        const viewer = document.getElementById('slide-viewer');
+        const badge = document.getElementById('slide-num');
+        const notes = document.getElementById('notes-content');
+        const notesDrawer = document.getElementById('notes-drawer');
+        const modal = document.getElementById('modal-overlay');
+
+        function render() {
+            const s = slides[index];
+            
+            // Interaction Boxes
+            const intEn = s.en.interact ? `<div class='box-interaction'><b>INTERACTION:</b> ${s.en.interact}</div>` : '';
+            const intUr = s.ur.interact ? `<div class='box-interaction'><b>انٹریکشن:</b> ${s.ur.interact}</div>` : '';
+
+            viewer.innerHTML = `
+                <div class="col-left scroller">
+                    <h1>${s.en.title}</h1>
+                    <!-- FIX: Removed flex:1 from here -->
+                    <div>${s.en.body}</div>
+                    ${intEn}
+                </div>
+                <div class="col-right scroller">
+                    <h1>${s.ur.title}</h1>
+                    <!-- FIX: Removed flex:1 from here -->
+                    <div>${s.ur.body}</div>
+                    ${intUr}
+                </div>
+            `;
+            
+            badge.innerText = `${index + 1} / ${slides.length}`;
+            notes.innerText = s.note;
+        }
+
+        function nextSlide() {
+            if (index < slides.length - 1) { index++; render(); }
+        }
+
+        function prevSlide() {
+            if (index > 0) { index--; render(); }
+        }
+
+        function toggleNotes() {
+            notesDrawer.classList.toggle('open');
+        }
+
+        function toggleModal() {
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function copyT(id) {
+            const txt = document.getElementById(id).innerText.replace("Copy", "");
+            navigator.clipboard.writeText(txt).then(() => alert('Copied!'));
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === "ArrowRight") nextSlide();
+            if(e.key === "ArrowLeft") prevSlide();
+        });
+
+        render();
+    </script>
+</body>
+</html>
