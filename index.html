@@ -1,35 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI for Everyone: Workshop Slides</title>
-    
+
     <!-- Fonts: Outfit (Modern) & Noto Nastaliq Urdu -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap"
+        rel="stylesheet">
 
     <style>
         :root {
             /* Vibrant Workshop Theme */
-            --primary: #4f46e5;       /* Indigo 600 */
-            --primary-dark: #3730a3;  /* Indigo 800 */
-            --accent: #0ea5e9;        /* Sky 500 */
-            --accent-pink: #db2777;   /* Pink 600 */
-            
+            --primary: #4f46e5;
+            /* Indigo 600 */
+            --primary-dark: #3730a3;
+            /* Indigo 800 */
+            --accent: #0ea5e9;
+            /* Sky 500 */
+            --accent-pink: #db2777;
+            /* Pink 600 */
+
             --bg-body: #f3f4f6;
             --card-bg: #ffffff;
             --text-main: #1f2937;
             --text-muted: #6b7280;
-            
-            --radius: 10px; /* STRICT REQUEST */
-            
+
+            --radius: 10px;
+            /* STRICT REQUEST */
+
             --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --gradient-header: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
         }
 
-        * { box-sizing: border_box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border_box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Outfit', sans-serif;
@@ -46,16 +58,30 @@
         /* --- Scrollbar Magic --- */
         .scroller {
             scrollbar-width: thin;
-            scrollbar-color: transparent transparent; 
+            scrollbar-color: transparent transparent;
             transition: scrollbar-color 0.3s;
         }
+
         .scroller:hover {
             scrollbar-color: #cbd5e1 transparent;
         }
-        .scroller::-webkit-scrollbar { width: 6px; }
-        .scroller::-webkit-scrollbar-track { background: transparent; }
-        .scroller::-webkit-scrollbar-thumb { background-color: transparent; border-radius: 10px; }
-        .scroller:hover::-webkit-scrollbar-thumb { background-color: #cbd5e1; }
+
+        .scroller::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroller::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scroller::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border-radius: 10px;
+        }
+
+        .scroller:hover::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+        }
 
         /* --- UI Controls --- */
         .top-nav {
@@ -66,7 +92,7 @@
             align-items: center;
             padding: 0 24px;
             border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             z-index: 10;
         }
 
@@ -104,14 +130,22 @@
             align-items: center;
             gap: 6px;
         }
-        .btn:hover { background: var(--primary-dark); box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3); }
-        .btn:active { transform: scale(0.98); }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
 
         .btn-ghost {
             background: white;
             border: 2px solid #e5e7eb;
             color: var(--text-muted);
         }
+
         .btn-ghost:hover {
             border-color: var(--primary);
             color: var(--primary);
@@ -145,17 +179,20 @@
         .slide-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             height: 6px;
             background: var(--gradient-header);
             z-index: 5;
         }
 
-        .col-left, .col-right {
+        .col-left,
+        .col-right {
             /* FIXED: Padding set to 50px as requested */
-            padding: 50px; 
+            padding: 50px;
             height: 100%;
-            overflow-y: auto; 
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
         }
@@ -173,20 +210,32 @@
 
         h1 {
             font-size: 2.5rem;
-            margin-bottom: 16px; 
+            margin-bottom: 16px;
             line-height: 1.1;
             color: var(--primary-dark);
         }
-        .col-right h1 { font-size: 2.2rem; }
 
-        p, li {
+        .col-right h1 {
+            font-size: 2.2rem;
+        }
+
+        p,
+        li {
             font-size: 1.15rem;
             line-height: 1.6;
             color: var(--text-main);
             margin-bottom: 12px;
         }
-        li { margin-left: 20px; padding-left: 8px; }
-        .col-right li { margin-right: 24px; margin-left: 0; }
+
+        li {
+            margin-left: 20px;
+            padding-left: 8px;
+        }
+
+        .col-right li {
+            margin-right: 24px;
+            margin-left: 0;
+        }
 
         /* --- Components --- */
         .box-highlight {
@@ -199,7 +248,7 @@
         }
 
         .box-interaction {
-            margin-top: 20px; 
+            margin-top: 20px;
             background: #fff1f2;
             border: 2px dashed var(--accent-pink);
             padding: 20px;
@@ -224,16 +273,20 @@
 
         .copy-tag {
             position: absolute;
-            top: 10px; right: 10px;
-            background: rgba(255,255,255,0.1);
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             padding: 4px 10px;
             border-radius: 4px;
             font-size: 0.75rem;
             cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .copy-tag:hover { background: rgba(255,255,255,0.2); }
+
+        .copy-tag:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
         /* --- Video Resources Styling --- */
         .video-grid {
@@ -242,6 +295,7 @@
             gap: 12px;
             margin-bottom: 25px;
         }
+
         .video-btn {
             display: flex;
             align-items: center;
@@ -256,14 +310,18 @@
             font-weight: 500;
             transition: all 0.2s;
         }
+
         .video-btn:hover {
             border-color: var(--primary);
             color: var(--primary);
             background: #fdfcff;
             transform: translateY(-2px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
-        .video-icon { color: #ef4444; }
+
+        .video-icon {
+            color: #ef4444;
+        }
 
         /* --- Footer --- */
         .controls-bar {
@@ -284,43 +342,66 @@
             border-top: 1px solid #e5e7eb;
             transition: height 0.3s ease;
         }
-        .notes-area.open { height: 160px; }
-        .notes-inner { padding: 20px 24px; color: var(--text-muted); font-size: 1.1rem; }
+
+        .notes-area.open {
+            height: 160px;
+        }
+
+        .notes-inner {
+            padding: 20px 24px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
 
         .modal-wrap {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(17, 24, 39, 0.5);
             backdrop-filter: blur(4px);
             display: none;
-            align-items: center; justify-content: center;
+            align-items: center;
+            justify-content: center;
             z-index: 50;
         }
+
         .modal-box {
-            background: white; width: 90%; max-width: 850px; height: 85%;
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
             border-radius: var(--radius);
             padding: 30px;
             overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        
     </style>
 </head>
+
 <body>
 
     <!-- Header -->
     <nav class="top-nav">
         <div class="brand-logo">
             <!-- Icon -->
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#4f46e5" /><stop offset="100%" style="stop-color:#0ea5e9" /></linearGradient></defs>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#4f46e5" />
+                        <stop offset="100%" style="stop-color:#0ea5e9" />
+                    </linearGradient>
+                </defs>
                 <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
                 <polyline points="2 17 12 22 22 17"></polyline>
                 <polyline points="2 12 12 17 22 12"></polyline>
             </svg>
             AI Workshop
         </div>
-        
+
         <div style="display:flex; gap:15px; align-items:center;">
             <button class="btn btn-ghost" onclick="toggleModal()">
                 <span>📂 Resources</span>
@@ -339,24 +420,25 @@
     <!-- Speaker Notes -->
     <div class="notes-area" id="notes-drawer">
         <div class="notes-inner">
-            <div style="font-size:0.8rem; text-transform:uppercase; color:#4f46e5; font-weight:700; margin-bottom:5px;">Speaker Script</div>
+            <div style="font-size:0.8rem; text-transform:uppercase; color:#4f46e5; font-weight:700; margin-bottom:5px;">
+                Speaker Script</div>
             <div id="notes-content"></div>
         </div>
     </div>
 
     <!-- Controls -->
     <footer class="controls-bar">
-        <button class="btn btn-ghost" onclick="toggleNotes()">Toggle Notes</button>
-        
+
+
         <div style="display:flex; gap:12px;">
             <button class="btn btn-ghost" onclick="prevSlide()">← Back</button>
             <button class="btn" onclick="nextSlide()">Next Slide →</button>
         </div>
-        
+
         <div style="width:100px"></div>
     </footer>
 
-        <!-- Modal Overlay (FAQ Only) -->
+    <!-- Modal Overlay (FAQ Only) -->
     <div class="modal-wrap" id="modal-overlay">
         <div class="modal-box scroller" role="dialog" aria-modal="true" aria-labelledby="trainerModalTitle">
             <button class="modal-close" onclick="toggleModal()" aria-label="Close">✕</button>
@@ -370,174 +452,199 @@
 
             <!-- Section-local styles (kept here to avoid breaking global CSS) -->
             <style>
-                .modal-close{
-                    position:absolute; top:20px; right:20px;
-                    border:none; background:none; font-size:1.5rem; cursor:pointer;
-                }
-                .modal-title{
-                    color:var(--primary);
-                    margin:0 0 18px 0;
-                    display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end;
-                }
-                .modal-title-ur{
-                    direction:rtl;
-                    font-family:'Noto Nastaliq Urdu', serif;
-                    font-weight:700;
-                    color:var(--primary-dark);
-                    font-size:1.15rem;
+                .modal-close {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    border: none;
+                    background: none;
+                    font-size: 1.5rem;
+                    cursor: pointer;
                 }
 
-                .modal-grid{
-                    display:grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap:22px;
-                }
-                @media (max-width: 900px){
-                    .modal-grid{ grid-template-columns: 1fr; }
+                .modal-title {
+                    color: var(--primary);
+                    margin: 0 0 18px 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    align-items: flex-end;
                 }
 
-                .modal-card{
-                    background:#fff;
-                    border:1px solid #e5e7eb;
-                    border-radius:var(--radius);
-                    padding:16px;
+                .modal-title-ur {
+                    direction: rtl;
+                    font-family: 'Noto Nastaliq Urdu', serif;
+                    font-weight: 700;
+                    color: var(--primary-dark);
+                    font-size: 1.15rem;
                 }
-                .modal-card h3{
-                    border-bottom:2px solid #e5e7eb;
-                    padding-bottom:6px;
-                    margin:0 0 12px 0;
+
+                .modal-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 22px;
+                }
+
+                @media (max-width: 900px) {
+                    .modal-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                .modal-card {
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    border-radius: var(--radius);
+                    padding: 16px;
+                }
+
+                .modal-card h3 {
+                    border-bottom: 2px solid #e5e7eb;
+                    padding-bottom: 6px;
+                    margin: 0 0 12px 0;
                 }
 
                 /* Run of Show */
-                .runofshow{
-                    display:grid;
+                .runofshow {
+                    display: grid;
                     grid-template-columns: 1fr;
-                    gap:6px;
-                    font-size:0.95rem;
+                    gap: 6px;
+                    font-size: 0.95rem;
                 }
-                .ros-row{
-                    display:grid;
+
+                .ros-row {
+                    display: grid;
                     grid-template-columns: 72px 1fr;
-                    gap:10px;
-                    padding:7px 0;
-                    border-bottom:1px dashed #e5e7eb;
+                    gap: 10px;
+                    padding: 7px 0;
+                    border-bottom: 1px dashed #e5e7eb;
                 }
-                .ros-row:last-child{ border-bottom:none; }
-                .ros-time{ font-weight:800; color:var(--primary-dark); }
-                .ros-hot{ color:var(--accent-pink); font-weight:800; }
+
+                .ros-row:last-child {
+                    border-bottom: none;
+                }
+
+                .ros-time {
+                    font-weight: 800;
+                    color: var(--primary-dark);
+                }
+
+                .ros-hot {
+                    color: var(--accent-pink);
+                    font-weight: 800;
+                }
 
                 /* FAQ (stable accordion using <details>) */
-                .faq-accordion details{
-                    border:1px solid #e5e7eb;
-                    border-radius:var(--radius);
-                    padding:10px 12px;
-                    margin-bottom:10px;
-                    background:#f9fafb;
+                .faq-accordion details {
+                    border: 1px solid #e5e7eb;
+                    border-radius: var(--radius);
+                    padding: 10px 12px;
+                    margin-bottom: 10px;
+                    background: #f9fafb;
                 }
-                .faq-accordion summary{
-                    cursor:pointer;
-                    list-style:none;
-                    display:flex;
-                    align-items:center;
-                    justify-content:space-between;
-                    gap:12px;
-                    font-weight:800;
-                    color:var(--text-main);
-                }
-                .faq-accordion summary::-webkit-details-marker{ display:none; }
-                .faq-accordion summary::after{
-                    content:"+";
-                    color:var(--primary);
-                    font-weight:900;
-                    flex:0 0 auto;
-                }
-                .faq-accordion details[open] summary::after{ content:"–"; }
 
-                .faq-q{
-                    display:grid;
+                .faq-accordion summary {
+                    cursor: pointer;
+                    list-style: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    font-weight: 800;
+                    color: var(--text-main);
+                }
+
+                .faq-accordion summary::-webkit-details-marker {
+                    display: none;
+                }
+
+                .faq-accordion summary::after {
+                    content: "+";
+                    color: var(--primary);
+                    font-weight: 900;
+                    flex: 0 0 auto;
+                }
+
+                .faq-accordion details[open] summary::after {
+                    content: "–";
+                }
+
+                .faq-q {
+                    display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap:12px;
-                    width:100%;
-                }
-                .faq-q .q-ur{
-                    direction:rtl;
-                    font-family:'Noto Nastaliq Urdu', serif;
-                    font-weight:800;
-                    text-align:right;
+                    gap: 12px;
+                    width: 100%;
                 }
 
-                .faq-body{
-                    margin-top:10px;
-                    display:grid;
+                .faq-q .q-ur {
+                    direction: rtl;
+                    font-family: 'Noto Nastaliq Urdu', serif;
+                    font-weight: 800;
+                    text-align: right;
+                }
+
+                .faq-body {
+                    margin-top: 10px;
+                    display: grid;
                     grid-template-columns: 1fr 1fr;
-                    gap:14px;
-                }
-                @media (max-width: 900px){
-                    .faq-body{ grid-template-columns: 1fr; }
+                    gap: 14px;
                 }
 
-                .faq-col{
-                    background:#fff;
-                    border:1px solid #e5e7eb;
-                    border-radius:var(--radius);
-                    padding:12px;
-                    font-size:0.98rem;
-                    line-height:1.55;
+                @media (max-width: 900px) {
+                    .faq-body {
+                        grid-template-columns: 1fr;
+                    }
                 }
-                .faq-col .label{
-                    font-size:0.75rem;
-                    font-weight:900;
-                    letter-spacing:0.06em;
-                    text-transform:uppercase;
-                    color:var(--text-muted);
-                    margin-bottom:6px;
+
+                .faq-col {
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    border-radius: var(--radius);
+                    padding: 12px;
+                    font-size: 0.98rem;
+                    line-height: 1.55;
                 }
-                .faq-col.ur{
-                    direction:rtl;
-                    font-family:'Noto Nastaliq Urdu', serif;
-                    line-height:2.0;
-                    text-align:right;
+
+                .faq-col .label {
+                    font-size: 0.75rem;
+                    font-weight: 900;
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+                    color: var(--text-muted);
+                    margin-bottom: 6px;
                 }
-                .faq-col.ur .label{
-                    text-transform:none;
-                    letter-spacing:0;
-                    font-size:0.85rem;
+
+                .faq-col.ur {
+                    direction: rtl;
+                    font-family: 'Noto Nastaliq Urdu', serif;
+                    line-height: 2.0;
+                    text-align: right;
                 }
-                .faq-tip{
-                    margin-top:10px;
-                    font-size:0.9rem;
-                    color:var(--text-muted);
+
+                .faq-col.ur .label {
+                    text-transform: none;
+                    letter-spacing: 0;
+                    font-size: 0.85rem;
                 }
-                .kbd{
+
+                .faq-tip {
+                    margin-top: 10px;
+                    font-size: 0.9rem;
+                    color: var(--text-muted);
+                }
+
+                .kbd {
                     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-                    background:#111827;
-                    color:#fff;
-                    padding:2px 8px;
-                    border-radius:8px;
-                    font-size:0.8rem;
+                    background: #111827;
+                    color: #fff;
+                    padding: 2px 8px;
+                    border-radius: 8px;
+                    font-size: 0.8rem;
                 }
             </style>
 
             <div class="modal-grid">
-                <!-- LEFT: Run of Show -->
-                <section class="modal-card">
-                    <h3>Run of Show</h3>
-                    <div class="runofshow">
-                        <div class="ros-row"><div class="ros-time">0:00</div><div>Welcome + Poll</div></div>
-                        <div class="ros-row"><div class="ros-time">0:05</div><div>AI Basics</div></div>
-                        <div class="ros-row"><div class="ros-time">0:15</div><div>AI vs ML</div></div>
-                        <div class="ros-row"><div class="ros-time">0:25</div><div>How LLMs Work</div></div>
-                        <div class="ros-row"><div class="ros-time">0:35</div><div>Prompt Engineering</div></div>
-                        <div class="ros-row"><div class="ros-time ros-hot">0:48</div><div class="ros-hot">Live Demo #1 (Email)</div></div>
-                        <div class="ros-row"><div class="ros-time">0:58</div><div>Safety &amp; Risks</div></div>
-                        <div class="ros-row"><div class="ros-time ros-hot">1:08</div><div class="ros-hot">Live Demo #2 (Structure)</div></div>
-                        <div class="ros-row"><div class="ros-time">1:18</div><div>Roadmap + Closing</div></div>
-                    </div>
 
-                    <div class="faq-tip">
-                        Tip: Use keyboard arrows <span class="kbd">←</span> <span class="kbd">→</span> to move slides. Keep 1–2 mins buffer for Q/A.
-                    </div>
-                </section>
 
                 <!-- RIGHT: FAQ -->
                 <section class="modal-card">
@@ -554,11 +661,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    AI usually replaces <b>tasks</b>, not entire roles. People who learn to use AI will often outperform people who ignore it.
+                                    AI usually replaces <b>tasks</b>, not entire roles. People who learn to use AI will
+                                    often outperform people who ignore it.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    عموماً اے آئی <b>کام</b> بدلتی ہے، پورا کردار نہیں۔ جو لوگ اے آئی کو صحیح استعمال کرنا سیکھتے ہیں وہ زیادہ بہتر نتیجہ دیتے ہیں۔
+                                    عموماً اے آئی <b>کام</b> بدلتی ہے، پورا کردار نہیں۔ جو لوگ اے آئی کو صحیح استعمال
+                                    کرنا سیکھتے ہیں وہ زیادہ بہتر نتیجہ دیتے ہیں۔
                                 </div>
                             </div>
                         </details>
@@ -573,11 +682,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    Treat prompts like public text. Don’t paste passwords, CNIC, bank info, private student data, or confidential documents.
+                                    Treat prompts like public text. Don’t paste passwords, CNIC, bank info, private
+                                    student data, or confidential documents.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    پرامپٹ کو “پبلک ٹیکسٹ” سمجھیں۔ پاس ورڈ، سی این آئی سی، بینک معلومات، طلباء کا نجی ڈیٹا، یا خفیہ ڈاکومنٹس کبھی نہ پیسٹ کریں۔
+                                    پرامپٹ کو “پبلک ٹیکسٹ” سمجھیں۔ پاس ورڈ، سی این آئی سی، بینک معلومات، طلباء کا نجی
+                                    ڈیٹا، یا خفیہ ڈاکومنٹس کبھی نہ پیسٹ کریں۔
                                 </div>
                             </div>
                         </details>
@@ -592,11 +703,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    No. AI can sound confident even when wrong. Use it for drafts and structure—verify facts.
+                                    No. AI can sound confident even when wrong. Use it for drafts and structure—verify
+                                    facts.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    نہیں۔ اے آئی غلط بات بھی پراعتماد انداز میں کہہ سکتی ہے۔ ڈرافٹ اور اسٹرکچر کے لیے استعمال کریں، حقائق ضرور چیک کریں۔
+                                    نہیں۔ اے آئی غلط بات بھی پراعتماد انداز میں کہہ سکتی ہے۔ ڈرافٹ اور اسٹرکچر کے لیے
+                                    استعمال کریں، حقائق ضرور چیک کریں۔
                                 </div>
                             </div>
                         </details>
@@ -611,11 +724,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    Use <b>3C</b>: <b>Claim</b> (what it said), <b>Check</b> (verify from trusted sources), <b>Cite</b> (record the source).
+                                    Use <b>3C</b>: <b>Claim</b> (what it said), <b>Check</b> (verify from trusted
+                                    sources), <b>Cite</b> (record the source).
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    <b>3C</b> استعمال کریں: <b>دعویٰ</b> (کیا کہا)، <b>چیک</b> (معتبر ذریعہ سے تصدیق)، <b>حوالہ</b> (سورس نوٹ کریں)۔
+                                    <b>3C</b> استعمال کریں: <b>دعویٰ</b> (کیا کہا)، <b>چیک</b> (معتبر ذریعہ سے تصدیق)،
+                                    <b>حوالہ</b> (سورس نوٹ کریں)۔
                                 </div>
                             </div>
                         </details>
@@ -630,11 +745,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    Passwords, OTPs, private emails, medical info, client contracts, exam papers, internal university letters, or anything confidential.
+                                    Passwords, OTPs, private emails, medical info, client contracts, exam papers,
+                                    internal university letters, or anything confidential.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    پاس ورڈ، او ٹی پی، ذاتی ای میلز، میڈیکل معلومات، کلائنٹ کنٹریکٹس، امتحانی پیپرز، یونیورسٹی کے اندرونی خطوط—یا کوئی بھی خفیہ چیز۔
+                                    پاس ورڈ، او ٹی پی، ذاتی ای میلز، میڈیکل معلومات، کلائنٹ کنٹریکٹس، امتحانی پیپرز،
+                                    یونیورسٹی کے اندرونی خطوط—یا کوئی بھی خفیہ چیز۔
                                 </div>
                             </div>
                         </details>
@@ -649,11 +766,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    Yes—especially for translation, summarization, and drafting. For critical info (dates, names, references), still verify.
+                                    Yes—especially for translation, summarization, and drafting. For critical info
+                                    (dates, names, references), still verify.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    جی ہاں—خاص طور پر ترجمہ، خلاصہ، اور ڈرافٹنگ میں۔ لیکن اہم چیزیں (تاریخیں، نام، حوالہ جات) لازماً چیک کریں۔
+                                    جی ہاں—خاص طور پر ترجمہ، خلاصہ، اور ڈرافٹنگ میں۔ لیکن اہم چیزیں (تاریخیں، نام، حوالہ
+                                    جات) لازماً چیک کریں۔
                                 </div>
                             </div>
                         </details>
@@ -668,11 +787,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    Use <b>Role + Task + Context + Format</b>. Also provide 1 short example when possible.
+                                    Use <b>Role + Task + Context + Format</b>. Also provide 1 short example when
+                                    possible.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    <b>کردار + کام + پس منظر + فارمیٹ</b> دیں۔ اور اگر ممکن ہو تو 1 چھوٹی مثال بھی شامل کریں۔
+                                    <b>کردار + کام + پس منظر + فارمیٹ</b> دیں۔ اور اگر ممکن ہو تو 1 چھوٹی مثال بھی شامل
+                                    کریں۔
                                 </div>
                             </div>
                         </details>
@@ -687,11 +808,13 @@
                             <div class="faq-body">
                                 <div class="faq-col en">
                                     <div class="label">Answer</div>
-                                    If your institution allows it: use it as a helper (outline, feedback, grammar). Don’t submit blindly—make it your own.
+                                    If your institution allows it: use it as a helper (outline, feedback, grammar).
+                                    Don’t submit blindly—make it your own.
                                 </div>
                                 <div class="faq-col ur">
                                     <div class="label">جواب</div>
-                                    اگر ادارہ اجازت دے: اسے مددگار کے طور پر استعمال کریں (آؤٹ لائن، فیڈبیک، گرامر)۔ بغیر سمجھے کاپی پیسٹ نہ کریں—اپنی محنت شامل کریں۔
+                                    اگر ادارہ اجازت دے: اسے مددگار کے طور پر استعمال کریں (آؤٹ لائن، فیڈبیک، گرامر)۔
+                                    بغیر سمجھے کاپی پیسٹ نہ کریں—اپنی محنت شامل کریں۔
                                 </div>
                             </div>
                         </details>
@@ -711,13 +834,13 @@
             {
                 en: {
                     title: "AI for Everyone",
-                    body: "<ul><li>We will demystify Artificial Intelligence and its core concepts.</li><li>No complex math, just practical skills you can use today.</li><li>Learn how to use AI safely and effectively in your daily routine.</li></ul><div style='margin-top:30px; border-top:1px solid #e5e7eb; padding-top:20px;'><p style='font-weight:700; color:#4f46e5; margin-bottom:5px; font-size:1.3rem;'>Dr. Wasim Ahmad Khan</p><p style='font-size:1rem; color:#6b7280; line-height:1.4;'>PhD Computer Science, Specialization in Artificial General Intelligence<br>AI Trainer - Associate Professor - AI Research Scientist</p></div>",
-                    interact: "Type in chat: Student / Teacher / Business / Developer"
+                    body: "<ul><li>We will demystify Artificial Intelligence and its core concepts.</li><li>No complex math, just practical skills you can use today.</li><li>Learn how to use AI safely and effectively in your daily routine.</li></ul><div style='margin-top:30px; border-top:1px solid #e5e7eb; padding-top:20px;'><p style='font-weight:700; color:#4f46e5; margin-bottom:5px; font-size:1.3rem;'>Dr. Wasim Ahmad Khan</p><p style='font-size:1rem; color:#6b7280; line-height:1.4;'>PhD Computer Science, Specialization in Artificial General Intelligence<br>AI Trainer - Associate Professor - AI Research Scientist</p></div><div style='display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-top: 20px;'><a href='https://www.linkedin.com/in/wasimahmadkhan/' target='_blank' style='display:inline-flex; align-items:center; gap:6px; background:#0a66c2; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;'>💼 LinkedIn Profile</a><a href='https://whatsapp.com/channel/0029VaJpFkl0lwgxOjiiNt2N' target='_blank' style='display:inline-flex; align-items:center; gap:6px; background:#25d366; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;'>📱 WhatsApp Channel</a><a href='https://drwasimahmadkhan.github.io/AI4everyone/session2.html' target='_blank' style='display:inline-flex; align-items:center; gap:6px; background:#4f46e5; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;'>📚 Session 2 Slides</a></div>",
+                    interact: ""
                 },
                 ur: {
                     title: "ہر خاص و عام کے لیے مصنوعی ذہانت",
                     body: "<ul><li>آج ہم مصنوعی ذہانت (AI) کو آسان الفاظ میں سمجھیں گے۔</li><li>کوئی مشکل ریاضی نہیں، صرف وہ عملی مہارتیں جو آپ آج ہی استعمال کر سکتے ہیں۔</li><li>AI کو محفوظ اور مؤثر طریقے سے استعمال کرنا سیکھیں۔</li></ul><div style='margin-top:30px; border-top:1px solid #e5e7eb; padding-top:20px;'><p style='font-weight:700; color:#4f46e5; margin-bottom:5px; font-size:1.4rem;'>ڈاکٹر وسیم احمد خان</p><p style='font-size:1.1rem; color:#6b7280; line-height:1.6;'>پی ایچ ڈی کمپیوٹر سائنس، مصنوعی عمومی ذہانت میں تخصص<br>اے آئی ٹرینر - ایسوسی ایٹ پروفیسر - اے آئی ریسرچ سائنٹسٹ</p></div>",
-                    interact: "چیٹ میں لکھیں: آپ کیا کرتے ہیں؟"
+                    interact: ""
                 },
                 note: "Welcome everyone! Introduce Dr. Wasim and set the stage for a practical session."
             },
@@ -915,19 +1038,19 @@
                     interact: ""
                 },
                 note: "Always verify facts, dates, and medical/legal info."
-            },{
-    en: {
-        title: "Problem: Missed Deadline",
-        body: "<div class='box-highlight'><p>We missed the deadline because requirements changed late and reviews were slow.</p></div>",
-        interact: ""
-    },
-    ur: {
-        title: "ڈیڈ لائن مس ہو گئی",
-        body: "<div class='box-highlight'><p>ہم نے ڈیڈ لائن اس لیے مس کر دی کیونکہ ضروریات آخری وقت میں بدل گئیں اور جائزہ لینے کا عمل سست رہا۔</p></div>",
-        interact: ""
-    },
-    note: "Not specified."
-},
+            }, {
+                en: {
+                    title: "Problem: Missed Deadline",
+                    body: "<div class='box-highlight'><p>We missed the deadline because requirements changed late and reviews were slow.</p></div>",
+                    interact: ""
+                },
+                ur: {
+                    title: "ڈیڈ لائن مس ہو گئی",
+                    body: "<div class='box-highlight'><p>ہم نے ڈیڈ لائن اس لیے مس کر دی کیونکہ ضروریات آخری وقت میں بدل گئیں اور جائزہ لینے کا عمل سست رہا۔</p></div>",
+                    interact: ""
+                },
+                note: "Not specified."
+            },
             {
                 en: {
                     title: "Live Demo #2: The Organizer",
@@ -980,7 +1103,7 @@ C) 60 سیکنڈ کی بولنے والی اسکرپٹ (تقریباً 120–140
                 },
                 note: "Grab a news article or Wikipedia page and paste it."
             },
-{
+            {
                 en: {
                     title: "Roadmap & Closing",
                     body: "<ul><li><b>Week 1:</b> Prompting Basics.</li><li><b>Week 2:</b> Practice tasks.</li><li><b>Week 3:</b> Verification habits.</li><li><b>Week 4:</b> Mini Project.</li></ul>",
@@ -1071,7 +1194,7 @@ C) 60 سیکنڈ کی بولنے والی اسکرپٹ (تقریباً 120–140
 
         function render() {
             const s = slides[index];
-            
+
             // Interaction Boxes
             const intEn = s.en.interact ? `<div class='box-interaction'><b>INTERACTION:</b> ${s.en.interact}</div>` : '';
             const intUr = s.ur.interact ? `<div class='box-interaction'><b>انٹریکشن:</b> ${s.ur.interact}</div>` : '';
@@ -1090,7 +1213,7 @@ C) 60 سیکنڈ کی بولنے والی اسکرپٹ (تقریباً 120–140
                     ${intUr}
                 </div>
             `;
-            
+
             badge.innerText = `${index + 1} / ${slides.length}`;
             notes.innerText = s.note;
         }
@@ -1117,11 +1240,12 @@ C) 60 سیکنڈ کی بولنے والی اسکرپٹ (تقریباً 120–140
         }
 
         document.addEventListener('keydown', (e) => {
-            if(e.key === "ArrowRight") nextSlide();
-            if(e.key === "ArrowLeft") prevSlide();
+            if (e.key === "ArrowRight") nextSlide();
+            if (e.key === "ArrowLeft") prevSlide();
         });
 
         render();
     </script>
 </body>
+
 </html>
