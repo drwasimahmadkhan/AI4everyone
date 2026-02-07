@@ -1,1 +1,2196 @@
-- Rename Session2.html - (safe)
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools for Everyone: Session 2</title>
+
+    <!-- Fonts: Outfit (Modern) & Noto Nastaliq Urdu -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Vibrant Workshop Theme */
+            --primary: #4f46e5;
+            /* Indigo 600 */
+            --primary-dark: #3730a3;
+            /* Indigo 800 */
+            --accent: #0ea5e9;
+            /* Sky 500 */
+            --accent-pink: #db2777;
+            /* Pink 600 */
+
+            --bg-body: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+
+            --radius: 10px;
+            /* STRICT REQUEST */
+
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --gradient-header: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-body);
+            background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* --- Scrollbar Magic --- */
+        .scroller {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+            transition: scrollbar-color 0.3s;
+        }
+
+        .scroller:hover {
+            scrollbar-color: #cbd5e1 transparent;
+        }
+
+        .scroller::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroller::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scroller::-webkit-scrollbar-thumb {
+            background-color: transparent;
+            border-radius: 10px;
+        }
+
+        .scroller:hover::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+        }
+
+        /* --- UI Controls --- */
+        .top-nav {
+            background: var(--card-bg);
+            height: 54px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .brand-logo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            background: var(--gradient-header);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.01em;
+        }
+
+        .pill-badge {
+            background: #eef2ff;
+            color: var(--primary);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.02em;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-ghost {
+            background: white;
+            border: 2px solid #e5e7eb;
+            color: var(--text-muted);
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #fdfcff;
+        }
+
+        /* --- Slide Stage --- */
+        .stage {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            padding: 12px 24px;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        .slide-card {
+            width: 100%;
+            max-width: 1300px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            overflow: hidden;
+            border: 1px solid #ffffff;
+            position: relative;
+            min-height: 0;
+        }
+
+        .slide-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: var(--gradient-header);
+            z-index: 5;
+        }
+
+        .col-left,
+        .col-right {
+            padding: 32px 36px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .col-left {
+            border-right: 1px solid #f3f4f6;
+        }
+
+        .col-right {
+            background: #f9fafb;
+            direction: rtl;
+            font-family: 'Noto Nastaliq Urdu', serif;
+            line-height: 2.8;
+        }
+
+        .col-right p,
+        .col-right li,
+        .col-right div {
+            line-height: 1.8;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        .col-right .tool-desc,
+        .col-right .tool-name {
+            line-height: 2.4;
+        }
+
+        h1 {
+            font-size: 2.1rem;
+            margin-bottom: 14px;
+            line-height: 1.1;
+            color: var(--primary-dark);
+        }
+
+        .col-right h1 {
+            font-size: 1.9rem;
+        }
+
+        p,
+        li {
+            font-size: 1.05rem;
+            line-height: 1.55;
+            color: var(--text-main);
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin-left: 20px;
+            padding-left: 8px;
+        }
+
+        .col-right li {
+            margin-right: 24px;
+            margin-left: 0;
+        }
+
+        /* --- Components --- */
+        .box-highlight {
+            background: #eef2ff;
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            margin: 20px 0;
+            color: var(--primary-dark);
+        }
+
+        .col-right .box-highlight {
+            border-left: none;
+            border-right: 5px solid var(--primary);
+            border-radius: var(--radius) 0 0 var(--radius);
+        }
+
+        .box-interaction {
+            margin-top: 20px;
+            background: #fff1f2;
+            border: 2px dashed var(--accent-pink);
+            padding: 20px;
+            border-radius: var(--radius);
+            text-align: center;
+            color: #be185d;
+        }
+
+        .code-snippet {
+            background: #111827;
+            color: #10b981;
+            font-family: monospace;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            white-space: pre-wrap;
+            font-size: 0.95rem;
+            position: relative;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .copy-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .copy-tag:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Tool Cards Styling --- */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tool-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--primary);
+            background: #fdfcff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tool-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            width: 36px;
+            text-align: center;
+        }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-name {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .tool-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0;
+            line-height: 1.3;
+        }
+
+        .tool-url {
+            font-size: 0.78rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+
+        .tool-url:hover {
+            text-decoration: underline;
+        }
+
+        .tool-badge {
+            background: #dcfce7;
+            color: #166534;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tool-badge.edu {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .tool-badge.premium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        /* Category Tags */
+        .cat-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 3px 4px 3px 0;
+        }
+
+        .cat-tag.green {
+            background: #059669;
+        }
+
+        .cat-tag.blue {
+            background: #2563eb;
+        }
+
+        .cat-tag.pink {
+            background: #db2777;
+        }
+
+        .cat-tag.orange {
+            background: #ea580c;
+        }
+
+        .cat-tag.purple {
+            background: #7c3aed;
+        }
+
+        /* Offer Cards */
+        .offer-card {
+            background: linear-gradient(135deg, #eef2ff 0%, #f0fdf4 100%);
+            border: 2px solid #c7d2fe;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin: 10px 0;
+        }
+
+        .offer-card h4 {
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+            font-size: 1.05rem;
+        }
+
+        .offer-card p {
+            font-size: 0.92rem;
+            margin-bottom: 4px;
+        }
+
+        /* --- Video Resources Styling --- */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .video-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .video-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #fdfcff;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .video-icon {
+            color: #ef4444;
+        }
+
+        /* --- Footer --- */
+        .controls-bar {
+            height: 56px;
+            background: var(--card-bg);
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        /* --- Drawers --- */
+        .notes-area {
+            height: 0;
+            overflow: hidden;
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
+            transition: height 0.3s ease;
+        }
+
+        .notes-area.open {
+            height: 160px;
+        }
+
+        .notes-inner {
+            padding: 20px 24px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .modal-wrap {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(17, 24, 39, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 1200px;
+            height: 85%;
+            border-radius: var(--radius);
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <nav class="top-nav">
+        <div class="brand-logo">
+            <!-- Icon -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:#4f46e5" />
+                        <stop offset="100%" style="stop-color:#0ea5e9" />
+                    </linearGradient>
+                </defs>
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            AI Workshop — Session 2
+        </div>
+
+        <div style="display:flex; gap:12px; align-items:center;">
+            <button class="btn btn-ghost" onclick="toggleModal()">
+                <span>📂 Resources</span>
+            </button>
+            <div class="pill-badge" id="slide-num">1 / 18</div>
+        </div>
+    </nav>
+
+    <!-- Slide Canvas -->
+    <main class="stage">
+        <div class="slide-card" id="slide-viewer">
+            <!-- Dynamic Content -->
+        </div>
+    </main>
+
+    <!-- Speaker Notes -->
+    <div class="notes-area" id="notes-drawer">
+        <div class="notes-inner">
+            <div style="font-size:0.8rem; text-transform:uppercase; color:#4f46e5; font-weight:700; margin-bottom:5px;">
+                Speaker Script</div>
+            <div id="notes-content"></div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <footer class="controls-bar">
+
+
+        <div style="display:flex; gap:12px;">
+            <button class="btn btn-ghost" onclick="prevSlide()">← Back</button>
+            <button class="btn" onclick="nextSlide()">Next Slide →</button>
+        </div>
+
+        <div style="width:100px"></div>
+    </footer>
+
+    <!-- Modal Overlay -->
+    <div class="modal-wrap" id="modal-overlay">
+        <div class="modal-box scroller" role="dialog" aria-modal="true" aria-labelledby="trainerModalTitle">
+            <button class="modal-close" onclick="toggleModal()" aria-label="Close">✕</button>
+
+            <div class="modal-title-wrap">
+                <h2 id="trainerModalTitle" class="modal-title">
+                    Session 2: Trainer Resources
+                    <span class="modal-title-ur">سیشن 2: ٹرینر ریسورسز</span>
+                </h2>
+            </div>
+
+            <style>
+                .modal-close {
+                    position: absolute;
+                    top: 20px;
+                    right: 20px;
+                    border: none;
+                    background: none;
+                    font-size: 1.5rem;
+                    cursor: pointer;
+                }
+
+                .modal-title {
+                    color: var(--primary);
+                    margin: 0 0 18px 0;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    align-items: flex-end;
+                }
+
+                .modal-title-ur {
+                    direction: rtl;
+                    font-family: 'Noto Nastaliq Urdu', serif;
+                    font-weight: 700;
+                    color: var(--primary-dark);
+                    font-size: 1.15rem;
+                }
+
+                .modal-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 22px;
+                }
+
+                @media (max-width: 900px) {
+                    .modal-grid {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                .modal-card {
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    border-radius: var(--radius);
+                    padding: 16px;
+                }
+
+                .modal-card h3 {
+                    border-bottom: 2px solid #e5e7eb;
+                    padding-bottom: 6px;
+                    margin: 0 0 12px 0;
+                }
+
+                .runofshow {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                }
+
+                .ros-row {
+                    display: grid;
+                    grid-template-columns: 72px 1fr;
+                    gap: 10px;
+                    padding: 7px 0;
+                    border-bottom: 1px dashed #e5e7eb;
+                }
+
+                .ros-row:last-child {
+                    border-bottom: none;
+                }
+
+                .ros-time {
+                    font-weight: 800;
+                    color: var(--primary-dark);
+                }
+
+                .ros-hot {
+                    color: var(--accent-pink);
+                    font-weight: 800;
+                }
+
+                .faq-accordion details {
+                    border: 1px solid #e5e7eb;
+                    border-radius: var(--radius);
+                    padding: 10px 12px;
+                    margin-bottom: 10px;
+                    background: #f9fafb;
+                }
+
+                .faq-accordion summary {
+                    cursor: pointer;
+                    list-style: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 12px;
+                    font-weight: 800;
+                    color: var(--text-main);
+                }
+
+                .faq-accordion summary::-webkit-details-marker {
+                    display: none;
+                }
+
+                .faq-accordion summary::after {
+                    content: "+";
+                    color: var(--primary);
+                    font-weight: 900;
+                    flex: 0 0 auto;
+                }
+
+                .faq-accordion details[open] summary::after {
+                    content: "–";
+                }
+
+                .faq-q {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 12px;
+                    width: 100%;
+                }
+
+                .faq-q .q-ur {
+                    direction: rtl;
+                    font-family: 'Noto Nastaliq Urdu', serif;
+                    font-weight: 800;
+                    text-align: right;
+                }
+
+                .faq-body {
+                    margin-top: 10px;
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 14px;
+                }
+
+                @media (max-width: 900px) {
+                    .faq-body {
+                        grid-template-columns: 1fr;
+                    }
+                }
+
+                .faq-col {
+                    background: #fff;
+                    border: 1px solid #e5e7eb;
+                    border-radius: var(--radius);
+                    padding: 12px;
+                    font-size: 0.98rem;
+                    line-height: 1.55;
+                }
+
+                .faq-col .label {
+                    font-size: 0.75rem;
+                    font-weight: 900;
+                    letter-spacing: 0.06em;
+                    text-transform: uppercase;
+                    color: var(--text-muted);
+                    margin-bottom: 6px;
+                }
+
+                .faq-col.ur {
+                    direction: rtl;
+                    font-family: 'Noto Nastaliq Urdu', serif;
+                    line-height: 2.0;
+                    text-align: right;
+                }
+
+                .faq-col.ur .label {
+                    text-transform: none;
+                    letter-spacing: 0;
+                    font-size: 0.85rem;
+                }
+
+                .faq-tip {
+                    margin-top: 10px;
+                    font-size: 0.9rem;
+                    color: var(--text-muted);
+                }
+
+                .kbd {
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                    background: #111827;
+                    color: #fff;
+                    padding: 2px 8px;
+                    border-radius: 8px;
+                    font-size: 0.8rem;
+                }
+            </style>
+
+            <div class="modal-grid">
+
+
+                <!-- RIGHT: FAQ -->
+                <section class="modal-card">
+                    <h3>FAQ (English + اردو)</h3>
+                    <div class="faq-accordion">
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Are these tools really free?</div>
+                                    <div class="q-ur">کیا یہ ٹولز واقعی مفت ہیں؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Yes — all tools listed have a <b>free tier</b>. Some offer limited usage (e.g., 15
+                                    messages/day). Paid plans unlock more features, but the free version is enough for
+                                    most beginners.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    جی ہاں — تمام ٹولز کا <b>مفت پلان</b> موجود ہے۔ کچھ میں حد ہوتی ہے (مثلاً 15 پیغامات
+                                    فی دن)۔ لیکن مبتدی لوگوں کے لیے مفت ورژن کافی ہے۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">How do I get .edu offers?</div>
+                                    <div class="q-ur">.edu آفرز کیسے ملیں گی؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Sign up with your <b>university/school email</b> (ending in .edu or .edu.pk). Some
+                                    tools auto-detect; others need verification through GitHub Student Pack or similar.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    اپنے <b>یونیورسٹی/سکول ای میل</b> (.edu یا .edu.pk) سے سائن اپ کریں۔ کچھ ٹولز خود
+                                    پہچان لیتے ہیں، کچھ کے لیے GitHub Student Pack جیسی تصدیق درکار ہوتی ہے۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Which ONE tool should I start with?</div>
+                                    <div class="q-ur">شروع کرنے کے لیے کون سا ایک ٹول بہترین ہے؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Start with <b>ChatGPT</b> (free) for general tasks. Then explore <b>Canva AI</b> for
+                                    design and <b>Gamma</b> for presentations. Don't try 10 tools at once — master one
+                                    first.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    عام کاموں کے لیے <b>ChatGPT</b> (مفت) سے شروع کریں۔ پھر ڈیزائن کے لیے <b>Canva
+                                        AI</b> اور پریزنٹیشن کے لیے <b>Gamma</b> آزمائیں۔ ایک وقت میں 10 ٹولز نہ آزمائیں
+                                    — پہلے ایک پر عبور حاصل کریں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Can I use AI tools for exams?</div>
+                                    <div class="q-ur">کیا میں امتحانات کے لیے AI استعمال کر سکتا ہوں؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    Use AI to <b>prepare</b> for exams (quizzes, flashcards, explanations) — not to
+                                    cheat. Always follow your institution's academic integrity policy.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    امتحان کی <b>تیاری</b> کے لیے AI استعمال کریں (کوئز، فلیش کارڈز، وضاحت) — نقل کے لیے
+                                    نہیں۔ ہمیشہ اپنے ادارے کی پالیسی کی پابندی کریں۔
+                                </div>
+                            </div>
+                        </details>
+
+                        <details>
+                            <summary>
+                                <div class="faq-q">
+                                    <div class="q-en">Are AI-generated videos safe to use?</div>
+                                    <div class="q-ur">کیا AI سے بنائی گئی ویڈیوز استعمال کرنا محفوظ ہے؟</div>
+                                </div>
+                            </summary>
+                            <div class="faq-body">
+                                <div class="faq-col en">
+                                    <div class="label">Answer</div>
+                                    For personal/educational use, yes. For commercial use, check each tool's license.
+                                    Most free tiers add watermarks. Never create deepfakes or misleading content.
+                                </div>
+                                <div class="faq-col ur">
+                                    <div class="label">جواب</div>
+                                    ذاتی/تعلیمی استعمال کے لیے ہاں۔ تجارتی استعمال کے لیے ہر ٹول کا لائسنس چیک کریں۔ مفت
+                                    ورژن میں واٹر مارک آتا ہے۔ ڈیپ فیکس یا گمراہ کن مواد کبھی نہ بنائیں۔
+                                </div>
+                            </div>
+                        </details>
+
+                    </div>
+                    <div class="faq-tip">
+                        Tip: Click any question to expand.
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const slides = [
+            // ===== SLIDE 1: WELCOME =====
+            {
+                en: {
+                    title: "AI Tools for Everyone",
+                    body: `<p style="font-size:1.25rem; margin-bottom:20px;">Session 2: Your Complete AI Toolkit</p>
+<ul>
+<li>Discover the <b>best free AI tools</b> you can start using today.</li>
+<li>Learn about <b>special offers</b> for students & teachers.</li>
+<li>Find the <b>right tool</b> for YOUR specific needs.</li>
+</ul>
+<div style='margin-top:24px; border-top:1px solid #e5e7eb; padding-top:18px;'>
+<p style='font-weight:700; color:#4f46e5; margin-bottom:4px; font-size:1.3rem;'>Dr. Wasim Ahmad Khan</p>
+<p style='font-size:0.95rem; color:#6b7280; line-height:1.4; margin-bottom:8px;'>PhD Computer Science, Specialization in Artificial General Intelligence<br>AI Trainer - Associate Professor - AI Research Scientist</p>
+<div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:10px;">
+<a href="https://www.linkedin.com/in/wasimahmadkhan/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#0a66c2; color:white; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:600;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+LinkedIn Profile</a>
+<a href="https://whatsapp.com/channel/0029VaJpFkl0lwgxOjiiNt2N" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#25d366; color:white; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:600;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+WhatsApp Channel</a>
+<a href="https://drwasimahmadkhan.github.io/AI4everyone/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#4f46e5; color:white; padding:6px 14px; border-radius:8px; text-decoration:none; font-size:0.85rem; font-weight:600;">📚 Session 1 Slides</a>
+</div>
+</div>`,
+                },
+                ur: {
+                    title: "ہر ایک کے لیے AI ٹولز",
+                    body: `<p style="font-size:1.25rem; margin-bottom:20px;">سیشن 2: آپ کی مکمل AI ٹول کٹ</p>
+<ul>
+<li>آج ہم <b>بہترین مفت AI ٹولز</b> دریافت کریں گے جو آپ ابھی استعمال کر سکتے ہیں۔</li>
+<li>طلباء اور اساتذہ کے لیے <b>خصوصی آفرز</b> جانیں گے۔</li>
+<li>آپ کی ضرورت کے مطابق <b>صحیح ٹول</b> تلاش کریں گے۔</li>
+</ul>
+<div style='margin-top:24px; border-top:1px solid #e5e7eb; padding-top:18px;'>
+<p style='font-weight:700; color:#4f46e5; margin-bottom:4px; font-size:1.4rem;'>ڈاکٹر وسیم احمد خان</p>
+<p style='font-size:1rem; color:#6b7280; line-height:2.4; margin-bottom:8px;'>پی ایچ ڈی کمپیوٹر سائنس، مصنوعی عمومی ذہانت میں تخصص<br>اے آئی ٹرینر - ایسوسی ایٹ پروفیسر - اے آئی ریسرچ سائنٹسٹ</p>
+</div>`,
+                },
+                note: "Welcome back! Remind them: Session 1 = What is AI + Prompting. Session 2 = The actual tools. High energy start!"
+            },
+
+            // ===== SLIDE 2: QUICK RECAP =====
+            {
+                en: {
+                    title: "Quick Recap: Session 1",
+                    body: `<div class='box-highlight'>
+<p><b>What we covered last time:</b></p>
+<p>✅ AI = Fast assistant, not a wise human</p>
+<p>✅ LLMs predict patterns, they don't "know" facts</p>
+<p>✅ Prompting Formula: Role + Task + Context + Format</p>
+<p>✅ Always verify AI output (3C Method)</p>
+<p>✅ Never paste private data into AI tools</p>
+</div>
+<p><b>Today's Focus:</b> Which tools to use & how to get them FREE.</p>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "مختصر یاد دہانی: سیشن 1",
+                    body: `<div class='box-highlight'>
+<p><b>پچھلی بار ہم نے کیا سیکھا:</b></p>
+<p>✅ AI = تیز اسسٹنٹ، عقلمند انسان نہیں</p>
+<p>✅ LLM پیٹرن کی پیشین گوئی کرتے ہیں، حقائق "جانتے" نہیں</p>
+<p>✅ پرامپٹ فارمولا: کردار + کام + پس منظر + فارمیٹ</p>
+<p>✅ AI کے جواب کی ہمیشہ تصدیق کریں (3C طریقہ)</p>
+<p>✅ ذاتی معلومات کبھی AI میں نہ ڈالیں</p>
+</div>
+<p><b>آج کا موضوع:</b> کون سے ٹولز استعمال کریں اور مفت کیسے حاصل کریں۔</p>`,
+                    interact: ""
+                },
+                note: "Spend just 2 minutes. Don't re-teach. Just remind and move forward."
+            },
+
+            // ===== SLIDE 3: AGENDA =====
+            {
+                en: {
+                    title: "Today's Agenda",
+                    body: `<ol>
+<li>The AI Tools Universe (Categories)</li>
+<li>Free Chatbot & Writing Tools</li>
+<li>Free Image & Design Tools</li>
+<li>Free Video Generation Tools</li>
+<li>Free Productivity & Presentation Tools</li>
+<li>Free Coding & Research Tools</li>
+<li>🔴 Live Demo: Build with AI</li>
+<li>Student & Teacher Special Offers</li>
+<li>AI Tools for Education (Why Necessary?)</li>
+<li>How to Pick the Right Tool</li>
+</ol>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "آج کا ایجنڈا",
+                    body: `<ol>
+<li>AI ٹولز کی دنیا (اقسام)</li>
+<li>مفت چیٹ بوٹ اور لکھائی کے ٹولز</li>
+<li>مفت تصویر اور ڈیزائن ٹولز</li>
+<li>مفت ویڈیو بنانے والے ٹولز</li>
+<li>مفت پروڈکٹیوٹی اور پریزنٹیشن ٹولز</li>
+<li>مفت کوڈنگ اور ریسرچ ٹولز</li>
+<li>🔴 لائیو ڈیمو: AI سے بنائیں</li>
+<li>طلباء اور اساتذہ کے لیے خصوصی آفرز</li>
+<li>تعلیم کے لیے AI ٹولز (کیوں ضروری ہیں؟)</li>
+<li>صحیح ٹول کا انتخاب کیسے کریں</li>
+</ol>`,
+                    interact: ""
+                },
+                note: "Quickly outline 90 minutes. Mention live demo to build excitement."
+            },
+
+            // ===== SLIDE 4: POLL =====
+            {
+                en: {
+                    title: "Poll: Which AI Tools Have You Tried?",
+                    body: `<p>Type in chat — pick ALL that apply:</p>
+<ul>
+<li>1️⃣ ChatGPT</li>
+<li>2️⃣ Google Gemini</li>
+<li>3️⃣ Canva AI</li>
+<li>4️⃣ Microsoft Copilot</li>
+<li>5️⃣ None yet!</li>
+</ul>
+<div class='box-highlight'><p>No wrong answers! This helps me tailor the session for you.</p></div>`,
+                    interact: "Type numbers: 1, 2, 3, 4, or 5"
+                },
+                ur: {
+                    title: "پول: آپ نے کون سے AI ٹولز آزمائے ہیں؟",
+                    body: `<p>چیٹ میں نمبر لکھیں — جو بھی لاگو ہو:</p>
+<ul>
+<li>1️⃣ ChatGPT</li>
+<li>2️⃣ Google Gemini</li>
+<li>3️⃣ Canva AI</li>
+<li>4️⃣ Microsoft Copilot</li>
+<li>5️⃣ ابھی تک کوئی نہیں!</li>
+</ul>
+<div class='box-highlight'><p>کوئی غلط جواب نہیں! اس سے مجھے آپ کی ضرورت سمجھنے میں مدد ملتی ہے۔</p></div>`,
+                    interact: "نمبر لکھیں: 1، 2، 3، 4، یا 5"
+                },
+                note: "Pause 30 seconds. If most say 5, slow down. If most say 1-4, you can go a bit faster."
+            },
+
+            // ===== SLIDE 5: AI TOOLS UNIVERSE =====
+            {
+                en: {
+                    title: "The AI Tools Universe",
+                    body: `<p>AI tools are organized into <b>7 major categories</b>:</p>
+<div style="margin: 15px 0;">
+<span class="cat-tag">💬 Chatbots & Writing</span>
+<span class="cat-tag green">🎨 Image & Design</span>
+<span class="cat-tag pink">🎬 Video Generation</span>
+<span class="cat-tag blue">📊 Productivity</span>
+<span class="cat-tag orange">💻 Coding & Dev</span>
+<span class="cat-tag purple">🔬 Research & Study</span>
+<span class="cat-tag" style="background:#0d9488;">🎵 Audio & Sound</span>
+</div>
+<div class='box-highlight'>
+<p><b>Key Rule:</b> You don't need ALL tools. Pick <b>2-3 tools</b> that match your daily work and master those first.</p>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "AI ٹولز کی دنیا",
+                    body: `<p>AI ٹولز کو <b>7 بڑے زمروں</b> میں تقسیم کیا جا سکتا ہے:</p>
+<div style="margin: 15px 0;">
+<span class="cat-tag">💬 چیٹ بوٹ اور لکھائی</span>
+<span class="cat-tag green">🎨 تصویر اور ڈیزائن</span>
+<span class="cat-tag pink">🎬 ویڈیو بنانا</span>
+<span class="cat-tag blue">📊 پروڈکٹیوٹی</span>
+<span class="cat-tag orange">💻 کوڈنگ</span>
+<span class="cat-tag purple">🔬 ریسرچ اور مطالعہ</span>
+<span class="cat-tag" style="background:#0d9488;">🎵 آڈیو</span>
+</div>
+<div class='box-highlight'>
+<p><b>اہم اصول:</b> آپ کو تمام ٹولز کی ضرورت نہیں۔ اپنے کام سے ملتے جلتے <b>2-3 ٹولز</b> چنیں اور پہلے ان پر عبور حاصل کریں۔</p>
+</div>`,
+                    interact: ""
+                },
+                note: "This is the overview slide. Tell them: Think of it like a toolbox. A carpenter doesn't use every tool for every job."
+            },
+
+            // ===== SLIDE 6: FREE CHATBOT & WRITING TOOLS =====
+            {
+                en: {
+                    title: "Free AI Chatbots & Writing",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">🤖</div>
+    <div class="tool-info">
+        <div class="tool-name">ChatGPT <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Best all-rounder. Writing, coding, analysis, translation.</div>
+        <a class="tool-url" href="https://chat.openai.com" target="_blank">chat.openai.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🌟</div>
+    <div class="tool-info">
+        <div class="tool-name">Google Gemini <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Google's AI. Great for research & connected to Google services.</div>
+        <a class="tool-url" href="https://gemini.google.com" target="_blank">gemini.google.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🟣</div>
+    <div class="tool-info">
+        <div class="tool-name">Claude (Anthropic) <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Excellent for long documents, careful analysis & safe responses.</div>
+        <a class="tool-url" href="https://claude.ai" target="_blank">claude.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🔷</div>
+    <div class="tool-info">
+        <div class="tool-name">Microsoft Copilot <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Built into Windows, Edge & Office. Web search included.</div>
+        <a class="tool-url" href="https://copilot.microsoft.com" target="_blank">copilot.microsoft.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🧠</div>
+    <div class="tool-info">
+        <div class="tool-name">Perplexity AI <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">AI-powered search engine. Gives answers with sources.</div>
+        <a class="tool-url" href="https://perplexity.ai" target="_blank">perplexity.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🐉</div>
+    <div class="tool-info">
+        <div class="tool-name">DeepSeek <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Open-source Chinese AI. Strong in reasoning & math.</div>
+        <a class="tool-url" href="https://chat.deepseek.com" target="_blank">chat.deepseek.com</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "مفت AI چیٹ بوٹ اور لکھائی ٹولز",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">🤖</div>
+    <div class="tool-info">
+        <div class="tool-name">ChatGPT <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">سب سے بہترین آل راؤنڈر۔ لکھائی، کوڈنگ، تجزیہ، ترجمہ۔</div>
+        <a class="tool-url" href="https://chat.openai.com" target="_blank">chat.openai.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🌟</div>
+    <div class="tool-info">
+        <div class="tool-name">Google Gemini <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">گوگل کا AI۔ ریسرچ اور گوگل سروسز سے جڑا ہوا۔</div>
+        <a class="tool-url" href="https://gemini.google.com" target="_blank">gemini.google.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🟣</div>
+    <div class="tool-info">
+        <div class="tool-name">Claude (Anthropic) <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">لمبے ڈاکومنٹس، محتاط تجزیہ اور محفوظ جوابات کے لیے بہترین۔</div>
+        <a class="tool-url" href="https://claude.ai" target="_blank">claude.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🔷</div>
+    <div class="tool-info">
+        <div class="tool-name">Microsoft Copilot <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">ونڈوز، ایج اور آفس میں شامل۔ ویب سرچ بھی کرتا ہے۔</div>
+        <a class="tool-url" href="https://copilot.microsoft.com" target="_blank">copilot.microsoft.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🧠</div>
+    <div class="tool-info">
+        <div class="tool-name">Perplexity AI <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">AI سرچ انجن۔ حوالوں کے ساتھ جوابات دیتا ہے۔</div>
+        <a class="tool-url" href="https://perplexity.ai" target="_blank">perplexity.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🐉</div>
+    <div class="tool-info">
+        <div class="tool-name">DeepSeek <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">اوپن سورس AI۔ ریاضی اور استدلال میں مضبوط۔</div>
+        <a class="tool-url" href="https://chat.deepseek.com" target="_blank">chat.deepseek.com</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                note: "Emphasize: ChatGPT for beginners, Perplexity for research, Copilot if they use Microsoft tools. All FREE."
+            },
+
+            // ===== SLIDE 7: FREE IMAGE & DESIGN TOOLS =====
+            {
+                en: {
+                    title: "Free AI Image & Design Tools",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">🎨</div>
+    <div class="tool-info">
+        <div class="tool-name">Canva AI (Magic Studio) <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Design posters, presentations, social media. AI generates images, text & layouts.</div>
+        <a class="tool-url" href="https://www.canva.com" target="_blank">canva.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🖼️</div>
+    <div class="tool-info">
+        <div class="tool-name">Leonardo AI <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">150 free images/day. Professional quality AI art generation.</div>
+        <a class="tool-url" href="https://leonardo.ai" target="_blank">leonardo.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">💡</div>
+    <div class="tool-info">
+        <div class="tool-name">Ideogram <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Best for text inside images (logos, posters). Very accurate text rendering.</div>
+        <a class="tool-url" href="https://ideogram.ai" target="_blank">ideogram.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎭</div>
+    <div class="tool-info">
+        <div class="tool-name">Microsoft Designer <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">AI image generator by Microsoft. Great for social posts & graphics.</div>
+        <a class="tool-url" href="https://designer.microsoft.com" target="_blank">designer.microsoft.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✂️</div>
+    <div class="tool-info">
+        <div class="tool-name">Remove.bg <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Instantly remove image backgrounds. One click. Free for standard size.</div>
+        <a class="tool-url" href="https://www.remove.bg" target="_blank">remove.bg</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "مفت AI تصویر اور ڈیزائن ٹولز",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">🎨</div>
+    <div class="tool-info">
+        <div class="tool-name">Canva AI <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">پوسٹرز، پریزنٹیشنز، سوشل میڈیا ڈیزائن۔ AI تصاویر اور لے آؤٹ بناتا ہے۔</div>
+        <a class="tool-url" href="https://www.canva.com" target="_blank">canva.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🖼️</div>
+    <div class="tool-info">
+        <div class="tool-name">Leonardo AI <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">150 مفت تصاویر روزانہ۔ پروفیشنل کوالٹی AI آرٹ۔</div>
+        <a class="tool-url" href="https://leonardo.ai" target="_blank">leonardo.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">💡</div>
+    <div class="tool-info">
+        <div class="tool-name">Ideogram <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">تصویروں میں متن کے لیے بہترین (لوگو، پوسٹر)۔ بہت درست ٹیکسٹ رینڈرنگ۔</div>
+        <a class="tool-url" href="https://ideogram.ai" target="_blank">ideogram.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎭</div>
+    <div class="tool-info">
+        <div class="tool-name">Microsoft Designer <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">مائیکروسافٹ کا AI امیج جنریٹر۔ سوشل پوسٹس اور گرافکس کے لیے بہترین۔</div>
+        <a class="tool-url" href="https://designer.microsoft.com" target="_blank">designer.microsoft.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✂️</div>
+    <div class="tool-info">
+        <div class="tool-name">Remove.bg <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">تصویر کا پس منظر فوری طور پر ہٹائیں۔ ایک کلک۔ معیاری سائز مفت۔</div>
+        <a class="tool-url" href="https://www.remove.bg" target="_blank">remove.bg</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                note: "Show Canva first — most audience members will relate to it. Ideogram is great for Urdu text in images too."
+            },
+
+            // ===== SLIDE 8: FREE VIDEO GENERATION TOOLS =====
+            {
+                en: {
+                    title: "Free AI Video Generation Tools",
+                    body: `<p style="margin-bottom:10px;">These tools can create videos from text, images, or templates — <b>no filming needed!</b></p>
+<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">🎬</div>
+    <div class="tool-info">
+        <div class="tool-name">CapCut (ByteDance) <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">AI video editor + text-to-video. Auto captions, effects, templates.</div>
+        <a class="tool-url" href="https://www.capcut.com" target="_blank">capcut.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📹</div>
+    <div class="tool-info">
+        <div class="tool-name">InVideo AI <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Type a topic → get a full video with stock footage, voiceover & sound.</div>
+        <a class="tool-url" href="https://invideo.io" target="_blank">invideo.io</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🗣️</div>
+    <div class="tool-info">
+        <div class="tool-name">HeyGen <span class="tool-badge">FREE TRIAL</span></div>
+        <div class="tool-desc">AI talking avatars. Type text → realistic video person speaks it. Great for courses.</div>
+        <a class="tool-url" href="https://www.heygen.com" target="_blank">heygen.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✨</div>
+    <div class="tool-info">
+        <div class="tool-name">Luma Dream Machine <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Text/image to short video clips. Cinematic AI video generation.</div>
+        <a class="tool-url" href="https://lumalabs.ai/dream-machine" target="_blank">lumalabs.ai/dream-machine</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎞️</div>
+    <div class="tool-info">
+        <div class="tool-name">Canva Video + AI <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Create videos with templates, AI transitions, auto-resize for social media.</div>
+        <a class="tool-url" href="https://www.canva.com/video" target="_blank">canva.com/video</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎙️</div>
+    <div class="tool-info">
+        <div class="tool-name">Synthesia <span class="tool-badge">FREE DEMO</span></div>
+        <div class="tool-desc">Professional AI avatar videos. Used by companies for training videos.</div>
+        <a class="tool-url" href="https://www.synthesia.io" target="_blank">synthesia.io</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "مفت AI ویڈیو بنانے کے ٹولز",
+                    body: `<p style="margin-bottom:10px;">یہ ٹولز ٹیکسٹ، تصاویر یا ٹیمپلیٹس سے ویڈیو بنا سکتے ہیں — <b>فلم بندی کی ضرورت نہیں!</b></p>
+<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">🎬</div>
+    <div class="tool-info">
+        <div class="tool-name">CapCut <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">AI ویڈیو ایڈیٹر + ٹیکسٹ سے ویڈیو۔ آٹو کیپشنز، ایفیکٹس، ٹیمپلیٹس۔</div>
+        <a class="tool-url" href="https://www.capcut.com" target="_blank">capcut.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📹</div>
+    <div class="tool-info">
+        <div class="tool-name">InVideo AI <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">موضوع لکھیں → مکمل ویڈیو مل جائے گی (فوٹیج، آواز، میوزک سمیت)۔</div>
+        <a class="tool-url" href="https://invideo.io" target="_blank">invideo.io</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🗣️</div>
+    <div class="tool-info">
+        <div class="tool-name">HeyGen <span class="tool-badge">مفت ٹرائل</span></div>
+        <div class="tool-desc">AI بولنے والے اوتار۔ ٹیکسٹ لکھیں → حقیقی شخص بول کر دکھائے۔ کورسز کے لیے بہترین۔</div>
+        <a class="tool-url" href="https://www.heygen.com" target="_blank">heygen.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✨</div>
+    <div class="tool-info">
+        <div class="tool-name">Luma Dream Machine <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">ٹیکسٹ/تصویر سے مختصر ویڈیو کلپس۔ سینما جیسی AI ویڈیو۔</div>
+        <a class="tool-url" href="https://lumalabs.ai/dream-machine" target="_blank">lumalabs.ai/dream-machine</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎞️</div>
+    <div class="tool-info">
+        <div class="tool-name">Canva Video + AI <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">ٹیمپلیٹس سے ویڈیو بنائیں، AI ٹرانزیشنز، سوشل میڈیا کے لیے آٹو ری سائز۔</div>
+        <a class="tool-url" href="https://www.canva.com/video" target="_blank">canva.com/video</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎙️</div>
+    <div class="tool-info">
+        <div class="tool-name">Synthesia <span class="tool-badge">مفت ڈیمو</span></div>
+        <div class="tool-desc">پروفیشنل AI اوتار ویڈیوز۔ کمپنیاں ٹریننگ ویڈیوز کے لیے استعمال کرتی ہیں۔</div>
+        <a class="tool-url" href="https://www.synthesia.io" target="_blank">synthesia.io</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                note: "This is the most-requested topic! Show InVideo AI demo if possible — type a sentence and it generates video. CapCut is most practical for social media creators."
+            },
+
+            // ===== SLIDE 9: FREE PRODUCTIVITY & PRESENTATION =====
+            {
+                en: {
+                    title: "Free AI Productivity & Presentations",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">📊</div>
+    <div class="tool-info">
+        <div class="tool-name">Gamma <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Type a topic → Beautiful presentation in 30 seconds. No PowerPoint needed.</div>
+        <a class="tool-url" href="https://gamma.app" target="_blank">gamma.app</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📝</div>
+    <div class="tool-info">
+        <div class="tool-name">Notion AI <span class="tool-badge">FREE TIER</span></div>
+        <div class="tool-desc">Notes, tasks, wikis with AI writing assistant built-in.</div>
+        <a class="tool-url" href="https://www.notion.so" target="_blank">notion.so</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📓</div>
+    <div class="tool-info">
+        <div class="tool-name">Google NotebookLM <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Upload documents → AI understands them. Ask questions, get summaries. By Google.</div>
+        <a class="tool-url" href="https://notebooklm.google.com" target="_blank">notebooklm.google.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎤</div>
+    <div class="tool-info">
+        <div class="tool-name">Otter.ai <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Transcribe meetings, lectures, interviews automatically. 300 min/month free.</div>
+        <a class="tool-url" href="https://otter.ai" target="_blank">otter.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🌐</div>
+    <div class="tool-info">
+        <div class="tool-name">Google Slides + Gemini <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Generate slides, images, and speaker notes with Gemini AI inside Google Slides.</div>
+        <a class="tool-url" href="https://workspace.google.com/products/slides" target="_blank">slides.google.com</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "مفت AI پروڈکٹیوٹی اور پریزنٹیشن ٹولز",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">📊</div>
+    <div class="tool-info">
+        <div class="tool-name">Gamma <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">موضوع لکھیں → 30 سیکنڈ میں خوبصورت پریزنٹیشن۔ پاورپوائنٹ کی ضرورت نہیں۔</div>
+        <a class="tool-url" href="https://gamma.app" target="_blank">gamma.app</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📝</div>
+    <div class="tool-info">
+        <div class="tool-name">Notion AI <span class="tool-badge">مفت پلان</span></div>
+        <div class="tool-desc">نوٹس، ٹاسکس، ویکی — AI لکھائی کا اسسٹنٹ شامل ہے۔</div>
+        <a class="tool-url" href="https://www.notion.so" target="_blank">notion.so</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📓</div>
+    <div class="tool-info">
+        <div class="tool-name">Google NotebookLM <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">ڈاکومنٹس اپلوڈ کریں → AI سمجھ لے گا۔ سوالات پوچھیں، خلاصے لیں۔</div>
+        <a class="tool-url" href="https://notebooklm.google.com" target="_blank">notebooklm.google.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎤</div>
+    <div class="tool-info">
+        <div class="tool-name">Otter.ai <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">میٹنگز اور لیکچرز کی خودکار ٹرانسکرپشن۔ 300 منٹ/ماہ مفت۔</div>
+        <a class="tool-url" href="https://otter.ai" target="_blank">otter.ai</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🌐</div>
+    <div class="tool-info">
+        <div class="tool-name">Google Slides + Gemini <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">گوگل سلائیڈز میں Gemini AI سے سلائیڈز، تصاویر اور نوٹس بنائیں۔</div>
+        <a class="tool-url" href="https://workspace.google.com/products/slides" target="_blank">slides.google.com</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                note: "Gamma is the WOW moment — show them how fast it makes presentations. NotebookLM is perfect for students who need to study PDFs."
+            },
+
+            // ===== SLIDE 10: FREE CODING & RESEARCH TOOLS =====
+            {
+                en: {
+                    title: "Free AI Coding & Research Tools",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">💻</div>
+    <div class="tool-info">
+        <div class="tool-name">GitHub Copilot <span class="tool-badge edu">FREE for Students</span></div>
+        <div class="tool-desc">AI code completion inside VS Code. Writes code as you type.</div>
+        <a class="tool-url" href="https://github.com/features/copilot" target="_blank">github.com/features/copilot</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🔧</div>
+    <div class="tool-info">
+        <div class="tool-name">Replit AI <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Online code editor with AI assistant. No setup needed. Great for beginners.</div>
+        <a class="tool-url" href="https://replit.com" target="_blank">replit.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📚</div>
+    <div class="tool-info">
+        <div class="tool-name">Semantic Scholar <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">AI-powered academic paper search. Find research papers intelligently.</div>
+        <a class="tool-url" href="https://www.semanticscholar.org" target="_blank">semanticscholar.org</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📖</div>
+    <div class="tool-info">
+        <div class="tool-name">Consensus <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Ask a research question → AI finds and summarizes scientific papers.</div>
+        <a class="tool-url" href="https://consensus.app" target="_blank">consensus.app</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📄</div>
+    <div class="tool-info">
+        <div class="tool-name">SciSpace (Typeset) <span class="tool-badge">FREE</span></div>
+        <div class="tool-desc">Upload a research paper → AI explains it in simple language.</div>
+        <a class="tool-url" href="https://typeset.io" target="_blank">typeset.io</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "مفت AI کوڈنگ اور ریسرچ ٹولز",
+                    body: `<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">💻</div>
+    <div class="tool-info">
+        <div class="tool-name">GitHub Copilot <span class="tool-badge edu">طلباء کے لیے مفت</span></div>
+        <div class="tool-desc">VS Code میں AI کوڈ مکمل کرتا ہے۔ آپ ٹائپ کریں، یہ کوڈ لکھے۔</div>
+        <a class="tool-url" href="https://github.com/features/copilot" target="_blank">github.com/features/copilot</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🔧</div>
+    <div class="tool-info">
+        <div class="tool-name">Replit AI <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">آن لائن کوڈ ایڈیٹر جس میں AI اسسٹنٹ شامل ہے۔ کوئی سیٹ اپ نہیں۔</div>
+        <a class="tool-url" href="https://replit.com" target="_blank">replit.com</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📚</div>
+    <div class="tool-info">
+        <div class="tool-name">Semantic Scholar <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">AI سے چلنے والی تعلیمی تحقیقی مقالات کی تلاش۔</div>
+        <a class="tool-url" href="https://www.semanticscholar.org" target="_blank">semanticscholar.org</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📖</div>
+    <div class="tool-info">
+        <div class="tool-name">Consensus <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">تحقیقی سوال پوچھیں → AI سائنسی مقالات تلاش کر کے خلاصہ دے۔</div>
+        <a class="tool-url" href="https://consensus.app" target="_blank">consensus.app</a>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📄</div>
+    <div class="tool-info">
+        <div class="tool-name">SciSpace <span class="tool-badge">مفت</span></div>
+        <div class="tool-desc">ریسرچ پیپر اپلوڈ کریں → AI آسان زبان میں سمجھائے۔</div>
+        <a class="tool-url" href="https://typeset.io" target="_blank">typeset.io</a>
+    </div>
+</div>
+</div>`,
+                    interact: ""
+                },
+                note: "For developers: GitHub Copilot is life-changing. For researchers: Consensus and SciSpace are game changers. Mention GitHub Student Pack."
+            },
+
+            // ===== SLIDE 11: LIVE DEMO =====
+            {
+                en: {
+                    title: "Live Demo: Build a Presentation",
+                    body: `<p><b>Goal:</b> Create a 5-slide presentation about any topic in under 60 seconds using AI.</p>
+<div class='code-snippet' id='p1'>
+STEP 1: Go to gamma.app
+STEP 2: Click "Create New" → "Presentation"
+STEP 3: Type this prompt:
+
+"Create a 5-slide presentation about 
+the benefits of AI in education.
+Include: key statistics, practical examples,
+and a call to action.
+Audience: Teachers and students.
+Tone: Professional but friendly."
+
+STEP 4: Watch AI build your slides!
+<button class='copy-tag' onclick='copyT("p1")'>Copy</button></div>
+<p><b>Alternative:</b> Try the same prompt in ChatGPT and copy the output into Google Slides.</p>`,
+                    interact: "Try it yourself right now! Share your screen in chat."
+                },
+                ur: {
+                    title: "لائیو ڈیمو: پریزنٹیشن بنائیں",
+                    body: `<p><b>مقصد:</b> AI کی مدد سے 60 سیکنڈ میں 5 سلائیڈز کی پریزنٹیشن بنانا۔</p>
+<div class='code-snippet' id='p1u'>
+مرحلہ 1: gamma.app پر جائیں
+مرحلہ 2: "Create New" → "Presentation" پر کلک کریں
+مرحلہ 3: یہ پرامپٹ لکھیں:
+
+"تعلیم میں AI کے فوائد پر 5 سلائیڈز 
+کی پریزنٹیشن بنائیں۔
+شامل کریں: اہم اعداد و شمار، عملی مثالیں،
+اور ایک کال ٹو ایکشن۔
+سامعین: اساتذہ اور طلباء۔
+لہجہ: پیشہ ورانہ لیکن دوستانہ۔"
+
+مرحلہ 4: AI کو سلائیڈز بناتے دیکھیں!
+<button class='copy-tag' onclick='copyT("p1u")'>Copy</button></div>
+<p><b>متبادل:</b> یہی پرامپٹ ChatGPT میں آزمائیں اور آؤٹ پٹ گوگل سلائیڈز میں لگائیں۔</p>`,
+                    interact: "ابھی خود آزمائیں! چیٹ میں اپنا تجربہ شیئر کریں۔"
+                },
+                note: "SWITCH TABS NOW. Open Gamma.app in browser. Show the live generation. This is the WOW moment of the session!"
+            },
+
+            // ===== SLIDE 12: STUDENT & TEACHER OFFERS =====
+            {
+                en: {
+                    title: "Student & Teacher Special Offers",
+                    body: `<p style="margin-bottom:10px;">Use your <b>.edu email</b> to unlock these FREE or discounted plans:</p>
+<div class="offer-card">
+    <h4>🎓 GitHub Student Developer Pack</h4>
+    <p>FREE GitHub Copilot, free domain, DigitalOcean credits, and 100+ tools.</p>
+    <a class="tool-url" href="https://education.github.com/pack" target="_blank">education.github.com/pack</a>
+</div>
+<div class="offer-card">
+    <h4>🎨 Canva for Education</h4>
+    <p>100% FREE Canva Pro for teachers & students. All premium templates, AI tools, brand kits.</p>
+    <a class="tool-url" href="https://www.canva.com/education" target="_blank">canva.com/education</a>
+</div>
+<div class="offer-card">
+    <h4>📝 Notion for Education</h4>
+    <p>FREE Notion Plus plan for students & educators with .edu email.</p>
+    <a class="tool-url" href="https://www.notion.so/product/notion-for-education" target="_blank">notion.so/education</a>
+</div>
+<div class="offer-card">
+    <h4>☁️ Microsoft 365 Education</h4>
+    <p>FREE Word, Excel, PowerPoint, Teams + Copilot features for verified students & teachers.</p>
+    <a class="tool-url" href="https://www.microsoft.com/en-us/education/products/office" target="_blank">microsoft.com/education</a>
+</div>
+<div class="offer-card">
+    <h4>🌐 Google Workspace for Education</h4>
+    <p>FREE Google Docs, Sheets, Slides, Classroom, Gemini AI features for schools.</p>
+    <a class="tool-url" href="https://edu.google.com" target="_blank">edu.google.com</a>
+</div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "طلباء اور اساتذہ کے لیے خصوصی آفرز",
+                    body: `<p style="margin-bottom:10px;">اپنے <b>.edu ای میل</b> سے یہ مفت یا رعایتی پلانز حاصل کریں:</p>
+<div class="offer-card">
+    <h4>🎓 GitHub Student Developer Pack</h4>
+    <p>مفت GitHub Copilot، مفت ڈومین، DigitalOcean کریڈٹس، اور 100+ ٹولز۔</p>
+    <a class="tool-url" href="https://education.github.com/pack" target="_blank">education.github.com/pack</a>
+</div>
+<div class="offer-card">
+    <h4>🎨 Canva for Education</h4>
+    <p>اساتذہ اور طلباء کے لیے 100% مفت Canva Pro۔ تمام پریمیم ٹیمپلیٹس اور AI ٹولز۔</p>
+    <a class="tool-url" href="https://www.canva.com/education" target="_blank">canva.com/education</a>
+</div>
+<div class="offer-card">
+    <h4>📝 Notion for Education</h4>
+    <p>.edu ای میل والے طلباء اور اساتذہ کے لیے مفت Notion Plus پلان۔</p>
+    <a class="tool-url" href="https://www.notion.so/product/notion-for-education" target="_blank">notion.so/education</a>
+</div>
+<div class="offer-card">
+    <h4>☁️ Microsoft 365 Education</h4>
+    <p>تصدیق شدہ طلباء اور اساتذہ کے لیے مفت Word، Excel، PowerPoint، Teams + Copilot۔</p>
+    <a class="tool-url" href="https://www.microsoft.com/en-us/education/products/office" target="_blank">microsoft.com/education</a>
+</div>
+<div class="offer-card">
+    <h4>🌐 Google Workspace for Education</h4>
+    <p>اسکولوں کے لیے مفت Google Docs، Sheets، Slides، Classroom، Gemini AI۔</p>
+    <a class="tool-url" href="https://edu.google.com" target="_blank">edu.google.com</a>
+</div>`,
+                    interact: ""
+                },
+                note: "This is what they've been waiting for! Stress that Canva Education is completely free with .edu. GitHub Pack is the goldmine for CS students."
+            },
+
+            // ===== SLIDE 13: AI TOOLS FOR TEACHERS =====
+            {
+                en: {
+                    title: "AI Tools for Teachers",
+                    body: `<p><b>Why are these necessary?</b> Teachers spend 50% of time on admin, not teaching. AI cuts that in half.</p>
+<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">📋</div>
+    <div class="tool-info">
+        <div class="tool-name">Lesson Planning</div>
+        <div class="tool-desc"><b>ChatGPT / Gemini</b> — Generate weekly plans, objectives, activities in seconds.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📝</div>
+    <div class="tool-info">
+        <div class="tool-name">Quiz & Assessment</div>
+        <div class="tool-desc"><b>Quillionz / ChatGPT</b> — Auto-generate MCQs, true/false, short questions from any text.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📊</div>
+    <div class="tool-info">
+        <div class="tool-name">Presentations</div>
+        <div class="tool-desc"><b>Gamma / Canva</b> — Create visual slides for any lecture topic automatically.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✅</div>
+    <div class="tool-info">
+        <div class="tool-name">Grading & Feedback</div>
+        <div class="tool-desc"><b>ChatGPT / Claude</b> — Draft constructive feedback, rubrics, report card comments.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🌍</div>
+    <div class="tool-info">
+        <div class="tool-name">Translation & Accessibility</div>
+        <div class="tool-desc"><b>Google Translate AI / ChatGPT</b> — Translate materials to Urdu/English instantly.</div>
+    </div>
+</div>
+</div>
+<div class='box-highlight'><p><b>Key point:</b> AI doesn't replace the teacher — it frees the teacher to actually TEACH.</p></div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "اساتذہ کے لیے AI ٹولز",
+                    body: `<p><b>یہ کیوں ضروری ہیں؟</b> اساتذہ کا 50% وقت انتظامی کاموں میں جاتا ہے۔ AI اسے آدھا کر سکتا ہے۔</p>
+<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">📋</div>
+    <div class="tool-info">
+        <div class="tool-name">سبق کی منصوبہ بندی</div>
+        <div class="tool-desc"><b>ChatGPT / Gemini</b> — ہفتہ وار منصوبے، مقاصد، سرگرمیاں سیکنڈوں میں بنائیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📝</div>
+    <div class="tool-info">
+        <div class="tool-name">کوئز اور جائزہ</div>
+        <div class="tool-desc"><b>Quillionz / ChatGPT</b> — کسی بھی متن سے MCQs، صحیح/غلط، مختصر سوالات خود بنائیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">📊</div>
+    <div class="tool-info">
+        <div class="tool-name">پریزنٹیشنز</div>
+        <div class="tool-desc"><b>Gamma / Canva</b> — کسی بھی لیکچر کے لیے خودکار طور پر خوبصورت سلائیڈز بنائیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✅</div>
+    <div class="tool-info">
+        <div class="tool-name">گریڈنگ اور فیڈ بیک</div>
+        <div class="tool-desc"><b>ChatGPT / Claude</b> — تعمیری فیڈ بیک، روبرکس، رپورٹ کارڈ تبصرے لکھیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🌍</div>
+    <div class="tool-info">
+        <div class="tool-name">ترجمہ اور رسائی</div>
+        <div class="tool-desc"><b>Google Translate AI / ChatGPT</b> — مواد کو فوری طور پر اردو/انگریزی میں ترجمہ کریں۔</div>
+    </div>
+</div>
+</div>
+<div class='box-highlight'><p><b>اہم نکتہ:</b> AI استاد کی جگہ نہیں لیتا — AI استاد کو فارغ کرتا ہے تاکہ وہ اصل میں پڑھا سکے۔</p></div>`,
+                    interact: ""
+                },
+                note: "Teachers are your biggest audience segment. Show them HOW much time they save. Give the example: lesson plan in 30 seconds vs 2 hours."
+            },
+
+            // ===== SLIDE 14: AI TOOLS FOR STUDENTS =====
+            {
+                en: {
+                    title: "AI Tools for Students",
+                    body: `<p><b>Why are these necessary?</b> Students who learn AI tools today will be 10x more employable tomorrow.</p>
+<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">📖</div>
+    <div class="tool-info">
+        <div class="tool-name">Study & Revision</div>
+        <div class="tool-desc"><b>ChatGPT / NotebookLM</b> — Explain topics, create flashcards, practice questions.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✍️</div>
+    <div class="tool-info">
+        <div class="tool-name">Writing & Editing</div>
+        <div class="tool-desc"><b>Grammarly / ChatGPT</b> — Fix grammar, improve essays, learn better writing.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🔬</div>
+    <div class="tool-info">
+        <div class="tool-name">Research</div>
+        <div class="tool-desc"><b>Perplexity / Consensus / SciSpace</b> — Find papers, understand them, cite properly.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎨</div>
+    <div class="tool-info">
+        <div class="tool-name">Projects & Presentations</div>
+        <div class="tool-desc"><b>Gamma / Canva / InVideo</b> — Make professional projects without design skills.</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">💼</div>
+    <div class="tool-info">
+        <div class="tool-name">Career Preparation</div>
+        <div class="tool-desc"><b>ChatGPT / Claude</b> — Practice interviews, build CVs, write cover letters.</div>
+    </div>
+</div>
+</div>
+<div class='box-highlight'><p><b>Remember:</b> Use AI to LEARN, not to cheat. AI is your study partner, not your replacement.</p></div>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "طلباء کے لیے AI ٹولز",
+                    body: `<p><b>یہ کیوں ضروری ہیں؟</b> آج AI ٹولز سیکھنے والے طلباء کل 10 گنا زیادہ قابل ملازمت ہوں گے۔</p>
+<div class="tool-grid">
+<div class="tool-card">
+    <div class="tool-icon">📖</div>
+    <div class="tool-info">
+        <div class="tool-name">پڑھائی اور دہرائی</div>
+        <div class="tool-desc"><b>ChatGPT / NotebookLM</b> — موضوعات سمجھیں، فلیش کارڈز بنائیں، پریکٹس سوالات۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">✍️</div>
+    <div class="tool-info">
+        <div class="tool-name">لکھائی اور ایڈیٹنگ</div>
+        <div class="tool-desc"><b>Grammarly / ChatGPT</b> — گرامر درست کریں، مضامین بہتر بنائیں، بہتر لکھنا سیکھیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🔬</div>
+    <div class="tool-info">
+        <div class="tool-name">ریسرچ</div>
+        <div class="tool-desc"><b>Perplexity / Consensus / SciSpace</b> — مقالات تلاش کریں، سمجھیں، صحیح حوالہ دیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">🎨</div>
+    <div class="tool-info">
+        <div class="tool-name">پراجیکٹس اور پریزنٹیشنز</div>
+        <div class="tool-desc"><b>Gamma / Canva / InVideo</b> — ڈیزائن کی مہارت کے بغیر پروفیشنل پراجیکٹس بنائیں۔</div>
+    </div>
+</div>
+<div class="tool-card">
+    <div class="tool-icon">💼</div>
+    <div class="tool-info">
+        <div class="tool-name">کیریئر کی تیاری</div>
+        <div class="tool-desc"><b>ChatGPT / Claude</b> — انٹرویو پریکٹس، CV بنائیں، کور لیٹر لکھیں۔</div>
+    </div>
+</div>
+</div>
+<div class='box-highlight'><p><b>یاد رکھیں:</b> AI سیکھنے کے لیے استعمال کریں، نقل کے لیے نہیں۔ AI آپ کا مطالعاتی ساتھی ہے، آپ کا متبادل نہیں۔</p></div>`,
+                    interact: ""
+                },
+                note: "Students love hearing about career prep. Emphasize: employers now EXPECT AI skills. The CV/Interview practice use case is very relatable."
+            },
+
+            // ===== SLIDE 15: AI USE CASES FOR STUDENTS (WITH PROMPTS) =====
+            {
+                en: {
+                    title: "AI Use Cases: Try These Prompts!",
+                    body: `<p style="margin-bottom:10px;">Copy these prompts and try them in <b>ChatGPT, Gemini, or Claude</b>:</p>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🌍 Language Translation & Learning</b></p>
+<div class='code-snippet' id='uc1' style="margin:8px 0; padding:12px; font-size:0.85rem;">Translate this paragraph into simple Urdu and explain any difficult words:
+"Artificial Intelligence is transforming education by personalizing learning experiences for each student."
+<button class='copy-tag' onclick='copyT("uc1")'>Copy</button></div>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>📖 Memorization & Revision</b></p>
+<div class='code-snippet' id='uc2' style="margin:8px 0; padding:12px; font-size:0.85rem;">I need to memorize the parts of a plant cell for my Biology exam. Create flashcard-style Q&A pairs (10 questions). Make it fun with mnemonics and memory tricks.
+<button class='copy-tag' onclick='copyT("uc2")'>Copy</button></div>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🎨 Visualization & Diagrams</b></p>
+<div class='code-snippet' id='uc3' style="margin:8px 0; padding:12px; font-size:0.85rem;">Explain the water cycle step by step. Describe a visual diagram I can draw on paper, labeling each stage (evaporation, condensation, precipitation, collection).
+<button class='copy-tag' onclick='copyT("uc3")'>Copy</button></div>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>📝 Essay & Assignment Help</b></p>
+<div class='code-snippet' id='uc4' style="margin:8px 0; padding:12px; font-size:0.85rem;">I need to write a 500-word essay on "Climate Change Effects on Pakistan." Give me an outline with 5 main points, a strong introduction hook, and a conclusion. Don't write the essay — help me structure my own thoughts.
+<button class='copy-tag' onclick='copyT("uc4")'>Copy</button></div>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🧮 Math Problem Solving</b></p>
+<div class='code-snippet' id='uc5' style="margin:8px 0; padding:12px; font-size:0.85rem;">Solve this step by step and explain each step like I'm a 10th grader: If a train travels 120 km in 2 hours, and then 180 km in 3 hours, what is the average speed for the entire journey?
+<button class='copy-tag' onclick='copyT("uc5")'>Copy</button></div>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🎤 Presentation & Project Ideas</b></p>
+<div class='code-snippet' id='uc6' style="margin:8px 0; padding:12px; font-size:0.85rem;">I'm a university student in Pakistan. Suggest 5 unique project ideas combining AI with agriculture. For each, give me: the problem it solves, tools I can use (free), and a one-line pitch.
+<button class='copy-tag' onclick='copyT("uc6")'>Copy</button></div>
+</div>`,
+                    interact: "Try one of these prompts right now in ChatGPT!"
+                },
+                ur: {
+                    title: "AI کے استعمال: یہ پرامپٹس آزمائیں!",
+                    body: `<p style="margin-bottom:10px;">یہ پرامپٹس کاپی کر کے <b>ChatGPT، Gemini، یا Claude</b> میں آزمائیں:</p>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🌍 زبان کا ترجمہ اور سیکھنا</b></p>
+<p style="font-size:0.92rem;">پرامپٹ: "اس پیراگراف کو آسان اردو میں ترجمہ کریں اور مشکل الفاظ سمجھائیں" — کوئی بھی انگریزی متن دیں اور فوری ترجمہ حاصل کریں۔</p>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>📖 سبق یاد کرنا</b></p>
+<p style="font-size:0.92rem;">پرامپٹ: "مجھے Biology کے plant cell کے حصے یاد کرنے ہیں۔ 10 فلیش کارڈ سوالات بنائیں — یاد رکھنے کی ٹرکس کے ساتھ۔"</p>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🎨 تصوراتی خاکے</b></p>
+<p style="font-size:0.92rem;">پرامپٹ: "پانی کے چکر (Water Cycle) کو مرحلہ وار سمجھائیں۔ ایک خاکہ بیان کریں جو میں کاغذ پر بنا سکوں۔"</p>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>📝 مضمون اور اسائنمنٹ</b></p>
+<p style="font-size:0.92rem;">پرامپٹ: "500 الفاظ کا مضمون — خاکہ دیں، مضمون نہ لکھیں — صرف میرے خیالات ترتیب دیں۔"</p>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🧮 ریاضی کے مسائل</b></p>
+<p style="font-size:0.92rem;">پرامپٹ: "یہ سوال مرحلہ وار حل کریں — ہر مرحلہ ایسے سمجھائیں جیسے میں دسویں جماعت کا طالب علم ہوں۔"</p>
+</div>
+
+<div class='box-highlight' style="margin:10px 0;">
+<p style="margin-bottom:2px;"><b>🎤 پریزنٹیشن اور پراجیکٹ آئیڈیاز</b></p>
+<p style="font-size:0.92rem;">پرامپٹ: "پاکستان میں AI + زراعت کے 5 منفرد پراجیکٹ آئیڈیاز تجویز کریں — ہر ایک کے لیے مسئلہ، مفت ٹولز، اور ایک لائن پچ۔"</p>
+</div>`,
+                    interact: "ابھی ChatGPT میں ان میں سے کوئی ایک پرامپٹ آزمائیں!"
+                },
+                note: "This is the HANDS-ON moment. Encourage everyone to copy one prompt and try it RIGHT NOW. Walk around and help. This creates the 'aha!' moment."
+            },
+
+            // ===== SLIDE 15: HOW TO CHOOSE =====
+            {
+                en: {
+                    title: "How to Pick the Right AI Tool",
+                    body: `<p>Don't get overwhelmed! Ask yourself these <b>3 questions</b>:</p>
+<div class='box-highlight'>
+<p><b>1. What is my task?</b></p>
+<p>Writing → ChatGPT/Claude | Design → Canva | Research → Perplexity | Video → InVideo/CapCut</p>
+</div>
+<div class='box-highlight'>
+<p><b>2. What is my budget?</b></p>
+<p>$0 → Use free tiers first | Student → Get .edu offers | Professional → Consider paid plans later</p>
+</div>
+<div class='box-highlight'>
+<p><b>3. What is my skill level?</b></p>
+<p>Beginner → ChatGPT + Canva | Intermediate → Add Gamma + Perplexity | Advanced → Add Copilot + NotebookLM</p>
+</div>
+<p style="margin-top:15px;"><b>Golden Rule:</b> Master 2-3 tools deeply. Don't chase every new tool.</p>`,
+                    interact: ""
+                },
+                ur: {
+                    title: "صحیح AI ٹول کا انتخاب کیسے کریں",
+                    body: `<p>پریشان نہ ہوں! اپنے آپ سے یہ <b>3 سوالات</b> پوچھیں:</p>
+<div class='box-highlight'>
+<p><b>1. میرا کام کیا ہے؟</b></p>
+<p>لکھائی → ChatGPT/Claude | ڈیزائن → Canva | ریسرچ → Perplexity | ویڈیو → InVideo/CapCut</p>
+</div>
+<div class='box-highlight'>
+<p><b>2. میرا بجٹ کیا ہے؟</b></p>
+<p>صفر → پہلے مفت ورژن استعمال کریں | طالب علم → .edu آفرز لیں | پروفیشنل → بعد میں پیڈ پلان</p>
+</div>
+<div class='box-highlight'>
+<p><b>3. میری مہارت کی سطح کیا ہے؟</b></p>
+<p>مبتدی → ChatGPT + Canva | درمیانی → Gamma + Perplexity شامل کریں | ماہر → Copilot + NotebookLM</p>
+</div>
+<p style="margin-top:15px;"><b>سنہری اصول:</b> 2-3 ٹولز پر عبور حاصل کریں۔ ہر نئے ٹول کے پیچھے نہ بھاگیں۔</p>`,
+                    interact: ""
+                },
+                note: "This slide brings it all together. Repeat the golden rule: MASTER 2-3, don't try 20."
+            },
+
+            // ===== SLIDE 16: QUICK REFERENCE CHEAT SHEET =====
+            {
+                en: {
+                    title: "Your AI Tools Cheat Sheet",
+                    body: `<p><b>Bookmark this slide!</b> Quick reference for all tools by category:</p>
+<table style="width:100%; border-collapse:collapse; font-size:0.92rem; margin-top:10px;">
+<tr style="background:#4f46e5; color:white;">
+    <th style="padding:8px; text-align:left; border-radius:8px 0 0 0;">Category</th>
+    <th style="padding:8px; text-align:left;">Top Free Tools</th>
+    <th style="padding:8px; text-align:left; border-radius:0 8px 0 0;">Best For</th>
+</tr>
+<tr style="background:#f8fafc;"><td style="padding:8px; border-bottom:1px solid #e5e7eb;">💬 Chat & Write</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">ChatGPT, Gemini, Claude, Copilot</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Everyone</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e5e7eb;">🎨 Image & Design</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Canva AI, Leonardo, Ideogram</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Teachers, Students</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px; border-bottom:1px solid #e5e7eb;">🎬 Video</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">CapCut, InVideo AI, HeyGen</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Content Creators</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e5e7eb;">📊 Productivity</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Gamma, NotebookLM, Otter.ai</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Professionals</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px; border-bottom:1px solid #e5e7eb;">💻 Coding</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">GitHub Copilot, Replit AI</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Developers</td></tr>
+<tr><td style="padding:8px; border-radius:0 0 0 8px;">🔬 Research</td><td style="padding:8px;">Perplexity, Consensus, SciSpace</td><td style="padding:8px; border-radius:0 0 8px 0;">Researchers</td></tr>
+</table>`,
+                    interact: "Screenshot this slide and save it!"
+                },
+                ur: {
+                    title: "آپ کی AI ٹولز چیٹ شیٹ",
+                    body: `<p><b>اس سلائیڈ کو محفوظ کر لیں!</b> تمام ٹولز کا فوری حوالہ:</p>
+<table style="width:100%; border-collapse:collapse; font-size:0.92rem; margin-top:10px;">
+<tr style="background:#4f46e5; color:white;">
+    <th style="padding:8px; text-align:right; border-radius:0 8px 0 0;">زمرہ</th>
+    <th style="padding:8px; text-align:right;">بہترین مفت ٹولز</th>
+    <th style="padding:8px; text-align:right; border-radius:8px 0 0 0;">کس کے لیے</th>
+</tr>
+<tr style="background:#f8fafc;"><td style="padding:8px; border-bottom:1px solid #e5e7eb;">💬 چیٹ اور لکھائی</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">ChatGPT, Gemini, Claude, Copilot</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">سب کے لیے</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e5e7eb;">🎨 تصویر اور ڈیزائن</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Canva AI, Leonardo, Ideogram</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">اساتذہ، طلباء</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px; border-bottom:1px solid #e5e7eb;">🎬 ویڈیو</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">CapCut, InVideo AI, HeyGen</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">مواد تخلیق کار</td></tr>
+<tr><td style="padding:8px; border-bottom:1px solid #e5e7eb;">📊 پروڈکٹیوٹی</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">Gamma, NotebookLM, Otter.ai</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">پیشہ ور افراد</td></tr>
+<tr style="background:#f8fafc;"><td style="padding:8px; border-bottom:1px solid #e5e7eb;">💻 کوڈنگ</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">GitHub Copilot, Replit AI</td><td style="padding:8px; border-bottom:1px solid #e5e7eb;">ڈویلپرز</td></tr>
+<tr><td style="padding:8px; border-radius:0 0 8px 0;">🔬 ریسرچ</td><td style="padding:8px;">Perplexity, Consensus, SciSpace</td><td style="padding:8px; border-radius:0 0 0 8px;">محققین</td></tr>
+</table>`,
+                    interact: "اس سلائیڈ کا اسکرین شاٹ لیں اور محفوظ کریں!"
+                },
+                note: "Tell them to screenshot this. It's their reference card. This is the most 'shareable' slide."
+            },
+
+            // ===== SLIDE 18: ROADMAP & CLOSING =====
+            {
+                en: {
+                    title: "Your Action Plan & Closing",
+                    body: `<ul>
+<li><b>This Week:</b> Sign up for ChatGPT + Canva (free). Try one task.</li>
+<li><b>Week 2:</b> Get your .edu offers (GitHub Pack, Canva Education).</li>
+<li><b>Week 3:</b> Try Gamma for presentations OR InVideo for video.</li>
+<li><b>Week 4:</b> Share your AI creation with the community!</li>
+</ul>
+<div class='box-highlight'>
+<p><b>Remember the Golden Rule:</b> Master 2-3 tools deeply. Don't chase every new tool. Start small, be consistent!</p>
+</div>
+<div style="margin-top:16px; padding:18px; background:#f0fdf4; border-radius:10px; border:2px solid #86efac; text-align:center;">
+<p style="font-size:1.3rem; font-weight:700; color:#166534; margin-bottom:5px;">🎉 Thank You!</p>
+<p style="font-size:0.95rem; color:#166534; margin-bottom:10px;">Stay connected for updates & resources:</p>
+<div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+<a href="https://whatsapp.com/channel/0029VaJpFkl0lwgxOjiiNt2N" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#25d366; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;">📱 Join WhatsApp Channel</a>
+<a href="https://www.linkedin.com/in/wasimahmadkhan/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#0a66c2; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;">💼 Connect on LinkedIn</a>
+<a href="300-Ai-Tools-Guide.pdf" target="_blank" download style="display:inline-flex; align-items:center; gap:6px; background:#db2777; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;">📕 300+ Tools</a>
+<a href="AI-Master.pdf" target="_blank" download style="display:inline-flex; align-items:center; gap:6px; background:#4f46e5; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600;">📘 AI Master</a>
+</div>
+</div>`,
+                    interact: "Join the WhatsApp Channel for resources!"
+                },
+                ur: {
+                    title: "آپ کا ایکشن پلان اور اختتام",
+                    body: `<ul>
+<li><b>اس ہفتے:</b> ChatGPT + Canva (مفت) میں سائن اپ کریں۔ ایک کام آزمائیں۔</li>
+<li><b>ہفتہ 2:</b> اپنی .edu آفرز حاصل کریں (GitHub Pack، Canva Education)۔</li>
+<li><b>ہفتہ 3:</b> پریزنٹیشنز کے لیے Gamma یا ویڈیو کے لیے InVideo آزمائیں۔</li>
+<li><b>ہفتہ 4:</b> اپنی AI تخلیق کمیونٹی کے ساتھ شیئر کریں!</li>
+</ul>
+<div class='box-highlight'>
+<p><b>سنہری اصول یاد رکھیں:</b> 2-3 ٹولز پر عبور حاصل کریں۔ ہر نئے ٹول کے پیچھے نہ بھاگیں۔ چھوٹی شروعات کریں، مسلسل رہیں!</p>
+</div>
+<div style="margin-top:16px; padding:18px; background:#f0fdf4; border-radius:10px; border:2px solid #86efac; text-align:center;">
+<p style="font-size:1.3rem; font-weight:700; color:#166534; margin-bottom:5px;">🎉 شکریہ!</p>
+<p style="font-size:0.95rem; color:#166534; margin-bottom:10px;">اپ ڈیٹس اور ریسورسز کے لیے جڑے رہیں:</p>
+<div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; direction:ltr;">
+<a href="https://whatsapp.com/channel/0029VaJpFkl0lwgxOjiiNt2N" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#25d366; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600; font-family:'Outfit',sans-serif; line-height:1.4;">📱 WhatsApp Channel</a>
+<a href="https://www.linkedin.com/in/wasimahmadkhan/" target="_blank" style="display:inline-flex; align-items:center; gap:6px; background:#0a66c2; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600; font-family:'Outfit',sans-serif; line-height:1.4;">💼 LinkedIn</a>
+<a href="300-Ai-Tools-Guide.pdf" target="_blank" download style="display:inline-flex; align-items:center; gap:6px; background:#db2777; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600; font-family:'Noto Nastaliq Urdu', serif; line-height:1.8;">📕 300+ ٹولز گائیڈ</a>
+<a href="AI-Master.pdf" target="_blank" download style="display:inline-flex; align-items:center; gap:6px; background:#4f46e5; color:white; padding:8px 16px; border-radius:8px; text-decoration:none; font-size:0.9rem; font-weight:600; font-family:'Noto Nastaliq Urdu', serif; line-height:1.8;">📘 AI ماسٹر بک</a>
+</div>
+</div>`,
+                    interact: "WhatsApp Channel جوائن کریں!"
+                },
+                note: "End on HIGH ENERGY! Thank everyone. Remind them about the 4-week roadmap. Get them to join the WhatsApp channel."
+            }
+        ];
+
+        let index = 0;
+        const viewer = document.getElementById('slide-viewer');
+        const badge = document.getElementById('slide-num');
+        const notes = document.getElementById('notes-content');
+        const notesDrawer = document.getElementById('notes-drawer');
+        const modal = document.getElementById('modal-overlay');
+
+        function render() {
+            const s = slides[index];
+
+            const intEn = s.en.interact ? `<div class='box-interaction'><b>INTERACTION:</b> ${s.en.interact}</div>` : '';
+            const intUr = s.ur.interact ? `<div class='box-interaction'><b>انٹریکشن:</b> ${s.ur.interact}</div>` : '';
+
+            viewer.innerHTML = `
+                <div class="col-left scroller">
+                    <h1>${s.en.title}</h1>
+                    <div>${s.en.body}</div>
+                    ${intEn}
+                </div>
+                <div class="col-right scroller">
+                    <h1>${s.ur.title}</h1>
+                    <div>${s.ur.body}</div>
+                    ${intUr}
+                </div>
+            `;
+
+            badge.innerText = `${index + 1} / ${slides.length}`;
+            notes.innerText = s.note;
+        }
+
+        function nextSlide() {
+            if (index < slides.length - 1) { index++; render(); }
+        }
+
+        function prevSlide() {
+            if (index > 0) { index--; render(); }
+        }
+
+        function toggleNotes() {
+            notesDrawer.classList.toggle('open');
+        }
+
+        function toggleModal() {
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function copyT(id) {
+            const txt = document.getElementById(id).innerText.replace("Copy", "");
+            navigator.clipboard.writeText(txt).then(() => alert('Copied!'));
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight") nextSlide();
+            if (e.key === "ArrowLeft") prevSlide();
+        });
+
+        render();
+    </script>
+</body>
+
+</html>
