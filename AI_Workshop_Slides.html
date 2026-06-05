@@ -41,20 +41,23 @@ body{
 .slide{
   position:absolute;inset:0;
   display:flex;flex-direction:column;
-  padding:clamp(28px,4.5vw,70px);
+  padding:clamp(60px, 6vw, 80px) clamp(28px,4.5vw,70px); /* Increased top padding to avoid overlap with fixed top brandmark */
+  padding-bottom:clamp(90px, 10vw, 120px); /* Added clearance for mobile fixed bottom nav */
   opacity:0;visibility:hidden;
   transform:translateY(22px) scale(.992);
   transition:opacity .55s ease, transform .55s cubic-bezier(.22,.61,.36,1), visibility .55s;
   pointer-events:none;
+  overflow-y:auto; /* Fixed: allows vertical scrolling when content overflows */
+  overflow-x:hidden;
 }
 .slide.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;}
 .slide.prev{transform:translateY(-22px) scale(.992);}
 
 /* inner column keeps content readable on huge screens */
 .wrap{
-  width:100%;max-width:1240px;margin:0 auto;
-  flex:1;display:flex;flex-direction:column;justify-content:center;
-  min-height:0;
+  width:100%;max-width:1240px;
+  margin:auto; /* Fixed: safe vertical centering that prevents top-cutoff on overflow */
+  display:flex;flex-direction:column;justify-content:center;
 }
 
 /* ---------- Reveal animation for on-slide items ---------- */
@@ -138,7 +141,7 @@ ul.clean li::before{
 .label-good{color:var(--teal);font-weight:700;}
 
 table{width:100%;border-collapse:collapse;background:var(--surface);
-  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);font-size:clamp(.85rem,1.2vw,1rem);}
+  border-radius:var(--radius);display:block;overflow-x:auto;box-shadow:var(--shadow);font-size:clamp(.85rem,1.2vw,1rem);}
 th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);}
 th{background:#f0f2fb;color:var(--ink);font-weight:700;}
 tr:last-child td{border-bottom:none;}
