@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prompt Engineering &amp; Practical AI Tools — Live Workshop</title>
+<style>
+:root{
+  --bg:#f6f8fc;
+  --surface:#ffffff;
+  --ink:#16203a;
+  --ink-soft:#475069;
+  --muted:#7b8499;
+  --line:#e4e8f1;
+  --brand:#4f46e5;       /* indigo */
+  --brand-2:#7c3aed;     /* violet */
+  --teal:#0d9488;
+  --amber:#d97706;
+  --rose:#e11d48;
+  --task:#0d9488;        /* practice task accent */
+  --output:#7c3aed;      /* output reveal accent */
+  --shadow:0 18px 50px -22px rgba(31,41,80,.45);
+  --radius:8px;          /* Updated: Decreased border radius to 8px (between 5px and 10px) */
+  --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--font);
+  color:var(--ink);
+  background:
+    radial-gradient(1200px 700px at 12% -8%, #eef1ff 0%, transparent 55%),
+    radial-gradient(1100px 650px at 105% 110%, #e7fbf6 0%, transparent 55%),
+    var(--bg);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Deck shell ---------- */
+.deck{position:fixed;inset:0;}
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  padding:clamp(28px,4.5vw,70px);
+  opacity:0;visibility:hidden;
+  transform:translateY(22px) scale(.992);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.22,.61,.36,1), visibility .55s;
+  pointer-events:none;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;pointer-events:auto;}
+.slide.prev{transform:translateY(-22px) scale(.992);}
+
+/* inner column keeps content readable on huge screens */
+.wrap{
+  width:100%;max-width:1240px;margin:0 auto;
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  min-height:0;
+}
+
+/* ---------- Reveal animation for on-slide items ---------- */
+.r{opacity:0;transform:translateY(16px);transition:opacity .5s ease, transform .5s cubic-bezier(.22,.61,.36,1);}
+.slide.active .r{opacity:1;transform:none;}
+.slide.active .r:nth-child(1){transition-delay:.08s}
+.slide.active .r:nth-child(2){transition-delay:.16s}
+.slide.active .r:nth-child(3){transition-delay:.24s}
+.slide.active .r:nth-child(4){transition-delay:.32s}
+.slide.active .r:nth-child(5){transition-delay:.40s}
+.slide.active .r:nth-child(6){transition-delay:.48s}
+.slide.active .r:nth-child(7){transition-delay:.56s}
+.slide.active .r:nth-child(8){transition-delay:.64s}
+
+/* ---------- Typography ---------- */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:9px;
+  font-size:clamp(.7rem,1.05vw,.82rem);font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--brand);
+  background:#eef0ff;border:1px solid #e0e2ff;
+  padding:7px 14px;border-radius:999px;margin-bottom:18px;width:max-content;
+}
+h1{font-size:clamp(2.1rem,5.4vw,4.1rem);line-height:1.04;letter-spacing:-.02em;font-weight:800;}
+h2{font-size:clamp(1.7rem,3.6vw,2.7rem);line-height:1.1;letter-spacing:-.015em;font-weight:800;margin-bottom:6px;}
+h3{font-size:clamp(1.05rem,1.7vw,1.3rem);font-weight:750;}
+p,li{font-size:clamp(.98rem,1.45vw,1.18rem);line-height:1.55;color:var(--ink-soft);}
+.lead{font-size:clamp(1.05rem,1.7vw,1.35rem);color:var(--ink-soft);max-width:60ch;}
+.big{font-size:clamp(1.2rem,2.2vw,1.7rem);color:var(--ink);font-weight:600;}
+.accent{color:var(--brand);}
+.accent2{color:var(--brand-2);}
+strong{color:var(--ink);font-weight:700;}
+.kicker{color:var(--muted);font-weight:600;font-size:clamp(.85rem,1.2vw,1rem);margin-top:18px;}
+
+/* ---------- Layout helpers ---------- */
+.grid{display:grid;gap:clamp(14px,1.8vw,22px);}
+.g2{grid-template-columns:repeat(2,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+.g4{grid-template-columns:repeat(4,1fr);}
+.center{text-align:center;align-items:center;}
+.center .eyebrow{margin-left:auto;margin-right:auto;}
+.stack>*+*{margin-top:16px;}
+
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:clamp(16px,1.9vw,26px);box-shadow:var(--shadow);
+}
+.card h3{margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.card p{font-size:clamp(.9rem,1.25vw,1.04rem);}
+.ico{
+  width:38px;height:38px;border-radius:6px;flex:0 0 auto;
+  display:grid;place-items:center;font-size:1.15rem;
+  background:#eef0ff;color:var(--brand);
+}
+.num{
+  width:34px;height:34px;border-radius:50%;flex:0 0 auto;
+  display:grid;place-items:center;font-weight:800;font-size:1rem;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;
+}
+ul.clean{list-style:none;}
+ul.clean li{position:relative;padding-left:30px;margin:11px 0;}
+ul.clean li::before{
+  content:"";position:absolute;left:4px;top:.62em;width:9px;height:9px;border-radius:3px;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+}
+.chip{display:inline-block;background:#eef0ff;color:var(--brand);border:1px solid #e0e2ff;
+  padding:5px 12px;border-radius:999px;font-size:.82rem;font-weight:650;margin:4px 6px 0 0;}
+
+/* code / prompt blocks */
+.code{
+  font-family:"SF Mono",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  background:#0f1530;color:#dbe2ff;border-radius:var(--radius);
+  padding:clamp(14px,1.6vw,20px);font-size:clamp(.82rem,1.15vw,.98rem);
+  line-height:1.55;white-space:pre-wrap;border:1px solid #1d264d;overflow:auto;
+}
+.code .c{color:#8ea0d8}      /* comment/label */
+.code .k{color:#a6f0c6}      /* good */
+.code .y{color:#ffd479}      /* highlight */
+.prompt-good{border-left:4px solid var(--teal);}
+.prompt-bad{border-left:4px solid var(--rose);}
+.label-bad{color:var(--rose);font-weight:700;}
+.label-good{color:var(--teal);font-weight:700;}
+
+table{width:100%;border-collapse:collapse;background:var(--surface);
+  border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);font-size:clamp(.85rem,1.2vw,1rem);}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--line);}
+th{background:#f0f2fb;color:var(--ink);font-weight:700;}
+tr:last-child td{border-bottom:none;}
+td:first-child{font-weight:650;color:var(--ink);}
+
+/* badges for task / output slides */
+.badge{
+  display:inline-flex;align-items:center;gap:9px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;font-size:clamp(.72rem,1.05vw,.86rem);
+  padding:8px 16px;border-radius:999px;width:max-content;margin-bottom:16px;
+}
+.badge.task{background:#d4f3ee;color:#0b6e63;border:1px solid #aee5dc;}
+.badge.output{background:#ece2ff;color:#5b21b6;border:1px solid #d9c9ff;}
+.slide.is-task{background:linear-gradient(160deg,#f1fbf9 0%,var(--bg) 60%);}
+.slide.is-output{background:linear-gradient(160deg,#f6f1ff 0%,var(--bg) 60%);}
+.slide.is-task .eyebrow{color:var(--task);background:#d9f4ef;border-color:#bce7df;}
+.rubric{background:var(--surface);border:1px dashed #c7b6f0;border-radius:var(--radius);padding:18px 22px;}
+.rubric h3{color:var(--brand-2);}
+
+.timeline{display:flex;flex-direction:column;gap:10px;}
+.tl-row{display:flex;align-items:center;gap:16px;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;padding:12px 18px;box-shadow:var(--shadow);}
+.tl-time{font-weight:800;color:var(--brand);min-width:30px;font-variant-numeric:tabular-nums;font-size:clamp(.85rem,1.2vw,1.02rem);}
+.tl-row p{margin:0;}
+
+.split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,3vw,46px);align-items:center;flex:1;min-height:0;}
+@media(max-width:880px){.split{grid-template-columns:1fr;}}
+
+/* ---------- Chrome: progress, nav, counter ---------- */
+.progress{position:fixed;top:0;left:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--teal));
+  width:0;z-index:50;transition:width .45s ease;border-radius:0 3px 3px 0;}
+.nav{position:fixed;bottom:22px;right:26px;display:flex;align-items:center;gap:10px;z-index:50;}
+.btn{
+  width:46px;height:46px;border-radius:var(--radius);border:1px solid var(--line);
+  background:var(--surface);color:var(--ink);font-size:1.2rem;cursor:pointer;
+  display:grid;place-items:center;box-shadow:var(--shadow);transition:transform .15s, background .2s, color .2s;
+}
+.btn:hover{transform:translateY(-2px);background:var(--brand);color:#fff;border-color:var(--brand);}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;background:var(--surface);color:var(--ink);}
+.counter{position:fixed;bottom:30px;left:26px;z-index:50;font-weight:700;color:var(--muted);
+  font-size:.92rem;background:var(--surface);border:1px solid var(--line);padding:8px 15px;border-radius:999px;
+  box-shadow:var(--shadow);font-variant-numeric:tabular-nums;}
+.counter b{color:var(--brand);}
+.brandmark{position:fixed;top:18px;left:26px;z-index:40;display:flex;align-items:center;gap:9px;
+  font-weight:800;color:var(--ink);font-size:.95rem;}
+.brandmark .dot{width:13px;height:13px;border-radius:4px;background:linear-gradient(135deg,var(--brand),var(--brand-2));}
+.hint{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:40;color:var(--muted);
+  font-size:.8rem;opacity:.85;}
+.hint kbd{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:2px 7px;font-family:var(--font);font-size:.75rem;box-shadow:0 1px 0 var(--line);}
+@media(max-width:760px){.hint{display:none}.counter{bottom:24px}.nav{bottom:18px;right:16px}}
+
+/* title slide flourish */
+.hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;}
+.hero-badges .chip{font-size:.9rem;padding:8px 16px;}
+.titlebar{display:flex;gap:14px;align-items:center;color:var(--muted);font-weight:600;margin-top:30px;flex-wrap:wrap;}
+.titlebar span{display:inline-flex;align-items:center;gap:8px;}
+
+.statline{display:flex;gap:clamp(20px,4vw,60px);flex-wrap:wrap;margin-top:8px;}
+.stat .n{font-size:clamp(1.9rem,3.6vw,2.9rem);font-weight:850;background:linear-gradient(135deg,var(--brand),var(--brand-2));-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1;}
+.stat .l{color:var(--muted);font-weight:600;margin-top:6px;}
+
+.note{font-size:clamp(.82rem,1.1vw,.95rem);color:var(--muted);margin-top:14px;}
+@media(max-width:880px){.g3,.g4{grid-template-columns:1fr 1fr;}.g2{grid-template-columns:1fr;}}
+@media(max-width:560px){.g3,.g4,.g2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="brandmark"><span class="dot"></span> AI Mastery Workshop</div>
+<div class="deck" id="deck">
+
+<!-- 1 — TITLE -->
+<section class="slide center">
+  <div class="wrap center">
+    <div class="eyebrow r">Live · 2-Hour Hands-On Workshop</div>
+    <h1 class="r">Prompt Engineering<br>&amp; Practical AI Tools</h1>
+    <h3 class="r" style="margin-top: 16px; color: var(--ink-soft);">By Dr. Wasim Ahmad Khan.</h3>
+    <p class="lead r" style="margin-top:22px">Turn AI from a novelty into a daily superpower. Learn the techniques the pros use — then practise them live, with feedback.</p>
+    <div class="hero-badges r">
+      <span class="chip">🎯 Beginner → Intermediate</span>
+      <span class="chip">🛠️ Hands-on practice</span>
+      <span class="chip">📋 Take-home cheat-sheet</span>
+    </div>
+    <div class="titlebar r">
+      <span>⏱️ 120 minutes</span><span>•</span><span>👥 Live cohort</span><span>•</span><span>💡 Real, reusable takeaways</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 — AGENDA -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Agenda</div>
+    <h2 class="r">How we'll spend our two hours</h2>
+    <div class="timeline" style="margin-top:22px">
+      <div class="tl-row r"><span class="tl-time">1</span><p><strong>Foundations</strong> — how AI models actually "think", and why prompting is leverage</p></div>
+      <div class="tl-row r"><span class="tl-time">2</span><p><strong>Core prompt techniques</strong> — role, context, examples, reasoning, structure (with live practice)</p></div>
+      <div class="tl-row r"><span class="tl-time">3</span><p><strong>QA</strong> — stretch, questions, compare notes</p></div>
+      <div class="tl-row r"><span class="tl-time">4</span><p><strong>The AI tools tour</strong> — a practical map of what to use for what</p></div>
+      <div class="tl-row r"><span class="tl-time">5</span><p><strong>Advanced tricks + capstone</strong> — pro tweaks and a real-world challenge</p></div>
+      <div class="tl-row r"><span class="tl-time">6</span><p><strong>Takeaways, cheat-sheet &amp; resources</strong></p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 — GROUND RULES -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Before we start</div>
+    <h2 class="r">Three ways to get the most out of today</h2>
+    <div class="grid g3" style="margin-top:24px">
+      <div class="card r"><h3><span class="ico">🙋</span>Try everything</h3><p>Every technique has a live practice task. Do it — even a rough attempt beats watching. The reveal slides show what "good" looks like.</p></div>
+      <div class="card r"><h3><span class="ico">💬</span>Ask anytime</h3><p>Stop me with questions. The best prompts in this room will come from your real work, not my examples.</p></div>
+      <div class="card r"><h3><span class="ico">📎</span>Keep the cheat-sheet</h3><p>You'll leave with reusable templates and patterns. Don't memorise — bookmark and adapt.</p></div>
+    </div>
+    <p class="kicker r">Have any AI chat tool open (free tier is fine). That's all you need.</p>
+  </div>
+</section>
+
+<!-- 4 — WHY IT MATTERS -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Why this matters</div>
+    <h2 class="r">The model is the same for everyone.<br>The <span class="accent">prompt</span> is your edge.</h2>
+    <p class="lead r" style="margin-top:18px">Two people using the identical AI get wildly different results. The difference isn't the tool — it's how clearly they brief it. Prompting is the highest-leverage skill in AI: minutes to learn, compounding returns forever.</p>
+    <div class="statline r" style="margin-top:30px">
+      <div class="stat"><div class="n">10×</div><div class="l">faster on drafting &amp; research tasks</div></div>
+      <div class="stat"><div class="n">$0</div><div class="l">extra cost — it's purely skill</div></div>
+      <div class="stat"><div class="n">∞</div><div class="l">use cases: write, code, plan, learn, analyse</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 — MENTAL MODEL -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Mental model</div>
+    <h2 class="r">What's really happening under the hood</h2>
+    <div class="split">
+      <div class="stack">
+        <p class="big r">An LLM is a <span class="accent">prediction engine</span>. It reads your text and guesses the most likely next words — over and over.</p>
+        <ul class="clean">
+          <li class="r"><strong>It has no memory</strong> beyond the current conversation. Context you don't give, it doesn't have.</li>
+          <li class="r"><strong>It's a brilliant improviser, not a database.</strong> It can sound confident and still be wrong ("hallucinate").</li>
+          <li class="r"><strong>Your words steer the probabilities.</strong> More signal in = better prediction out.</li>
+        </ul>
+      </div>
+      <div class="card r">
+        <h3><span class="ico">🧭</span>The one takeaway</h3>
+        <p style="margin-top:10px">Treat the model like a <strong>talented new hire on day one</strong>: capable and fast, but knows nothing about your situation unless you tell it. Brief it like you'd brief a smart colleague — goal, context, constraints, format.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 — ANATOMY OF A PROMPT -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">The framework</div>
+    <h2 class="r">Anatomy of a high-quality prompt</h2>
+    <p class="lead r" style="margin-top:8px">Six ingredients. You won't always need all six — but knowing them means you'll never stare at a blank box again.</p>
+    <div class="grid g3" style="margin-top:22px">
+      <div class="card r"><h3><span class="num">1</span>Role</h3><p>Who should the AI be? "Act as a senior copy editor…"</p></div>
+      <div class="card r"><h3><span class="num">2</span>Task</h3><p>The single, clear job. One verb: summarise, draft, compare, debug.</p></div>
+      <div class="card r"><h3><span class="num">3</span>Context</h3><p>Background, audience, source material, what you've already tried.</p></div>
+      <div class="card r"><h3><span class="num">4</span>Examples</h3><p>Show one or two samples of the style or format you want.</p></div>
+      <div class="card r"><h3><span class="num">5</span>Constraints</h3><p>Length, tone, what to avoid, must-haves, reading level.</p></div>
+      <div class="card r"><h3><span class="num">6</span>Format</h3><p>Output shape: table, bullet list, JSON, email, step-by-step.</p></div>
+    </div>
+    <p class="kicker r">Memory hook: <strong>R-T-C-E-C-F</strong> → "Role, Task, Context, Examples, Constraints, Format."</p>
+  </div>
+</section>
+
+<!-- 7 — CLARITY BEFORE/AFTER -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Fundamentals</div>
+    <h2 class="r">Specific beats clever, every time</h2>
+    <div class="grid g2" style="margin-top:20px">
+      <div class="code prompt-bad r"><span class="label-bad">✗ VAGUE</span>
+Write something about marketing.</div>
+      <div class="code prompt-good r"><span class="label-good">✓ SPECIFIC</span>
+<span class="c"># Role</span> You are a B2B marketing strategist.
+<span class="c"># Task</span> Write 3 LinkedIn post hooks
+<span class="c"># Context</span> for a SaaS that helps clinics
+cut no-shows. Audience: clinic owners.
+<span class="c"># Constraints</span> &lt;20 words each, no jargon,
+end with a question.</span></div>
+    </div>
+    <p class="kicker r">The vague prompt could mean a thousand things — so you get the blandest average of all of them. Specificity removes guesswork.</p>
+  </div>
+</section>
+
+<!-- 8 — TECHNIQUE: ROLE -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 1</div>
+    <h2 class="r">Role &amp; persona prompting</h2>
+    <div class="split">
+      <div class="stack">
+        <p class="lead r">Assigning a role primes the model to pull from the right "voice" and depth of knowledge. "Explain like a kindergarten teacher" and "explain like a tax attorney" produce very different answers — by design.</p>
+        <ul class="clean">
+          <li class="r"><strong>Be specific about seniority.</strong> "Senior" or "expert" raises the rigour.</li>
+          <li class="r"><strong>Add a perspective, not just a job.</strong> "…who is skeptical and asks hard questions."</li>
+          <li class="r"><strong>Stack a target reader.</strong> Role + audience = controlled tone.</li>
+        </ul>
+      </div>
+      <div class="code r"><span class="c"># Pro pattern</span>
+You are a <span class="y">veteran UX researcher</span>.
+Review my onboarding flow as if
+preparing a <span class="y">critique for a design review</span>.
+Be direct, cite specific friction points,
+and rank them by user impact.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 — TECHNIQUE: CONTEXT -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 2</div>
+    <h2 class="r">Context setting — the biggest lever of all</h2>
+    <p class="lead r" style="margin-top:8px">Most "bad AI answers" are really starved-of-context answers. The model can only work with what's in front of it.</p>
+    <div class="grid g3" style="margin-top:22px">
+      <div class="card r"><h3><span class="ico">🎯</span>Goal</h3><p>What does success look like? What's this <em>for</em>?</p></div>
+      <div class="card r"><h3><span class="ico">👤</span>Audience</h3><p>Who reads the output — and what do they already know?</p></div>
+      <div class="card r"><h3><span class="ico">📄</span>Source</h3><p>Paste the real data, notes, or document. Don't make it guess.</p></div>
+    </div>
+    <p class="kicker r">Pro tip: end with <strong>"Ask me up to 3 questions before you start if anything is unclear."</strong> Turns a one-shot guess into a briefing.</p>
+  </div>
+</section>
+
+<!-- 10 — PRACTICE TASK 1 -->
+<section class="slide is-task center">
+  <div class="wrap center">
+    <div class="badge task r">✍️ Practice Task 1 · 4 minutes</div>
+    <h2 class="r">Rescue a lazy prompt</h2>
+    <p class="lead r" style="margin-top:14px">Take this weak prompt and rewrite it using <strong>Role + Context + Constraints + Format</strong>:</p>
+    <div class="code prompt-bad r" style="max-width:760px;margin:22px auto 0;text-align:left">"Give me ideas for my coffee shop."</div>
+    <p class="kicker r">Pick a real-ish scenario: who's the audience, what's the goal, what format do you want back? Type it into your AI tool and run it.</p>
+  </div>
+</section>
+
+<!-- 11 — OUTPUT REVEAL 1 -->
+<section class="slide is-output">
+  <div class="wrap">
+    <div class="badge output r">🔍 What good looks like · Reveal 1</div>
+    <div class="split">
+      <div class="code prompt-good r"><span class="label-good">✓ A strong rewrite</span>
+You are a <span class="y">small-business marketing
+consultant</span>. My context: an independent
+coffee shop near a university, quiet on
+weekday afternoons. <span class="y">Goal:</span> drive 2–4pm
+weekday traffic. Give me <span class="y">6 low-cost
+ideas</span>, each with a one-line "why it works"
+and an estimated effort (low/med/high).
+<span class="y">Format</span> as a table.</div>
+      <div class="rubric r">
+        <h3>✅ Checklist — does yours have…</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li>A clear <strong>role</strong> and a specific <strong>goal</strong> (not just "ideas")?</li>
+          <li><strong>Context</strong> that narrows the problem (location, timing, audience)?</li>
+          <li>A defined <strong>output shape</strong> (count, columns, format)?</li>
+          <li>A <strong>constraint</strong> that filters quality (low-cost, effort rating)?</li>
+        </ul>
+        <p class="note">Common miss: people add a role but forget the goal — so the AI optimises for nothing in particular.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12 — TECHNIQUE: FEW-SHOT -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 3</div>
+    <h2 class="r">Few-shot examples — show, don't just tell</h2>
+    <p class="lead r" style="margin-top:8px">When tone or format is hard to describe, give 1–3 examples. The model pattern-matches your samples far better than it follows adjectives.</p>
+    <div class="code r" style="margin-top:18px">Rewrite product names into punchy taglines.
+
+<span class="c">Example 1 →</span> "Wireless earbuds" → <span class="k">"Silence, summoned."</span>
+<span class="c">Example 2 →</span> "Standing desk" → <span class="k">"Work on your feet, not your back."</span>
+
+Now do: "Insulated water bottle" → ?</div>
+    <p class="kicker r">Rule of thumb: <strong>2 good examples</strong> usually beat a paragraph of instructions. Keep them consistent — the model copies your inconsistencies too.</p>
+  </div>
+</section>
+
+<!-- 13 — TECHNIQUE: CHAIN OF THOUGHT -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 4</div>
+    <h2 class="r">Make it think step-by-step</h2>
+    <div class="split">
+      <div class="stack">
+        <p class="lead r">For anything involving logic, math, planning, or multi-part analysis, ask the model to reason <strong>before</strong> it answers. Quality jumps because it doesn't blurt the first guess.</p>
+        <ul class="clean">
+          <li class="r"><strong>"Think step by step"</strong> — the classic trigger.</li>
+          <li class="r"><strong>"Work through it, then give a final answer."</strong></li>
+          <li class="r"><strong>"List your assumptions first,"</strong> then solve — catches bad premises early.</li>
+        </ul>
+        <p class="note r">Don't need the reasoning shown? Add: "reason internally, then output only the final answer."</p>
+      </div>
+      <div class="code r"><span class="c"># Weak</span>
+What's the best pricing tier? <span class="c">→ a guess</span>
+
+<span class="c"># Strong</span>
+<span class="y">Step by step:</span> list our cost per unit,
+compare 3 pricing models, weigh pros/cons,
+THEN recommend one with reasoning.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 — PRACTICE TASK 2 -->
+<section class="slide is-task center">
+  <div class="wrap center">
+    <div class="badge task r">✍️ Practice Task 2 · 5 minutes</div>
+    <h2 class="r">Teach the AI your style</h2>
+    <p class="lead r" style="margin-top:14px">Pick a small writing job (email subject lines, headlines, or short replies). Give the AI <strong>two examples</strong> in your preferred style, then ask it to produce three more — same voice.</p>
+    <div class="grid g2 r" style="max-width:820px;margin:22px auto 0">
+      <div class="card"><h3><span class="ico">🎯</span>Goal</h3><p>Get outputs that sound like <em>you</em>, not generic AI.</p></div>
+      <div class="card"><h3><span class="ico">🧪</span>Bonus</h3><p>Add "step by step, first describe the pattern you see in my examples."</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 15 — OUTPUT REVEAL 2 -->
+<section class="slide is-output">
+  <div class="wrap">
+    <div class="badge output r">🔍 What good looks like · Reveal 2</div>
+    <h2 class="r">Did the style actually transfer?</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="rubric r">
+        <h3>✅ Signs it worked</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li>New outputs match your examples' <strong>length and rhythm</strong>.</li>
+          <li>Same <strong>tone</strong> (playful / formal / punchy) carried through.</li>
+          <li>It picked up <strong>structural quirks</strong> — e.g. always ending on a verb.</li>
+        </ul>
+      </div>
+      <div class="rubric r" style="border-color:#f0c7c7">
+        <h3 style="color:var(--rose)">⚠️ Common mistakes</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li><strong>Inconsistent examples</strong> → the model averages them into mush.</li>
+          <li>Examples too similar → it can't tell what's <em>essential</em> vs incidental.</li>
+          <li>Forgot to say "same style" → it reverts to its default voice.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="kicker r">Fix-it move: when output drifts, reply with <strong>"More like example 2, less like example 1"</strong> — comparative feedback is gold.</p>
+  </div>
+</section>
+
+<!-- 16 — TECHNIQUE: STRUCTURED OUTPUT -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 5</div>
+    <h2 class="r">Control the <span class="accent">shape</span> of the answer</h2>
+    <p class="lead r" style="margin-top:8px">Don't accept whatever the model feels like returning. Specify the format and you can paste it straight into a doc, sheet, or app.</p>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="code r"><span class="c"># Ask for a table</span>
+Compare these 3 laptops in a markdown
+table: columns = Price, Battery, Weight,
+Best for. One row each.</div>
+      <div class="code r"><span class="c"># Ask for JSON (great for automation)</span>
+Return ONLY valid JSON:
+{"<span class="y">title</span>":"", "<span class="y">tags</span>":[], "<span class="y">summary</span>":""}
+No prose, no markdown fences.</div>
+    </div>
+    <p class="kicker r">Formats worth knowing: <span class="chip">Markdown table</span><span class="chip">Numbered steps</span><span class="chip">JSON</span><span class="chip">CSV</span><span class="chip">Pros / Cons</span><span class="chip">Email draft</span></p>
+  </div>
+</section>
+
+<!-- 17 — TECHNIQUE: CONSTRAINTS -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 6</div>
+    <h2 class="r">Constraints make outputs usable</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card r"><h3><span class="ico">📏</span>Length &amp; depth</h3><p>"In exactly 5 bullets." "Under 100 words." "One paragraph, then a TL;DR."</p></div>
+      <div class="card r"><h3><span class="ico">🎚️</span>Tone &amp; reading level</h3><p>"Friendly but professional." "Explain so a 12-year-old gets it." "No buzzwords."</p></div>
+      <div class="card r"><h3><span class="ico">🚫</span>Negative constraints</h3><p>"Don't use the word 'leverage'." "No emojis." "Avoid hedging — commit to a recommendation."</p></div>
+      <div class="card r"><h3><span class="ico">✅ </span>Must-haves</h3><p>"Every claim needs a reason." "Include one counter-argument." "Cite which input you used."</p></div>
+    </div>
+    <p class="kicker r">Counter-intuitive truth: <strong>tighter constraints raise quality</strong>. Freedom produces vagueness; limits force decisions.</p>
+  </div>
+</section>
+
+<!-- 18 — SYSTEM VS USER -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 7</div>
+    <h2 class="r">System vs. user prompts — the standing orders</h2>
+    <div class="split">
+      <div class="stack">
+        <p class="lead r">Many tools let you set a <strong>system prompt</strong> (or "custom instructions" / "project rules"): persistent rules that apply to <em>every</em> message, so you stop repeating yourself.</p>
+        <ul class="clean">
+          <li class="r"><strong>System</strong> = who the AI is + standing rules ("Always answer in British English, be concise, never invent facts").</li>
+          <li class="r"><strong>User</strong> = the specific request for this turn.</li>
+          <li class="r">Set persona, tone, and guardrails <strong>once</strong> at the system level; keep per-message prompts short.</li>
+        </ul>
+      </div>
+      <div class="code r"><span class="c"># System (set once)</span>
+You are my writing assistant.
+Always: concise, active voice,
+British spelling, no clichés.
+If unsure, ask before guessing.
+
+<span class="c"># User (each time)</span>
+Draft a reply to this email: …</div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 — TEMPERATURE / VERBOSITY -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 8</div>
+    <h2 class="r">Dial creativity &amp; length on purpose</h2>
+    <p class="lead r" style="margin-top:8px">Even without technical settings, you can steer the model's "temperature" and verbosity with words.</p>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card r"><h3><span class="ico">🎨</span>More creative / divergent</h3><p>"Give me 10 wildly different angles, including unconventional ones." "Brainstorm freely — quantity over polish."</p></div>
+      <div class="card r"><h3><span class="ico">🎯</span>More precise / deterministic</h3><p>"Be factual and conservative." "Only state what you're confident about." "One best answer, no alternatives."</p></div>
+      <div class="card r"><h3><span class="ico">📐</span>Control verbosity</h3><p>"One-line answer." vs "Go deep — assume I'm technical and want detail."</p></div>
+      <div class="card r"><h3><span class="ico">🔁</span>Vary the seed</h3><p>Hate the result? "Give me 3 completely different versions" beats re-rolling the same one.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 — PRACTICE TASK 3 -->
+<section class="slide is-task center">
+  <div class="wrap center">
+    <div class="badge task r">✍️ Practice Task 3 · 5 minutes</div>
+    <h2 class="r">Make the AI fill a real table</h2>
+    <p class="lead r" style="margin-top:14px">Think of a decision you're weighing (tools, trips, purchases, vendors). Ask the AI to build a <strong>comparison table</strong> with columns you choose — and a final recommendation row with reasoning.</p>
+    <div class="code prompt-good r" style="max-width:780px;margin:22px auto 0;text-align:left"><span class="label-good">Starter</span>
+"Compare [A], [B], [C] as a markdown table.
+Columns: Cost, Learning curve, Best for.
+Then recommend one for [my situation], step by step."</div>
+  </div>
+</section>
+
+<!-- 21 — OUTPUT REVEAL 3 -->
+<section class="slide is-output">
+  <div class="wrap">
+    <div class="badge output r">🔍 What good looks like · Reveal 3</div>
+    <h2 class="r">Grading your structured output</h2>
+    <div class="split">
+      <div class="rubric r">
+        <h3>✅ A strong result has…</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li>A <strong>clean table</strong> you could paste anywhere — consistent columns, no rambling.</li>
+          <li>Cells that are <strong>comparable</strong> (same unit / scale across rows).</li>
+          <li>A <strong>reasoned recommendation</strong>, not just "it depends".</li>
+          <li>It respected your columns exactly — didn't invent extra ones.</li>
+        </ul>
+      </div>
+      <div class="stack">
+        <div class="code r"><span class="c"># If it ignored your format, anchor harder:</span>
+"Output ONLY the table, nothing before
+or after. Exactly these columns: …"</div>
+        <p class="note r">Reliability tip: for automation/JSON, add "If a value is unknown, use null — never make one up." This is how you stop silent hallucinations.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 — ITERATIVE REFINEMENT -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Technique 9</div>
+    <h2 class="r">Treat it as a conversation, not a vending machine</h2>
+    <p class="lead r" style="margin-top:8px">The first answer is a draft. Your real skill is the <strong>follow-up</strong>. Refine instead of restarting.</p>
+    <div class="grid g4" style="margin-top:22px">
+      <div class="card r"><h3><span class="num">1</span>Draft</h3><p>Get a first version, however rough.</p></div>
+      <div class="card r"><h3><span class="num">2</span>Diagnose</h3><p>"Too formal." "Section 2 is weak." "Add data."</p></div>
+      <div class="card r"><h3><span class="num">3</span>Direct</h3><p>Give a precise next instruction, not "make it better".</p></div>
+      <div class="card r"><h3><span class="num">4</span>Repeat</h3><p>2–3 rounds usually gets you to great.</p></div>
+    </div>
+    <p class="kicker r">Power moves: <strong>"What would make this stronger?"</strong> · <strong>"Critique your own answer, then improve it."</strong> · <strong>"Keep everything except the intro — rewrite just that."</strong></p>
+  </div>
+</section>
+
+<!-- 23 — FAILURE MODES -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Troubleshooting</div>
+    <h2 class="r">Common failure modes &amp; the fix</h2>
+    <table class="r" style="margin-top:16px">
+      <tr><th>Symptom</th><th>Why it happens</th><th>The fix</th></tr>
+      <tr><td>Confident but wrong (hallucination)</td><td>It's predicting, not looking up</td><td>"Only use the text I gave you. Say 'not stated' if missing."</td></tr>
+      <tr><td>Generic, bland answer</td><td>Prompt was too open</td><td>Add role, audience, constraints, an example</td></tr>
+      <tr><td>Ignores part of your request</td><td>Too many instructions at once</td><td>Number them; or split into steps</td></tr>
+      <tr><td>Wrong format</td><td>Format stated loosely</td><td>"Output ONLY a table with these exact columns"</td></tr>
+      <tr><td>Too long / waffly</td><td>No length constraint</td><td>"Max 120 words. Lead with the answer."</td></tr>
+    </table>
+    <p class="kicker r">Golden rule: if the output is bad, <strong>your prompt is the bug</strong>. Fix the brief, not your expectations.</p>
+  </div>
+</section>
+
+<!-- 24 — BREAK -->
+<section class="slide center">
+  <div class="wrap center">
+    <div class="eyebrow r">Halfway point</div>
+    <h1 class="r" style="font-size:clamp(2.4rem,6vw,4.4rem)">QA</h1>
+    <p class="lead r" style="margin-top:18px">10 minutes. Stretch, refill, and think of <strong>one real task</strong> from your work or life you'd love AI to help with — we'll use it after the QA.</p>
+    <div class="hero-badges r" style="justify-content:center">
+      <span class="chip">Up next: the AI tools tour 🧰</span>
+    </div>
+  </div>
+</section>
+
+<!-- 25 — TOOLS TOUR INTRO -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Part 2 · The tools tour</div>
+    <h2 class="r">The map: pick the right tool for the job</h2>
+    <p class="lead r" style="margin-top:8px">There are thousands of AI tools. You don't need them all — you need <strong>one good one per category</strong>. Here's how the landscape breaks down.</p>
+    <div class="grid g3" style="margin-top:22px">
+      <div class="card r"><h3><span class="ico">💬</span>Chat &amp; reasoning</h3><p>Your everyday thinking partner.</p></div>
+      <div class="card r"><h3><span class="ico">✍️</span>Writing</h3><p>Drafting, editing, repurposing.</p></div>
+      <div class="card r"><h3><span class="ico">💻</span>Coding</h3><p>Build &amp; debug, even as a non-coder.</p></div>
+      <div class="card r"><h3><span class="ico">🎨</span>Image · audio · video</h3><p>Create media from text.</p></div>
+      <div class="card r"><h3><span class="ico">🔎</span>Research</h3><p>Search with sources &amp; synthesis.</p></div>
+      <div class="card r"><h3><span class="ico">⚙️</span>Automation</h3><p>Connect AI to your workflows.</p></div>
+    </div>
+    <p class="note r">We'll name well-known options as examples — the category and what it's <em>best for</em> matters more than any single brand.</p>
+  </div>
+</section>
+
+<!-- 26 — CHAT/LLMS -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Category 1</div>
+    <h2 class="r">Chat assistants &amp; reasoning models</h2>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">💬</span>General assistants</h3><p><strong>ChatGPT, Claude, Gemini.</strong> Best for: writing, analysis, brainstorming, learning, everyday Q&amp;A.</p></div>
+      <div class="card r"><h3><span class="ico">🧠</span>"Reasoning" modes</h3><p>Deeper-thinking variants for hard logic, math, and multi-step planning. Slower, but far more reliable on complex problems.</p></div>
+      <div class="card r"><h3><span class="ico">📎</span>Bring your files</h3><p>Most now accept PDFs, images, and spreadsheets. Upload the source instead of describing it.</p></div>
+    </div>
+    <p class="kicker r">Pro tip: keep <strong>two assistants</strong> open and compare on important tasks — different models have different strengths and blind spots.</p>
+  </div>
+</section>
+
+<!-- 27 — WRITING -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Category 2</div>
+    <h2 class="r">Writing &amp; content tools</h2>
+    <div class="grid g2" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">✏️</span>Editing &amp; polish</h3><p><strong>Grammarly, general LLMs.</strong> Best for: grammar, tone shifts, tightening, adapting one piece for many channels.</p></div>
+      <div class="card r"><h3><span class="ico">📰</span>Long-form &amp; SEO</h3><p><strong>Jasper, Copy.ai, Notion AI.</strong> Best for: templated marketing content, outlines, repurposing at volume.</p></div>
+      <div class="card r"><h3><span class="ico">🔁</span>Repurposing</h3><p>Turn one webinar into a blog, 5 social posts, and an email. "Repurpose this into X for Y audience."</p></div>
+      <div class="card r"><h3><span class="ico">🗣️</span>Voice &amp; brand</h3><p>Feed the tool 3 samples of your writing → it mirrors your voice. The few-shot trick from earlier.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 28 — CODING -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Category 3</div>
+    <h2 class="r">Coding assistants — even if you don't code</h2>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">⌨️</span>In-editor</h3><p><strong>GitHub Copilot, Cursor.</strong> Autocomplete and whole-function generation right inside your code.</p></div>
+      <div class="card r"><h3><span class="ico">🧩</span>Build-by-chatting</h3><p><strong>Claude, ChatGPT, v0, Replit.</strong> Describe an app or script; get working code you can run.</p></div>
+      <div class="card r"><h3><span class="ico">🐞</span>Debug &amp; explain</h3><p>Paste an error → "Explain this and fix it." Brilliant for learning, not just fixing.</p></div>
+    </div>
+    <p class="kicker r">Non-coder superpower: <strong>"Write me a small script to rename / sort / clean these files"</strong> — automate boring tasks without learning to program.</p>
+  </div>
+</section>
+
+<!-- 29 — IMAGE/AUDIO/VIDEO -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Category 4</div>
+    <h2 class="r">Image, audio &amp; video generation</h2>
+    <div class="grid g4" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">🖼️</span>Images</h3><p><strong>Midjourney, DAL·E, Adobe Firefly.</strong> Concepts, illustrations, mockups, social graphics.</p></div>
+      <div class="card r"><h3><span class="ico">🎙️</span>Voice &amp; audio</h3><p><strong>ElevenLabs.</strong> Natural voiceovers, narration, dubbing in many languages.</p></div>
+      <div class="card r"><h3><span class="ico">🎬</span>Video</h3><p><strong>Runway, Pika, Sora-class tools.</strong> Short clips, b-roll, animation from text.</p></div>
+      <div class="card r"><h3><span class="ico">📝</span>Meetings</h3><p><strong>Otter, Fireflies.</strong> Auto transcripts, summaries, action items.</p></div>
+    </div>
+    <p class="kicker r">Image prompting mirrors text prompting: <strong>subject + style + lighting + composition + mood</strong>. "A cozy café, watercolor style, warm afternoon light, wide shot."</p>
+  </div>
+</section>
+
+<!-- 30 — RESEARCH -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Category 5</div>
+    <h2 class="r">Research &amp; knowledge tools</h2>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">🔎</span>Answer engines</h3><p><strong>Perplexity, Gemini, ChatGPT search.</strong> Best for: questions that need <em>current</em> info with citations you can verify.</p></div>
+      <div class="card r"><h3><span class="ico">📚</span>Chat with documents</h3><p><strong>NotebookLM.</strong> Upload your sources; ask questions grounded only in them. Great for study &amp; reports.</p></div>
+      <div class="card r"><h3><span class="ico">🧾</span>Deep research modes</h3><p>Agents that browse many sources and return a structured, cited brief. Use for serious due diligence.</p></div>
+    </div>
+    <p class="kicker r">Always-verify rule: <strong>treat AI research as a fast first draft, not a final source.</strong> Click the citations before you trust a number.</p>
+  </div>
+</section>
+
+<!-- 31 — AUTOMATION -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Category 6</div>
+    <h2 class="r">Productivity &amp; automation</h2>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">⚙️</span>Connect everything</h3><p><strong>Zapier, Make.</strong> Trigger AI steps inside workflows — "summarise every new form response and email it to me."</p></div>
+      <div class="card r"><h3><span class="ico">🗂️</span>Workspace AI</h3><p><strong>Notion, Microsoft Copilot, Google Gemini in Workspace.</strong> AI living inside your docs, sheets, inbox.</p></div>
+      <div class="card r"><h3><span class="ico">🤖</span>Custom assistants</h3><p>Build a reusable "GPT"/"Project" with your instructions + files baked in. Set it up once, reuse forever.</p></div>
+    </div>
+    <p class="kicker r">The mindset shift: stop doing repetitive tasks <em>manually</em>. If you've done it 3 times, ask "can AI do this on a trigger?"</p>
+  </div>
+</section>
+
+<!-- 32 — PRACTICE TASK 4 -->
+<section class="slide is-task center">
+  <div class="wrap center">
+    <div class="badge task r">✍️ Practice Task 4 · 6 minutes</div>
+    <h2 class="r">Solve your real task</h2>
+    <p class="lead r" style="margin-top:14px">Take the real task you thought of at the break. <strong>Choose the right category</strong>, then write a full prompt using the framework: Role · Task · Context · Constraints · Format.</p>
+    <div class="grid g3 r" style="max-width:900px;margin:22px auto 0">
+      <div class="card"><h3><span class="num">1</span>Pick tool</h3><p>Which category fits — chat, writing, research, code?</p></div>
+      <div class="card"><h3><span class="num">2</span>Brief it</h3><p>Use all the framework pieces you need.</p></div>
+      <div class="card"><h3><span class="num">3</span>Refine</h3><p>Run it, then do one improvement round.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 33 — OUTPUT REVEAL 4 -->
+<section class="slide is-output">
+  <div class="wrap">
+    <div class="badge output r">🔍 Self-assessment · Reveal 4</div>
+    <h2 class="r">Score your real-world prompt</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="rubric r">
+        <h3>✅ A great prompt scores 4/4</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li>You'd be happy to <strong>send the output</strong> with light edits.</li>
+          <li>It needed <strong>one refinement round</strong> or fewer.</li>
+          <li>You gave <strong>real context</strong>, not a generic description.</li>
+          <li>You picked the <strong>right tool</strong> for the job.</li>
+        </ul>
+      </div>
+      <div class="rubric r" style="border-color:#f0c7c7">
+        <h3 style="color:var(--rose)">⚠️ If it fell flat…</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li>Probably <strong>under-briefed</strong> — add audience &amp; goal.</li>
+          <li>Wrong tool — e.g. asked a chat model for <em>current</em> facts (use a research tool).</li>
+          <li>Tried to do <strong>too much in one prompt</strong> — break it into steps.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="kicker r">Share-out: who got a result they'd actually use? What changed it from "meh" to "useful"?</p>
+  </div>
+</section>
+
+<!-- 34 — ADVANCED TIPS 1 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Pro tier · Part 1</div>
+    <h2 class="r">Lesser-known tricks that punch above their weight</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card r"><h3><span class="ico">🔄</span>Make AI write the prompt</h3><p>"I want to achieve X. Ask me questions, then write the ideal prompt for me." Meta-prompting beats guessing.</p></div>
+      <div class="card r"><h3><span class="ico">🧐</span>Self-critique loop</h3><p>"Now critique that answer for weaknesses, then rewrite it addressing them." One message, two-stage quality boost.</p></div>
+      <div class="card r"><h3><span class="ico">🎭</span>Multiple personas</h3><p>"Respond as an optimist, then a skeptic, then synthesise." Surfaces blind spots in seconds.</p></div>
+      <div class="card r"><h3><span class="ico">🪜</span>Prompt chaining</h3><p>Break big jobs into steps: outline → draft → edit. Each step's output feeds the next, with checkpoints.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 35 — ADVANCED TIPS 2 -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Pro tier · Part 2</div>
+    <h2 class="r">More tweaks the pros rely on</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <div class="card r"><h3><span class="ico">🚪</span>Give it an "out"</h3><p>"If you're not sure, say so." A simple line that dramatically cuts confident-but-wrong answers.</p></div>
+      <div class="card r"><h3><span class="ico">📥</span>Pre-load the format</h3><p>Start the answer for it: "Begin your reply with: 'Summary:'…" The model continues your pattern.</p></div>
+      <div class="card r"><h3><span class="ico">🔢</span>Constrain quantity precisely</h3><p>"Exactly 5, no more." Models drift on "a few" — give a number.</p></div>
+      <div class="card r"><h3><span class="ico">🧱</span>Delimit your inputs</h3><p>Wrap pasted text in <code>"""triple quotes"""</code> or tags so the model never confuses instructions with data.</p></div>
+    </div>
+    <p class="kicker r">Bonus: keep a personal <strong>prompt library</strong>. Your best prompts are reusable assets — save the winners.</p>
+  </div>
+</section>
+
+<!-- 36 — CHEAT SHEET -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Take this home</div>
+    <h2 class="r">The reusable prompt cheat-sheet</h2>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="code r"><span class="c"># MASTER TEMPLATE</span>
+<span class="y">Role:</span> You are a [expert role].
+<span class="y">Task:</span> [one clear job].
+<span class="y">Context:</span> [audience, goal, background,
+        + paste any source material].
+<span class="y">Constraints:</span> [length, tone, must/avoid].
+<span class="y">Format:</span> [table / list / JSON / email].
+<span class="y">Before you start:</span> ask me up to 3
+questions if anything is unclear.</div>
+      <div class="stack">
+        <div class="card r"><h3><span class="ico">⚡</span>Instant upgrades — paste any of these</h3>
+          <ul class="clean" style="margin-top:8px">
+            <li>"Think step by step, then answer."</li>
+            <li>"If unsure, say so — don't invent."</li>
+            <li>"Critique your answer, then improve it."</li>
+            <li>"Give me 3 different versions."</li>
+            <li>"Use only the text I provided."</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <p class="note r">Screenshot this slide. These two boxes cover ~90% of everyday prompting.</p>
+  </div>
+</section>
+
+<!-- 37 — CAPSTONE TASK -->
+<section class="slide is-task center">
+  <div class="wrap center">
+    <div class="badge task r">🏆 Capstone Challenge · 8 minutes</div>
+    <h2 class="r">Build a reusable assistant</h2>
+    <p class="lead r" style="margin-top:14px">Combine everything: design a prompt (or custom GPT/Project) you could reuse weekly — e.g. <strong>"My weekly content repurposer"</strong> or <strong>"My meeting-notes-to-actions assistant."</strong></p>
+    <div class="grid g4 r" style="max-width:980px;margin:22px auto 0">
+      <div class="card"><h3><span class="num">R</span></h3><p>Clear role &amp; standing rules</p></div>
+      <div class="card"><h3><span class="num">C</span></h3><p>Reusable context &amp; inputs slot</p></div>
+      <div class="card"><h3><span class="num">F</span></h3><p>Locked output format</p></div>
+      <div class="card"><h3><span class="num">+</span></h3><p>One pro trick (self-critique / steps)</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 38 — CAPSTONE REVEAL -->
+<section class="slide is-output">
+  <div class="wrap">
+    <div class="badge output r">🔍 Capstone rubric · Reveal 5</div>
+    <h2 class="r">What a reusable assistant should have</h2>
+    <div class="split">
+      <div class="code r"><span class="c"># Example: Meeting → Actions assistant</span>
+<span class="y">Role:</span> You are my executive assistant.
+<span class="y">Task:</span> Turn raw meeting notes into actions.
+<span class="y">Rules:</span> Output 3 sections —
+  1) TL;DR (2 lines)
+  2) Decisions made
+  3) Action items: owner, task, due date
+If an owner/date is missing, mark "TBD".
+<span class="y">Then:</span> review your list for anything vague
+and tighten it.
+<span class="y">Input:</span> """[paste notes]"""</div>
+      <div class="rubric r">
+        <h3>✅ Score it</h3>
+        <ul class="clean" style="margin-top:10px">
+          <li>Could a teammate <strong>reuse it unchanged</strong> next week?</li>
+          <li>Is the <strong>output format fixed</strong> and paste-ready?</li>
+          <li>Does it <strong>handle missing info</strong> gracefully (TBD / "not stated")?</li>
+          <li>Did you add a <strong>quality step</strong> (self-check, steps, or examples)?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 39 — KEY TAKEAWAYS -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">The whole workshop in one slide</div>
+    <h2 class="r">Seven things to remember</h2>
+    <div class="grid g2" style="margin-top:18px">
+      <ul class="clean r">
+        <li><strong>Brief it like a smart new hire</strong> — goal, context, constraints, format.</li>
+        <li><strong>Specific beats clever.</strong> Vagueness in, vagueness out.</li>
+        <li><strong>Show examples</strong> when words can't capture the style.</li>
+        <li><strong>Ask for reasoning</strong> on anything complex.</li>
+      </ul>
+      <ul class="clean r">
+        <li><strong>Control the format</strong> so output is instantly usable.</li>
+        <li><strong>Iterate</strong> — the follow-up is where quality lives.</li>
+        <li><strong>If it's bad, fix the prompt</strong>, then save the winners.</li>
+      </ul>
+    </div>
+    <p class="kicker r">The meta-skill: <strong>clear thinking</strong>. A good prompt is just a clearly-articulated request — which makes you better at communicating with humans too.</p>
+  </div>
+</section>
+
+<!-- 40 — RESOURCES -->
+<section class="slide">
+  <div class="wrap">
+    <div class="eyebrow r">Keep going</div>
+    <h2 class="r">Your next 7 days</h2>
+    <div class="grid g3" style="margin-top:20px">
+      <div class="card r"><h3><span class="ico">📅</span>This week</h3><p>Replace <strong>one</strong> recurring task with an AI prompt. Save that prompt somewhere you'll find it again.</p></div>
+      <div class="card r"><h3><span class="ico">🗃️</span>Start a prompt library</h3><p>A simple note or doc. Every time a prompt works well, paste it in. In a month you'll have a personal toolkit.</p></div>
+      <div class="card r"><h3><span class="ico">🧪</span>Run experiments</h3><p>Try the same task on two assistants. Notice which wins, and why. That's how intuition builds.</p></div>
+      <div class="card r"><h3><span class="ico">📖</span>Learn the providers' guides</h3><p>The official prompting docs from major AI labs are free, short, and excellent. Read one.</p></div>
+      <div class="card r"><h3><span class="ico">👥</span>Teach someone</h3><p>Show a colleague one technique from today. Teaching cements it faster than anything.</p></div>
+      <div class="card r"><h3><span class="ico">🔁</span>Revisit this deck</h3><p>You have the slides &amp; cheat-sheet. Re-skim the templates whenever you're stuck.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 41 — CLOSING -->
+<section class="slide center">
+  <div class="wrap center">
+    <div class="eyebrow r">That's a wrap</div>
+    <h1 class="r">Thank you 🙌</h1>
+    <p class="lead r" style="margin-top:18px">You now know more about prompting than most people using AI every day. The only thing left is reps — go use it.</p>
+    <div class="hero-badges r" style="justify-content:center">
+      <span class="chip">Questions? Let's talk →</span>
+      <span class="chip">Keep your cheat-sheet 📋</span>
+      <span class="chip">Go build something 🚀</span>
+    </div>
+    
+    <!-- Contact Links -->
+    <div class="r" style="margin-top:34px; display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <a href="https://www.linkedin.com/in/wasimahmadkhan/" target="_blank" style="display:inline-flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); padding:10px 22px; border-radius:8px; text-decoration:none; color:var(--ink); font-weight:650; box-shadow:var(--shadow); transition:transform .15s, border-color .2s;">
+        <svg width="22" height="22" fill="#0a66c2" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+        LinkedIn
+      </a>
+      <a href="mailto:drwasimahmadkhan@gmail.com" style="display:inline-flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); padding:10px 22px; border-radius:8px; text-decoration:none; color:var(--ink); font-weight:650; box-shadow:var(--shadow); transition:transform .15s, border-color .2s;">
+        <svg width="22" height="22" fill="#ea4335" viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+        Email
+      </a>
+    </div>
+
+    <p class="kicker r" style="margin-top:30px;">Press <kbd style="background:#fff;border:1px solid var(--line);border-radius:6px;padding:2px 8px">←</kbd> anytime to revisit a slide.</p>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+<div class="counter" id="counter"><b>1</b> / 41</div>
+<div class="hint">Navigate with <kbd>←</kbd> <kbd>→</kbd> · <kbd>F</kbd> fullscreen · <kbd>Home</kbd> restart</div>
+<div class="nav">
+  <button class="btn" id="prev" aria-label="Previous slide">‹</button>
+  <button class="btn" id="next" aria-label="Next slide">›</button>
+</div>
+
+<script>
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let i = 0;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+
+  function render(){
+    slides.forEach((s,idx)=>{
+      s.classList.remove('active','prev');
+      if(idx===i) s.classList.add('active');
+      else if(idx<i) s.classList.add('prev');
+    });
+    progress.style.width = ((i+1)/total*100) + '%';
+    counter.innerHTML = '<b>'+(i+1)+'</b> / '+total;
+    prevBtn.disabled = (i===0);
+    nextBtn.disabled = (i===total-1);
+  }
+  function go(n){ i = Math.max(0, Math.min(total-1, n)); render(); }
+  function next(){ go(i+1); }
+  function prev(){ go(i-1); }
+
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+
+  document.addEventListener('keydown', e=>{
+    switch(e.key){
+      case 'ArrowRight': case 'PageDown': case ' ': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': prev(); break;
+      case 'Home': go(0); break;
+      case 'End': go(total-1); break;
+      case 'f': case 'F':
+        if(!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+        break;
+    }
+  });
+
+  // touch / swipe support for tablets
+  let x0=null;
+  document.addEventListener('touchstart', e=>{ x0 = e.changedTouches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', e=>{
+    if(x0===null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx)>50){ dx<0 ? next() : prev(); }
+    x0=null;
+  }, {passive:true});
+
+  render();
+})();
+</script>
+</body>
+</html>
