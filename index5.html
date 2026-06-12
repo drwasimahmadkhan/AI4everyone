@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Academic AI Productivity Workshop</title>
+<style>
+:root{--card:#ffffff;--card2:#f6f9ff;--ink:#0e1630;--muted:#455875;--line:#d9e3f4;--soft:#edf3fb;--accent:#2457e6;--accent2:#7c3aed;--accent3:#0891b2;--good:#0f766e;--bad:#b42318;--shadow:0 22px 70px rgba(8,18,45,.17);--r:24px;--pad:clamp(20px,2.3vw,34px)}
+body.dark{--card:#101a33;--card2:#172342;--ink:#f4f7ff;--muted:#ccdaef;--line:#3b4e71;--soft:#273858;--accent:#7fb2ff;--accent2:#c4b5fd;--accent3:#67e8f9;--shadow:0 24px 80px rgba(0,0,0,.4)}
+*{box-sizing:border-box} html,body{margin:0;height:100%;overflow:hidden;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 14% 10%,rgba(36,87,230,.18),transparent 34%),radial-gradient(circle at 88% 8%,rgba(124,58,237,.15),transparent 32%),linear-gradient(135deg,#f8fbff,#eef4ff 45%,#fbfdff)}
+body.dark{background:radial-gradient(circle at 14% 10%,rgba(59,130,246,.15),transparent 34%),radial-gradient(circle at 86% 9%,rgba(124,58,237,.16),transparent 30%),linear-gradient(135deg,#050814,#0d1730)}
+.app{height:100dvh;display:grid;grid-template-rows:auto 1fr;gap:8px;padding:8px 10px 62px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:18px;padding:7px 9px;box-shadow:0 10px 28px rgba(8,18,45,.11);backdrop-filter:blur(14px);z-index:20} body.dark .topbar{background:rgba(15,25,50,.9)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0} .logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-weight:1000} .brand b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .brand span{font-size:11px;color:var(--muted)}
+.actions{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap} button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 10px;border-radius:12px;font-weight:850;cursor:pointer;box-shadow:0 5px 14px rgba(0,0,0,.04);font-size:12px} .primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border-color:transparent}
+.stage{min-height:0;position:relative} .slide{display:none;height:100%;align-items:stretch;justify-content:center} .slide.active{display:flex}
+.slide-card{width:min(1240px,100%);height:100%;position:relative;overflow:hidden;background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:var(--pad)}
+.slide-card:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(135deg,rgba(36,87,230,.09),transparent 45%,rgba(124,58,237,.08))}
+.fit{height:100%;position:relative;z-index:1;transform-origin:top left;display:flex;flex-direction:column} .slide-no{position:absolute;top:12px;right:16px;color:var(--muted);font-weight:950;font-size:12px;z-index:2}
+.kicker{text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-size:12px;font-weight:1000;margin-bottom:8px}
+h1{font-size:clamp(32px,3.45vw,54px);line-height:1.04;margin:0 46px 12px 0;letter-spacing:-.04em;max-width:1120px} .subtitle{font-size:clamp(17px,1.28vw,21px);line-height:1.42;color:var(--muted);margin:0 0 14px;max-width:980px} h2{font-size:clamp(22px,2vw,30px);margin:0 0 8px} h3{font-size:clamp(20px,1.45vw,25px);line-height:1.15;margin:6px 0 6px} p{font-size:clamp(15.5px,1.08vw,18px);line-height:1.42;color:var(--muted);margin:.25rem 0}
+.hero h1{font-size:clamp(42px,4.5vw,66px);max-width:1000px} .heroSplit{display:grid;grid-template-columns:1.15fr .75fr;gap:18px;align-items:stretch;flex:1} .heroBadge{background:linear-gradient(160deg,rgba(36,87,230,.13),rgba(124,58,237,.13));border:1px solid var(--line);border-radius:30px;padding:24px;display:grid;place-items:center;text-align:center;gap:12px} .heroBadge span{width:138px;height:138px;border-radius:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;color:#fff;font-size:46px;font-weight:1000;box-shadow:0 24px 58px rgba(36,87,230,.27)} .heroBadge b{font-size:26px;line-height:1.1}
+.cards{display:grid;gap:14px;margin-top:12px} .c2{grid-template-columns:repeat(2,1fr)} .c3{grid-template-columns:repeat(3,1fr)} .c4{grid-template-columns:repeat(4,1fr)} .c5{grid-template-columns:repeat(3,1fr)} .c5 .card{min-height:205px} .c5 .card:nth-child(4){grid-column:1/2} .c5 .card:nth-child(5){grid-column:2/4} .c6{grid-template-columns:repeat(3,1fr)}
+.card,.taskbox,.prompt,.step,.sourceGrid article,.scoregrid div{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 8px 20px rgba(8,18,45,.05)} .card{min-height:180px;display:flex;flex-direction:column} .c4 .card{min-height:196px} .c6 .card{min-height:165px} .card p{font-size:clamp(14.5px,1vw,16.8px)} .icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:rgba(36,87,230,.1);font-size:22px;font-weight:1000;color:var(--accent);margin-bottom:8px;flex:0 0 auto}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px} .compare>div{border-radius:22px;padding:22px;border:1px solid var(--line);background:var(--card)} .bad{border-color:rgba(180,35,24,.32)!important} .good{border-color:rgba(15,118,110,.34)!important} .bad h2{color:var(--bad)} .good h2{color:var(--good)}
+.formula{margin:8px 0 14px;padding:22px;border-radius:24px;text-align:center;background:linear-gradient(135deg,rgba(36,87,230,.12),rgba(124,58,237,.12));border:1px solid rgba(36,87,230,.24);font-size:clamp(31px,3.7vw,54px);font-weight:1000;letter-spacing:-.04em}
+.steps{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px} .step{display:flex;gap:13px;min-height:118px} .step span{width:38px;height:38px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:grid;place-items:center;font-weight:1000;flex:0 0 auto} .step h3{margin-top:0}
+.taskbox{margin-top:14px;background:linear-gradient(135deg,rgba(8,145,178,.10),rgba(36,87,230,.08))} .taskhead{display:flex;justify-content:space-between;gap:14px;align-items:flex-start} .taskhead b{text-transform:uppercase;color:var(--accent);font-size:12px;letter-spacing:.08em} .taskhead span{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-weight:1000;border-radius:16px;padding:10px 12px;white-space:nowrap} ul{margin:8px 0 0 20px;padding:0;color:var(--muted);font-size:clamp(15px,1vw,17px);line-height:1.4} li{margin:4px 0}
+.promptSlide .prompt{margin-top:6px;background:#0b1224;color:#e8f3ff;border-color:rgba(36,87,230,.35)} .prompt b{display:block;color:#93c5fd;text-transform:uppercase;letter-spacing:.08em;font-size:12px;margin-bottom:8px} code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:clamp(14px,1vw,16px);line-height:1.5;white-space:pre-wrap;color:inherit}
+.scoregrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px} .scoregrid div{min-height:190px} .scoregrid b{display:block;color:var(--accent);font-size:18px;margin-bottom:8px} .scoregrid span{color:var(--muted);line-height:1.4}
+.sourceGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px} .sourceGrid article{min-height:170px} .sourceGrid b{display:block;color:var(--accent);font-size:18px;margin-bottom:6px} .sourceGrid a{color:var(--accent);font-weight:900;text-decoration:none;font-size:13px}
+.quoteSmall{margin-top:16px;border:1px solid var(--line);border-radius:24px;background:rgba(36,87,230,.08);padding:22px;font-size:clamp(24px,2.6vw,40px);font-weight:1000;color:var(--accent);line-height:1.12} .closing{height:100%;display:grid;place-items:center;text-align:center} .bigQuote{font-size:clamp(44px,5.2vw,76px);font-weight:1000;line-height:1.05;letter-spacing:-.05em;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;max-width:1000px} .closing p{font-size:clamp(20px,1.5vw,26px);max-width:920px;color:var(--ink);font-weight:800}
+.compact h1{font-size:clamp(30px,3.1vw,48px)} .compact .subtitle{font-size:clamp(16px,1.15vw,19px)}
+.floating{position:fixed;left:50%;bottom:8px;transform:translateX(-50%);z-index:999;background:rgba(255,255,255,.92);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:999px;padding:6px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(14px)} :fullscreen .floating{position:fixed!important;bottom:10px!important;z-index:2147483647!important} body.dark .floating{background:rgba(12,19,38,.92)} .progress{height:8px;width:min(280px,26vw);border-radius:999px;background:var(--soft);overflow:hidden;border:1px solid var(--line)} .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));transition:.2s} .count{font-weight:1000;color:var(--muted);min-width:58px;text-align:center;font-size:12px}
+.modal{position:fixed;inset:0;background:rgba(3,7,18,.56);display:none;place-items:center;z-index:1000;padding:18px} .modal.open{display:grid} .modal-card{width:min(1040px,96vw);max-height:86vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:20px;box-shadow:var(--shadow)} .modal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:10px} .promptGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px} .promptGrid article{background:#0b1224;color:#e8f3ff;border:1px solid rgba(36,87,230,.36);border-radius:18px;padding:14px;cursor:pointer} .promptGrid b{display:block;color:#93c5fd;margin-bottom:7px}
+@media(max-width:1050px){.heroSplit,.compare{grid-template-columns:1fr}.c4,.c5,.c6,.sourceGrid,.scoregrid{grid-template-columns:repeat(2,1fr)}.steps{grid-template-columns:1fr}}
+@media(max-width:700px){.app{padding:6px 6px 58px}.brand span,.actions .hide-small{display:none}.slide-card{padding:18px}.cards,.c2,.c3,.c4,.c5,.c6,.sourceGrid,.scoregrid,.promptGrid{grid-template-columns:1fr}.c5 .card:nth-child(4),.c5 .card:nth-child(5){grid-column:auto}.progress{display:none}h1{font-size:30px}.floating{width:calc(100vw - 12px);justify-content:center}.floating button{padding:7px 8px}}
+@media print{html,body{overflow:visible;height:auto;background:#fff}.topbar,.floating,.modal{display:none!important}.app{height:auto;display:block;padding:0}.slide{display:block;height:auto;page-break-after:always}.slide-card{height:100vh;box-shadow:none;border-radius:0}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">AI</div><div><b>Academic AI Productivity Workshop</b><span>Redefining Productivity Across Multidisciplinary Fields with AI</span></div></div>
+    <div class="actions"><button onclick="toggleTheme()">Theme</button><button onclick="toggleFull()" class="hide-small">Fullscreen</button><button onclick="openPrompts()" class="primary">Prompts</button></div>
+  </header>
+  <main class="stage">
+<section class="slide hero">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Academic Workshop</div>
+      <h1>Redefining Productivity Across Multidisciplinary Fields with AI</h1>
+      <p class="subtitle">For teachers, students, researchers and academic staff across departments</p>
+      <div class="heroSplit"><div><div class="cards c3"><article class="card"><div class="icon">🎓</div><h3>Audience</h3><p>Teachers, students, researchers, coordinators and academic administrators.</p></article><article class="card"><div class="icon">🧠</div><h3>Theme</h3><p>Use AI to think better, work faster and learn deeper.</p></article><article class="card"><div class="icon">🛠</div><h3>Method</h3><p>Short explanation, live demo, hands-on task and review.</p></article></div></div><div class="heroBadge"><span>AI</span><b>Learn → Try → Check → Improve</b><p>No coding required. Bring your own subject, topic or routine academic task.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Session Outcomes</div>
+      <h1>By the end, participants will be able to use AI safely and productively</h1>
+      <p class="subtitle">The goal is not to replace thinking; the goal is to improve academic work with better thinking.</p>
+      <div class="cards c5"><article class="card"><div class="icon">1</div><h3>Explain AI</h3><p>Describe what AI can and cannot do in simple words.</p></article><article class="card"><div class="icon">2</div><h3>Use AI</h3><p>Apply AI to study, teaching, research and administration.</p></article><article class="card"><div class="icon">3</div><h3>Prompt well</h3><p>Write clear prompts using role, task, context, format and limits.</p></article><article class="card"><div class="icon">4</div><h3>Choose tools</h3><p>Select the right tool for writing, research, visuals, coding or documents.</p></article><article class="card"><div class="icon">5</div><h3>Verify output</h3><p>Check facts, sources, ethics, originality and final quality.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Start Here</div>
+      <h1>What is Artificial Intelligence?</h1>
+      <p class="subtitle">AI is software that can perform tasks that normally require human-like thinking.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🗣</div><h3>Language</h3><p>AI can understand and generate text, explanations, questions and summaries.</p></article><article class="card"><div class="icon">👁</div><h3>Vision</h3><p>AI can help read images, slides, scanned pages and visual material.</p></article><article class="card"><div class="icon">📊</div><h3>Patterns</h3><p>AI can find patterns in data, text, feedback, marks and research notes.</p></article><article class="card"><div class="icon">🤖</div><h3>Assistance</h3><p>AI can act like a draft assistant, study partner, reviewer or idea generator.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Explain AI in your own words</h2></div><span>5 minutes</span></div>
+      <ul><li>Write a one-line definition of AI for a school student.</li><li>Ask AI to simplify it for a non-technical audience.</li><li>Compare both versions and choose the clearer one.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Simple Analogy</div>
+      <h1>AI is like a very fast assistant, not an automatic authority</h1>
+      <p class="subtitle">It can help you draft, organize, explain and compare, but it does not replace human judgment.</p>
+      <div class="compare"><div class="good"><h2>Good use</h2><p>Ask AI to help you understand, structure, improve, practice and review your work.</p></div><div class="bad"><h2>Bad use</h2><p>Copy AI output without checking facts, sources, originality, policy and context.</p></div></div><div class="cards c3"><article class="card"><div class="icon">✅</div><h3>You decide</h3><p>Teacher, student or researcher remains responsible.</p></article><article class="card"><div class="icon">🔍</div><h3>You verify</h3><p>Check claims, references, calculations and examples.</p></article><article class="card"><div class="icon">✍</div><h3>You finalize</h3><p>Use AI drafts as starting points, not final submissions.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">AI Types</div>
+      <h1>Common types of AI you will use in academia</h1>
+      <p class="subtitle">Different tools are useful for different academic tasks.</p>
+      <div class="cards c4"><article class="card"><div class="icon">💬</div><h3>Text AI</h3><p>Chatbots for explanations, writing, summaries, feedback and planning.</p></article><article class="card"><div class="icon">📄</div><h3>Source-grounded AI</h3><p>Tools that answer from uploaded notes, PDFs, handouts and papers.</p></article><article class="card"><div class="icon">🎨</div><h3>Design AI</h3><p>Tools for slides, posters, infographics, diagrams and classroom visuals.</p></article><article class="card"><div class="icon">📈</div><h3>Data AI</h3><p>Tools for tables, charts, survey summaries, code help and basic analysis.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Match the tool type</h2></div><span>4 minutes</span></div>
+      <ul><li>Choose one academic task you do weekly.</li><li>Decide whether it needs text AI, source-grounded AI, design AI or data AI.</li><li>Write one sentence explaining your choice.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">What AI Is Not</div>
+      <h1>AI is not a mind reader, subject expert or policy owner</h1>
+      <p class="subtitle">Clear input and human review are still required.</p>
+      <div class="cards c4"><article class="card"><div class="icon">❌</div><h3>Not always accurate</h3><p>AI can invent facts, citations, numbers or confident explanations.</p></article><article class="card"><div class="icon">❌</div><h3>Not your institution policy</h3><p>Academic integrity rules still come from your department or institution.</p></article><article class="card"><div class="icon">❌</div><h3>Not a substitute for learning</h3><p>Students should use AI to practice and understand, not to avoid thinking.</p></article><article class="card"><div class="icon">❌</div><h3>Not safe for secrets</h3><p>Do not paste private, confidential or sensitive data into public tools.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Risk spotting</h2></div><span>5 minutes</span></div>
+      <ul><li>Look at an AI answer from any tool.</li><li>Highlight one claim that needs verification.</li><li>Write how you would verify it.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Why Academia Should Care</div>
+      <h1>AI can reduce routine work and increase time for higher-value learning</h1>
+      <p class="subtitle">The best use is not shortcutting education; it is upgrading education.</p>
+      <div class="cards c4"><article class="card"><div class="icon">⏱</div><h3>Save time</h3><p>Draft rubrics, summaries, emails, quizzes, outlines and feedback templates.</p></article><article class="card"><div class="icon">🧩</div><h3>Personalize learning</h3><p>Create examples for beginner, intermediate and advanced learners.</p></article><article class="card"><div class="icon">🌍</div><h3>Improve access</h3><p>Simplify difficult concepts, translate, explain and create practice material.</p></article><article class="card"><div class="icon">📚</div><h3>Support research</h3><p>Organize literature notes, compare sources and refine research questions.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Academic Integrity</div>
+      <h1>Use AI transparently, ethically and according to rules</h1>
+      <p class="subtitle">Every institution may have different policies, so local policy comes first.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🧾</div><h3>Declare when required</h3><p>Follow course, department and journal rules for disclosure.</p></article><article class="card"><div class="icon">🧠</div><h3>Keep your thinking visible</h3><p>Show notes, reasoning, drafts, calculations or process when needed.</p></article><article class="card"><div class="icon">🔐</div><h3>Protect privacy</h3><p>Do not upload student records, exams, unpublished data or confidential files.</p></article><article class="card"><div class="icon">📌</div><h3>Cite real sources</h3><p>AI is not a source. Cite books, papers, datasets and official documents.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Integrity statement</h2></div><span>6 minutes</span></div>
+      <ul><li>Write a two-line class rule for responsible AI use.</li><li>Include what is allowed, what is not allowed and when disclosure is required.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">AI Uses</div>
+      <h1>Where AI helps in academic life</h1>
+      <p class="subtitle">Think of AI as a support layer across teaching, learning, research and administration.</p>
+      <div class="cards c4"><article class="card"><div class="icon">👩‍🏫</div><h3>Teaching</h3><p>Lesson plans, examples, activities, rubrics, quiz questions and feedback.</p></article><article class="card"><div class="icon">👨‍🎓</div><h3>Learning</h3><p>Study plans, concept explanations, practice questions and self-testing.</p></article><article class="card"><div class="icon">🔬</div><h3>Research</h3><p>Literature notes, research questions, summaries and comparison tables.</p></article><article class="card"><div class="icon">🏫</div><h3>Academic operations</h3><p>Emails, notices, meeting minutes, forms, reports and event planning.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">For Teachers</div>
+      <h1>Practical teacher use cases</h1>
+      <p class="subtitle">Teachers can use AI to save preparation time and improve learning material.</p>
+      <div class="cards c4"><article class="card"><div class="icon">📘</div><h3>Lesson design</h3><p>Create objectives, flow, examples, classroom activities and homework.</p></article><article class="card"><div class="icon">📝</div><h3>Assessment</h3><p>Generate quiz items, rubrics, marking criteria and feedback comments.</p></article><article class="card"><div class="icon">🎯</div><h3>Differentiation</h3><p>Make beginner-friendly, advanced and remedial versions of the same topic.</p></article><article class="card"><div class="icon">💬</div><h3>Communication</h3><p>Draft notices, parent/student messages and course announcements.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Teacher quick win</h2></div><span>8 minutes</span></div>
+      <ul><li>Pick one topic you teach.</li><li>Ask AI for a 30-minute lesson plan with objectives and activity.</li><li>Ask AI to create 5 quiz questions and a simple rubric.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">For Students</div>
+      <h1>Practical student use cases</h1>
+      <p class="subtitle">Students should use AI to understand, practice and improve—not to submit unchecked work.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🧠</div><h3>Concept clarity</h3><p>Ask for simple explanation, analogy, examples and common mistakes.</p></article><article class="card"><div class="icon">📅</div><h3>Study planning</h3><p>Turn syllabus into weekly plan, revision checklist and exam strategy.</p></article><article class="card"><div class="icon">❓</div><h3>Self-testing</h3><p>Generate practice questions, flashcards and answer explanations.</p></article><article class="card"><div class="icon">✍</div><h3>Writing support</h3><p>Improve structure, grammar, clarity and argument flow after drafting yourself.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Student quick win</h2></div><span>8 minutes</span></div>
+      <ul><li>Choose one difficult concept.</li><li>Ask AI to explain it with analogy and two examples.</li><li>Ask for five practice questions, then answer them without looking at the answers.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">For Researchers</div>
+      <h1>Practical research use cases</h1>
+      <p class="subtitle">AI can support research organization, but source quality and methodology remain human responsibilities.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🔎</div><h3>Question refinement</h3><p>Turn broad interest into focused research questions.</p></article><article class="card"><div class="icon">📚</div><h3>Literature notes</h3><p>Summarize papers into claims, methods, findings and limitations.</p></article><article class="card"><div class="icon">📊</div><h3>Data thinking</h3><p>Suggest coding categories, survey themes, chart ideas and analysis checks.</p></article><article class="card"><div class="icon">🧾</div><h3>Writing revision</h3><p>Improve abstract, introduction flow, clarity and reviewer response drafts.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Research quick win</h2></div><span>8 minutes</span></div>
+      <ul><li>Write your research topic in one sentence.</li><li>Ask AI for 5 possible research questions.</li><li>Select one and ask for variables, method options and ethical concerns.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">For Academic Staff</div>
+      <h1>Practical administration use cases</h1>
+      <p class="subtitle">AI can speed up repetitive academic office work.</p>
+      <div class="cards c4"><article class="card"><div class="icon">📩</div><h3>Communication</h3><p>Emails, reminders, notices, agendas and event announcements.</p></article><article class="card"><div class="icon">📋</div><h3>Documentation</h3><p>Meeting minutes, action lists, SOPs, checklists and report drafts.</p></article><article class="card"><div class="icon">📊</div><h3>Data summaries</h3><p>Attendance summaries, feedback themes and basic table cleanup.</p></article><article class="card"><div class="icon">🗂</div><h3>Coordination</h3><p>Timelines, task tracking, departmental plans and follow-up messages.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Admin quick win</h2></div><span>7 minutes</span></div>
+      <ul><li>Take a rough meeting note.</li><li>Ask AI to create minutes with decisions and action items.</li><li>Check names, dates, responsibilities and missing points.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Prompt Engineering</div>
+      <h1>Prompt engineering means asking clearly</h1>
+      <p class="subtitle">A prompt is the instruction you give to AI. Better instructions create better outputs.</p>
+      <div class="formula">Role + Task + Context + Format + Limits + Check</div><div class="cards c4"><article class="card"><div class="icon">🎭</div><h3>Role</h3><p>Tell AI what role to play: tutor, reviewer, editor, researcher or planner.</p></article><article class="card"><div class="icon">🎯</div><h3>Task</h3><p>State the exact result you need.</p></article><article class="card"><div class="icon">📦</div><h3>Context</h3><p>Give audience, level, subject, source text and background.</p></article><article class="card"><div class="icon">📐</div><h3>Format</h3><p>Request table, checklist, lesson plan, quiz, email or summary.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Prompt Formula</div>
+      <h1>The complete academic prompt formula</h1>
+      <p class="subtitle">Use this structure for most teaching, learning and research tasks.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>Role</h3><p>Act as a supportive university tutor / teacher / research assistant.</p></div></article><article class="step"><span>2</span><div><h3>Task</h3><p>Create, explain, review, summarize, compare or improve something specific.</p></div></article><article class="step"><span>3</span><div><h3>Context</h3><p>Mention subject, level, department, audience and source material.</p></div></article><article class="step"><span>4</span><div><h3>Format</h3><p>Ask for bullets, table, rubric, lesson plan, quiz or one-page brief.</p></div></article><article class="step"><span>5</span><div><h3>Limits</h3><p>Set length, tone, difficulty, citations, privacy and no fake facts.</p></div></article><article class="step"><span>6</span><div><h3>Check</h3><p>Ask AI to list assumptions, missing information and risks.</p></div></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Bad vs Good Prompt</div>
+      <h1>Small prompt changes create big quality changes</h1>
+      <p class="subtitle">A good prompt gives purpose, audience, source and output format.</p>
+      <div class="compare"><div class="bad"><h2>Weak Prompt</h2><p>Explain photosynthesis.</p></div><div class="good"><h2>Better Prompt</h2><p>Act as a biology teacher. Explain photosynthesis for first-year students using a simple analogy, a labeled step list, 3 common mistakes and 5 quiz questions with answers.</p></div></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Improve a weak prompt</h2></div><span>6 minutes</span></div>
+      <ul><li>Write one weak prompt from your subject.</li><li>Add role, audience, format and check step.</li><li>Compare the output before and after.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide promptSlide">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Prompt Pattern 1</div>
+      <h1>Ask AI to teach like a tutor</h1>
+      <p class="subtitle">Use this when students struggle with a concept.</p>
+      <div class="prompt"><b>Tutor Prompt</b><code>Act as a patient tutor. Explain [topic] to a [level] student. Use simple language, one analogy, two examples, three common mistakes and five practice questions. Do not skip steps.</code></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Tutor prompt practice</h2></div><span>7 minutes</span></div>
+      <ul><li>Replace [topic] with a real topic from your class.</li><li>Run the prompt.</li><li>Ask a student or colleague which part is clearest.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide promptSlide">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Prompt Pattern 2</div>
+      <h1>Ask AI to make teaching material</h1>
+      <p class="subtitle">Use this when teachers need classroom-ready structure.</p>
+      <div class="prompt"><b>Lesson Prompt</b><code>Act as a teacher. Create a 45-minute lesson plan on [topic] for [level]. Include learning outcomes, warm-up, explanation, activity, assessment, homework and required materials.</code></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Lesson prompt practice</h2></div><span>8 minutes</span></div>
+      <ul><li>Use a topic from your department.</li><li>Ask AI to make the lesson easier for weak students.</li><li>Ask AI to add one active learning activity.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide promptSlide">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Prompt Pattern 3</div>
+      <h1>Ask AI to review writing</h1>
+      <p class="subtitle">Use this for essays, lab reports, proposals and assignments after a first draft exists.</p>
+      <div class="prompt"><b>Review Prompt</b><code>Review this draft for clarity, structure, argument, missing evidence, repetition, tone and academic integrity risks. Do not rewrite first. Give feedback in a table, then provide an improved version.</code></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Review prompt practice</h2></div><span>8 minutes</span></div>
+      <ul><li>Paste a short non-sensitive paragraph.</li><li>Ask for feedback table first.</li><li>Improve the paragraph yourself after reading feedback.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide promptSlide">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Prompt Pattern 4</div>
+      <h1>Ask AI to create assessment items</h1>
+      <p class="subtitle">Use this to build practice questions, not to replace teacher judgment.</p>
+      <div class="prompt"><b>Assessment Prompt</b><code>Create 10 assessment questions on [topic] for [level]. Include 4 MCQs, 3 short questions and 3 application questions. Provide answers, difficulty level and the learning outcome tested.</code></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Assessment prompt practice</h2></div><span>7 minutes</span></div>
+      <ul><li>Create questions for one topic.</li><li>Check whether each question matches your learning outcome.</li><li>Remove or revise weak questions manually.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Iterative Prompting</div>
+      <h1>The first answer is rarely the final answer</h1>
+      <p class="subtitle">Good AI users improve output through follow-up prompts.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>First ask</h3><p>Get a rough answer or structure.</p></div></article><article class="step"><span>2</span><div><h3>Narrow</h3><p>Ask AI to simplify, shorten, make practical or change audience level.</p></div></article><article class="step"><span>3</span><div><h3>Verify</h3><p>Ask what assumptions, missing information and possible errors exist.</p></div></article><article class="step"><span>4</span><div><h3>Improve</h3><p>Ask for a clearer version, better examples or table format.</p></div></article><article class="step"><span>5</span><div><h3>Finalize</h3><p>Human checks and edits before sharing or submitting.</p></div></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Two-round improvement</h2></div><span>6 minutes</span></div>
+      <ul><li>Run one prompt.</li><li>Then ask: “Make it more practical and add a verification checklist.”</li><li>Compare the two outputs.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">AI Tools Map</div>
+      <h1>Choose tools by task, not by hype</h1>
+      <p class="subtitle">Start with one or two tools and build habits before adding more.</p>
+      <div class="cards c6"><article class="card"><div class="icon">💬</div><h3>ChatGPT / Gemini / Copilot</h3><p>General writing, explanation, planning, brainstorming and file-based help.</p></article><article class="card"><div class="icon">📚</div><h3>NotebookLM</h3><p>Study and research assistant grounded in your uploaded sources.</p></article><article class="card"><div class="icon">🔎</div><h3>Perplexity</h3><p>Web research and comparison with sources.</p></article><article class="card"><div class="icon">🎨</div><h3>Canva</h3><p>Academic posters, infographics, class visuals and presentations.</p></article><article class="card"><div class="icon">✅</div><h3>Grammarly / Writing tools</h3><p>Grammar, tone, clarity and writing polish.</p></article><article class="card"><div class="icon">🧑‍💻</div><h3>GitHub Copilot / coding tools</h3><p>Programming help for CS, engineering and data projects.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: ChatGPT</div>
+      <h1>Best for explanation, drafting, brainstorming and structured work</h1>
+      <p class="subtitle">Use it as a thinking partner for teaching, learning, writing and planning.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Explain concepts</h3><p>Ask for examples, analogies and practice questions.</p></article><article class="card"><div class="icon">Use 2</div><h3>Draft academic material</h3><p>Lesson outlines, announcements, feedback templates and rubrics.</p></article><article class="card"><div class="icon">Use 3</div><h3>Improve writing</h3><p>Clarity, structure, tone and revision suggestions.</p></article><article class="card"><div class="icon">Use 4</div><h3>Analyze files/data</h3><p>Summaries, tables and simple reasoning over uploaded material where available.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>ChatGPT practice</h2></div><span>8 minutes</span></div>
+      <ul><li>Ask it to explain one topic for beginners.</li><li>Ask for 5 practice questions.</li><li>Ask it to identify what students usually misunderstand.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: Google Gemini</div>
+      <h1>Best for general academic assistance and Google-style workflows</h1>
+      <p class="subtitle">Useful for drafting, explaining, planning and working around Google documents where available.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Brainstorming</h3><p>Generate ideas for projects, activities and presentations.</p></article><article class="card"><div class="icon">Use 2</div><h3>Drafting</h3><p>Create outlines, summaries, lesson notes and messages.</p></article><article class="card"><div class="icon">Use 3</div><h3>Learning support</h3><p>Simplify complex topics and make revision plans.</p></article><article class="card"><div class="icon">Use 4</div><h3>Workspace fit</h3><p>Helpful when your institution uses Google Docs, Gmail or Sheets.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Gemini practice</h2></div><span>7 minutes</span></div>
+      <ul><li>Ask for a weekly study plan for one course.</li><li>Ask it to turn the plan into a checklist.</li><li>Ask it to add exam revision tips.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: Microsoft Copilot</div>
+      <h1>Best for Microsoft 365 academic workflows</h1>
+      <p class="subtitle">Useful when classes and departments already use Word, PowerPoint, Excel, Outlook or Teams.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Word</h3><p>Draft, summarize and improve documents.</p></article><article class="card"><div class="icon">Use 2</div><h3>PowerPoint</h3><p>Outline lecture slides and presentation structure.</p></article><article class="card"><div class="icon">Use 3</div><h3>Excel</h3><p>Explain formulas, organize data and suggest charts.</p></article><article class="card"><div class="icon">Use 4</div><h3>Outlook/Teams</h3><p>Draft messages, agendas and meeting summaries where supported.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Copilot practice</h2></div><span>7 minutes</span></div>
+      <ul><li>Take a course announcement.</li><li>Ask for a polished email and a short Teams-style message.</li><li>Check tone, dates and action required.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: NotebookLM</div>
+      <h1>Best for learning from your own sources</h1>
+      <p class="subtitle">NotebookLM is strong when you upload course notes, PDFs, handouts or papers and ask questions from them.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Source Q&amp;A</h3><p>Ask questions grounded in uploaded material.</p></article><article class="card"><div class="icon">Use 2</div><h3>Study guide</h3><p>Generate summaries, key terms and review questions.</p></article><article class="card"><div class="icon">Use 3</div><h3>Paper notes</h3><p>Extract claims, methods, findings and limitations.</p></article><article class="card"><div class="icon">Use 4</div><h3>Audio / briefing</h3><p>Turn source material into easier revision formats where available.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>NotebookLM practice</h2></div><span>10 minutes</span></div>
+      <ul><li>Upload non-confidential class notes or a public article.</li><li>Ask for a study guide and 10 quiz questions.</li><li>Ask it to answer using only the uploaded source.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: Perplexity</div>
+      <h1>Best for web research with visible sources</h1>
+      <p class="subtitle">Use it to compare recent information, find starting sources and verify claims.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Current topics</h3><p>Find recent developments, policies or examples.</p></article><article class="card"><div class="icon">Use 2</div><h3>Source comparison</h3><p>Compare different explanations or viewpoints.</p></article><article class="card"><div class="icon">Use 3</div><h3>Research starting point</h3><p>Collect initial sources before deeper database research.</p></article><article class="card"><div class="icon">Use 4</div><h3>Verification</h3><p>Check whether an AI claim has public evidence.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Perplexity practice</h2></div><span>8 minutes</span></div>
+      <ul><li>Search one current topic from your department.</li><li>Open at least two cited sources.</li><li>Write what you trust, what you doubt and what needs academic verification.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: Canva</div>
+      <h1>Best for academic visuals and presentations</h1>
+      <p class="subtitle">Use Canva for posters, infographics, certificates, class activities and visual summaries.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Posters</h3><p>Seminar, conference, society and event posters.</p></article><article class="card"><div class="icon">Use 2</div><h3>Infographics</h3><p>Summarize processes, timelines, frameworks and comparisons.</p></article><article class="card"><div class="icon">Use 3</div><h3>Slides</h3><p>Create lecture or student presentation layouts.</p></article><article class="card"><div class="icon">Use 4</div><h3>Class visuals</h3><p>Diagrams, worksheets, flashcards and classroom graphics.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Canva practice</h2></div><span>8 minutes</span></div>
+      <ul><li>Create an infographic title for one academic topic.</li><li>Ask AI for 5 visual sections.</li><li>Turn those sections into a poster or slide outline.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: Grammarly / Writing Tools</div>
+      <h1>Best for clarity, tone and grammar polish</h1>
+      <p class="subtitle">Use writing tools after you have your own draft.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Grammar</h3><p>Fix spelling, punctuation and sentence issues.</p></article><article class="card"><div class="icon">Use 2</div><h3>Tone</h3><p>Make writing formal, polite, concise or academic.</p></article><article class="card"><div class="icon">Use 3</div><h3>Clarity</h3><p>Reduce repetition and improve sentence flow.</p></article><article class="card"><div class="icon">Use 4</div><h3>Final polish</h3><p>Check emails, abstracts, reports and student drafts.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Writing tool practice</h2></div><span>6 minutes</span></div>
+      <ul><li>Write a rough paragraph yourself.</li><li>Use a writing tool to improve clarity.</li><li>Compare: what did it improve and what did you reject?</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: Google Translate / Lens</div>
+      <h1>Best for accessibility and quick text extraction</h1>
+      <p class="subtitle">Useful for multilingual support, scanned pages and quick understanding.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Translate</h3><p>Understand rough meaning across languages.</p></article><article class="card"><div class="icon">Use 2</div><h3>Scan text</h3><p>Extract text from images, boards, pages or screenshots.</p></article><article class="card"><div class="icon">Use 3</div><h3>Class access</h3><p>Help students understand instructions or key terms.</p></article><article class="card"><div class="icon">Use 4</div><h3>Manual check</h3><p>Academic wording still needs teacher or expert review.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Translate/Lens practice</h2></div><span>6 minutes</span></div>
+      <ul><li>Scan or type a small non-sensitive paragraph.</li><li>Translate it into another language.</li><li>Check meaning, names, terms and subject-specific vocabulary.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Tool: GitHub Copilot / Coding AI</div>
+      <h1>Best for programming and technical departments</h1>
+      <p class="subtitle">Useful for code explanation, debugging, examples and learning programming patterns.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Use 1</div><h3>Explain code</h3><p>Understand what a function or error means.</p></article><article class="card"><div class="icon">Use 2</div><h3>Generate examples</h3><p>Create starter code, test cases and practice tasks.</p></article><article class="card"><div class="icon">Use 3</div><h3>Debugging</h3><p>Suggest fixes and explain why code fails.</p></article><article class="card"><div class="icon">Use 4</div><h3>Learning support</h3><p>Compare approaches and understand algorithms.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Coding AI practice</h2></div><span>8 minutes</span></div>
+      <ul><li>Paste a small non-sensitive code snippet.</li><li>Ask AI to explain it line by line.</li><li>Ask for one bug, one improvement and one practice exercise.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Department Examples</div>
+      <h1>AI use across different academic departments</h1>
+      <p class="subtitle">Every department can use the same AI workflow with different content.</p>
+      <div class="cards c6"><article class="card"><div class="icon">🔬</div><h3>Science</h3><p>Lab explanations, experiment plans, safety checklists and data summaries.</p></article><article class="card"><div class="icon">⚙</div><h3>Engineering</h3><p>Design ideas, calculations review, coding help and project documentation.</p></article><article class="card"><div class="icon">💼</div><h3>Business</h3><p>Case analysis, market summaries, reports, presentations and financial tables.</p></article><article class="card"><div class="icon">📖</div><h3>Humanities</h3><p>Reading guides, essay outlines, argument maps and source comparison.</p></article><article class="card"><div class="icon">⚖</div><h3>Law</h3><p>Case briefs, issue spotting, policy summaries and argument structure.</p></article><article class="card"><div class="icon">🩺</div><h3>Health Sciences</h3><p>Patient education drafts, anatomy explanations and evidence summaries with strict verification.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Sciences</div>
+      <h1>Biology, Chemistry, Physics and Environmental Sciences</h1>
+      <p class="subtitle">Use AI to simplify concepts, plan labs and review data carefully.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🧪</div><h3>Teaching</h3><p>Lab safety checklist, concept analogies and pre-lab questions.</p></article><article class="card"><div class="icon">📊</div><h3>Learning</h3><p>Step-by-step problem solving and error analysis.</p></article><article class="card"><div class="icon">🔬</div><h3>Research</h3><p>Paper summary, method comparison and limitations table.</p></article><article class="card"><div class="icon">⚠</div><h3>Caution</h3><p>Verify formulas, units, safety instructions and scientific claims.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Science task</h2></div><span>7 minutes</span></div>
+      <ul><li>Ask AI to explain one lab concept using analogy.</li><li>Ask for 5 pre-lab questions.</li><li>Check whether safety instructions are accurate.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Engineering &amp; Technology</div>
+      <h1>Engineering, CS, IT and Architecture</h1>
+      <p class="subtitle">Use AI for project planning, code explanation, documentation and design thinking.</p>
+      <div class="cards c4"><article class="card"><div class="icon">💻</div><h3>Coding</h3><p>Debugging, code explanation, test cases and algorithm practice.</p></article><article class="card"><div class="icon">📐</div><h3>Design</h3><p>Requirements, constraints, diagrams and project documentation.</p></article><article class="card"><div class="icon">🧮</div><h3>Math support</h3><p>Explain formulas and steps, but verify calculations manually.</p></article><article class="card"><div class="icon">🧰</div><h3>Portfolio</h3><p>Create project summaries, reports and presentation decks.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Engineering task</h2></div><span>8 minutes</span></div>
+      <ul><li>Choose one project idea.</li><li>Ask AI for requirements, risks and milestones.</li><li>Ask for a simple architecture or workflow outline.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Business &amp; Management</div>
+      <h1>Business, Economics, Accounting and Entrepreneurship</h1>
+      <p class="subtitle">Use AI for case analysis, communication, data summaries and presentations.</p>
+      <div class="cards c4"><article class="card"><div class="icon">📊</div><h3>Analysis</h3><p>SWOT, PESTLE, competitor comparison and market summaries.</p></article><article class="card"><div class="icon">💰</div><h3>Finance basics</h3><p>Explain ratios, formulas and table structures.</p></article><article class="card"><div class="icon">🧾</div><h3>Reports</h3><p>Executive summaries, dashboards and recommendation memos.</p></article><article class="card"><div class="icon">🗣</div><h3>Presentation</h3><p>Pitch outlines, speaker notes and Q&amp;A preparation.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Business task</h2></div><span>7 minutes</span></div>
+      <ul><li>Give AI a short case summary.</li><li>Ask for SWOT and 3 recommendations.</li><li>Ask what extra data is needed before making a decision.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Humanities &amp; Social Sciences</div>
+      <h1>Languages, History, Sociology, Psychology and Education</h1>
+      <p class="subtitle">Use AI for reading support, argument development and qualitative thinking.</p>
+      <div class="cards c4"><article class="card"><div class="icon">📚</div><h3>Reading</h3><p>Summaries, themes, timelines and concept maps.</p></article><article class="card"><div class="icon">🧠</div><h3>Theory</h3><p>Explain frameworks with examples and limitations.</p></article><article class="card"><div class="icon">✍</div><h3>Writing</h3><p>Essay outlines, thesis refinement and paragraph feedback.</p></article><article class="card"><div class="icon">🔎</div><h3>Caution</h3><p>Check interpretation, bias, citations and cultural context.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Humanities task</h2></div><span>7 minutes</span></div>
+      <ul><li>Choose one reading or theory.</li><li>Ask AI for main claims, assumptions and counterarguments.</li><li>Write your own final viewpoint in 5 lines.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Medical &amp; Health Sciences</div>
+      <h1>Medicine, Nursing, Pharmacy and Allied Health</h1>
+      <p class="subtitle">AI can support learning, but clinical accuracy and policy verification are essential.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🫀</div><h3>Learning</h3><p>Anatomy explanations, mechanism summaries and flashcards.</p></article><article class="card"><div class="icon">💊</div><h3>Study</h3><p>Drug class summaries, comparisons and exam questions.</p></article><article class="card"><div class="icon">🧑‍⚕️</div><h3>Patient education</h3><p>Plain-language draft handouts for review by professionals.</p></article><article class="card"><div class="icon">⚠</div><h3>Caution</h3><p>Never rely on public AI for diagnosis, dosage or patient-specific decisions.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Health sciences task</h2></div><span>7 minutes</span></div>
+      <ul><li>Ask for a simple explanation of one mechanism.</li><li>Ask for flashcards.</li><li>Verify every medical claim with approved textbook or guideline.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Education Department</div>
+      <h1>Teacher training and pedagogy</h1>
+      <p class="subtitle">Use AI to design learning experiences, not just content.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🎯</div><h3>Learning outcomes</h3><p>Write measurable outcomes and success criteria.</p></article><article class="card"><div class="icon">🤝</div><h3>Activities</h3><p>Create active learning, group tasks and reflection prompts.</p></article><article class="card"><div class="icon">📏</div><h3>Rubrics</h3><p>Build transparent rubrics and feedback language.</p></article><article class="card"><div class="icon">🌱</div><h3>Differentiation</h3><p>Adapt material for different levels and learning needs.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Education task</h2></div><span>8 minutes</span></div>
+      <ul><li>Choose one class topic.</li><li>Ask AI for an activity using active learning.</li><li>Ask for a 4-level rubric to assess student work.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Law &amp; Policy</div>
+      <h1>Law, governance and public policy</h1>
+      <p class="subtitle">Use AI for structure and comparison, but verify legal authority yourself.</p>
+      <div class="cards c4"><article class="card"><div class="icon">⚖</div><h3>Case briefs</h3><p>Facts, issues, rule, application and conclusion.</p></article><article class="card"><div class="icon">📑</div><h3>Policy summary</h3><p>Stakeholders, benefits, risks and implementation issues.</p></article><article class="card"><div class="icon">🗣</div><h3>Argument</h3><p>Prepare arguments, counterarguments and questions.</p></article><article class="card"><div class="icon">⚠</div><h3>Caution</h3><p>Verify statutes, cases, dates and jurisdiction from official sources.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Law/policy task</h2></div><span>7 minutes</span></div>
+      <ul><li>Summarize a public policy issue.</li><li>Ask for arguments for and against.</li><li>Ask what legal or official sources must be checked.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Arts, Media &amp; Design</div>
+      <h1>Fine arts, media studies, communication and design</h1>
+      <p class="subtitle">Use AI for ideation, storyboarding and design planning while keeping originality.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🎨</div><h3>Ideation</h3><p>Generate themes, mood boards and visual directions.</p></article><article class="card"><div class="icon">🎬</div><h3>Storytelling</h3><p>Scripts, storyboards, campaign concepts and captions.</p></article><article class="card"><div class="icon">🖼</div><h3>Visual planning</h3><p>Poster layout, color mood and infographic structure.</p></article><article class="card"><div class="icon">✨</div><h3>Originality</h3><p>Use AI for direction, then make your own creative decisions.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Creative task</h2></div><span>7 minutes</span></div>
+      <ul><li>Choose a campaign or class topic.</li><li>Ask AI for 5 visual concepts and audience rationale.</li><li>Pick one and improve it manually.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Bring AI Into Daily Academic Life</div>
+      <h1>Use small daily habits instead of waiting for a full course</h1>
+      <p class="subtitle">Like smartphones, AI becomes useful when you start using it for real tasks.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🟢</div><h3>Start small</h3><p>One message, one summary, one explanation or one checklist per day.</p></article><article class="card"><div class="icon">📌</div><h3>Save prompts</h3><p>Keep your best prompts in Notes, Docs or a shared departmental file.</p></article><article class="card"><div class="icon">🔁</div><h3>Repeat workflow</h3><p>Ask, check, improve and finalize every time.</p></article><article class="card"><div class="icon">👥</div><h3>Share examples</h3><p>Departments should share safe, useful AI workflows with colleagues.</p></article></div>
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Personal AI habit</h2></div><span>5 minutes</span></div>
+      <ul><li>Write one academic task you do every week.</li><li>Write how AI can reduce 20% of the effort.</li><li>Choose one prompt you will save today.</li></ul>
+    </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Teacher Workflow</div>
+      <h1>A safe AI workflow for teachers</h1>
+      <p class="subtitle">Use AI to prepare, personalize, assess and reflect.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>Prepare</h3><p>Create a lesson outline, examples and activity.</p></div></article><article class="step"><span>2</span><div><h3>Personalize</h3><p>Ask for versions for weak, average and advanced learners.</p></div></article><article class="step"><span>3</span><div><h3>Assess</h3><p>Generate practice questions and a rubric.</p></div></article><article class="step"><span>4</span><div><h3>Review</h3><p>Check accuracy, level, inclusivity and policy.</p></div></article><article class="step"><span>5</span><div><h3>Teach</h3><p>Use final human-edited material in class.</p></div></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Student Workflow</div>
+      <h1>A safe AI workflow for students</h1>
+      <p class="subtitle">Use AI for learning process, not academic dishonesty.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>Try first</h3><p>Attempt the problem, reading or draft yourself.</p></div></article><article class="step"><span>2</span><div><h3>Ask for help</h3><p>Ask AI to explain, give hints or review your attempt.</p></div></article><article class="step"><span>3</span><div><h3>Practice</h3><p>Generate similar questions and solve them yourself.</p></div></article><article class="step"><span>4</span><div><h3>Verify</h3><p>Check with lecture notes, teacher, textbook or source.</p></div></article><article class="step"><span>5</span><div><h3>Submit honestly</h3><p>Follow disclosure and academic integrity rules.</p></div></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Research Workflow</div>
+      <h1>A safe AI workflow for academic research</h1>
+      <p class="subtitle">AI can organize your thinking, but evidence and methodology must be real.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>Define</h3><p>Turn interest into a focused question.</p></div></article><article class="step"><span>2</span><div><h3>Map</h3><p>List concepts, keywords, variables and possible methods.</p></div></article><article class="step"><span>3</span><div><h3>Read</h3><p>Use databases, journals and official sources for evidence.</p></div></article><article class="step"><span>4</span><div><h3>Organize</h3><p>Use AI to summarize notes and compare sources.</p></div></article><article class="step"><span>5</span><div><h3>Write</h3><p>Draft with transparency, citations and human review.</p></div></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Do Not Paste</div>
+      <h1>Academic data that should not go into public AI tools</h1>
+      <p class="subtitle">Use anonymized or sample data unless your institution has approved a secure tool.</p>
+      <div class="cards c4"><article class="card"><div class="icon">🔐</div><h3>Student records</h3><p>Marks, IDs, attendance, disciplinary data or private feedback.</p></article><article class="card"><div class="icon">🧪</div><h3>Unpublished research</h3><p>Raw data, confidential methods, grant drafts or reviewer comments.</p></article><article class="card"><div class="icon">📝</div><h3>Exam material</h3><p>Unreleased questions, answer keys or controlled assessment files.</p></article><article class="card"><div class="icon">🏥</div><h3>Sensitive data</h3><p>Medical, legal, financial or personal information.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Verification Checklist</div>
+      <h1>Before you use AI output, check these five things</h1>
+      <p class="subtitle">This is the minimum human review step.</p>
+      <div class="cards c5"><article class="card"><div class="icon">1</div><h3>Accuracy</h3><p>Are facts, terms, calculations and examples correct?</p></article><article class="card"><div class="icon">2</div><h3>Sources</h3><p>Are claims supported by real, reliable sources?</p></article><article class="card"><div class="icon">3</div><h3>Originality</h3><p>Is the final work your own and policy-compliant?</p></article><article class="card"><div class="icon">4</div><h3>Privacy</h3><p>Did you remove sensitive or confidential information?</p></article><article class="card"><div class="icon">5</div><h3>Fitness</h3><p>Is the output suitable for audience, level and purpose?</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Workshop Practice Round</div>
+      <h1>Group task: solve one real academic problem with AI</h1>
+      <p class="subtitle">Each group chooses a teacher, student, research or admin problem.</p>
+      
+    <div class="taskbox">
+      <div class="taskhead"><div><b>Practice Task</b><h2>Group challenge</h2></div><span>20 minutes</span></div>
+      <ul><li>Choose one real academic task from your department.</li><li>Write a strong prompt using the formula.</li><li>Run the prompt in an AI tool.</li><li>Improve the output with one follow-up prompt.</li><li>Present: problem → prompt → output → checks → final version.</li></ul>
+    </div><div class="quoteSmall">One real task done well is better than ten slides understood only in theory.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Task Ideas</div>
+      <h1>Choose one task if your group is stuck</h1>
+      <p class="subtitle">Select the closest task to your role or department.</p>
+      <div class="cards c6"><article class="card"><div class="icon">👩‍🏫</div><h3>Teacher</h3><p>Create a lesson plan, rubric or quiz for a current topic.</p></article><article class="card"><div class="icon">👨‍🎓</div><h3>Student</h3><p>Create a study plan, concept explanation and practice quiz.</p></article><article class="card"><div class="icon">🔬</div><h3>Researcher</h3><p>Create research questions and a literature comparison table.</p></article><article class="card"><div class="icon">🏫</div><h3>Admin</h3><p>Create meeting minutes, checklist or announcement.</p></article><article class="card"><div class="icon">🎨</div><h3>Creative</h3><p>Create poster sections or infographic outline.</p></article><article class="card"><div class="icon">💻</div><h3>Technical</h3><p>Explain code, debug a small example or create project milestones.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Group Presentation Format</div>
+      <h1>Every group presents in the same simple structure</h1>
+      <p class="subtitle">Keep presentation short and practical.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>Problem</h3><p>What academic problem did you choose?</p></div></article><article class="step"><span>2</span><div><h3>Prompt</h3><p>What exact prompt did you write?</p></div></article><article class="step"><span>3</span><div><h3>Tool</h3><p>Which tool did you use and why?</p></div></article><article class="step"><span>4</span><div><h3>Output</h3><p>What useful output did AI produce?</p></div></article><article class="step"><span>5</span><div><h3>Check</h3><p>What did you verify or manually improve?</p></div></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Simple Scorecard</div>
+      <h1>Use this to check participant work</h1>
+      <p class="subtitle">The goal is improvement, not embarrassment.</p>
+      <div class="scoregrid"><div><b>Prompt clarity</b><span>Role, task, context and format are clear.</span></div><div><b>Output usefulness</b><span>Result is practical for academic work.</span></div><div><b>Human review</b><span>Facts, privacy and policy are checked.</span></div><div><b>Improvement</b><span>Participant used at least one follow-up prompt.</span></div><div><b>Final quality</b><span>Final version is clear, ethical and ready to use.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">30-Day AI Practice Plan</div>
+      <h1>Build skill through small daily actions</h1>
+      <p class="subtitle">No long course is required to start; consistent practice is required.</p>
+      <div class="cards c4"><article class="card"><div class="icon">Week 1</div><h3>Understand + Explain</h3><p>Use AI for simple explanations, summaries and examples.</p></article><article class="card"><div class="icon">Week 2</div><h3>Prompt + Improve</h3><p>Practice stronger prompts and follow-up improvements.</p></article><article class="card"><div class="icon">Week 3</div><h3>Tools + Tasks</h3><p>Use two tools for teaching, study, research or admin tasks.</p></article><article class="card"><div class="icon">Week 4</div><h3>Verify + Share</h3><p>Create a safe workflow and share one useful prompt with your department.</p></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Department Adoption Plan</div>
+      <h1>How departments can use AI without confusion</h1>
+      <p class="subtitle">Start with clear rules, safe examples and shared practice.</p>
+      <div class="steps"><article class="step"><span>1</span><div><h3>Policy</h3><p>Clarify allowed, restricted and prohibited AI uses.</p></div></article><article class="step"><span>2</span><div><h3>Examples</h3><p>Create 5 safe examples for teachers and 5 for students.</p></div></article><article class="step"><span>3</span><div><h3>Prompt bank</h3><p>Build a department prompt bank with reviewed prompts.</p></div></article><article class="step"><span>4</span><div><h3>Training</h3><p>Run short practice sessions, not only lectures.</p></div></article><article class="step"><span>5</span><div><h3>Review</h3><p>Update examples and rules every semester.</p></div></article></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide closingSlide">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">Closing Message</div>
+      <h1>AI will not replace good teachers or serious students</h1>
+      <p class="subtitle">But teachers and students who use AI wisely can become faster, clearer and more creative.</p>
+      <div class="closing"><div class="bigQuote">Use AI to upgrade thinking, not to avoid thinking.</div><p>Learn it the same way people learned smartphones: start using it, make small mistakes safely, improve your habits and keep human judgment in control.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide compact">
+  <div class="slide-card">
+    <div class="slide-no"></div>
+    <div class="fit">
+      <div class="kicker">References</div>
+      <h1>Official resources used while preparing this workshop</h1>
+      <p class="subtitle">Use official pages and your institution policy for final decisions.</p>
+      <div class="sourceGrid"><article><b>OpenAI ChatGPT Edu</b><p>AI support for campus tasks such as tutoring, resume review and academic productivity.</p><a href="https://openai.com/index/introducing-chatgpt-edu/">openai.com</a></article><article><b>Microsoft Education</b><p>Office 365 Education and Copilot Chat availability for students and educators.</p><a href="https://www.microsoft.com/en/education/products/office">microsoft.com</a></article><article><b>Google NotebookLM</b><p>AI research and thinking partner grounded in uploaded sources.</p><a href="https://notebooklm.google/">notebooklm.google</a></article><article><b>Google NotebookLM Education</b><p>Education page describing NotebookLM as a source-grounded learning tool.</p><a href="https://edu.google.com/ai-notebooklm/">edu.google.com</a></article><article><b>Canva Education</b><p>Education design tools and templates for eligible teachers and students.</p><a href="https://www.canva.com/education/">canva.com</a></article><article><b>GitHub Education</b><p>Student access to coding tools including GitHub Copilot for eligible users.</p><a href="https://github.com/education/students">github.com</a></article></div>
+    </div>
+  </div>
+</section></main>
+</div>
+<div class="floating"><button onclick="prevSlide()">← Back</button><div class="progress"><div class="bar" id="bar"></div></div><div class="count" id="count">1/54</div><button class="primary" onclick="nextSlide()">Next →</button><button onclick="openPrompts()">Prompts</button><button onclick="toggleFull()">⛶</button></div>
+<div class="modal" id="promptModal"><div class="modal-card"><div class="modal-head"><h2>Academic Prompt Bank</h2><button onclick="openPrompts(false)">Close</button></div><p>Click any prompt to copy it. Replace bracketed text with your own academic topic.</p><div class="promptGrid" id="promptGrid"></div></div></div>
+<script>
+const slides=[...document.querySelectorAll('.slide')];let idx=0;const prompts=[
+['Academic Tutor', 'Act as a patient tutor. Explain [topic] to a [level] student using simple language, one analogy, two examples, three common mistakes and five practice questions.'],
+['Lesson Plan', 'Act as a teacher. Create a 45-minute lesson plan on [topic] for [level]. Include outcomes, activity, assessment, homework and materials.'],
+['Rubric Maker', 'Create a 4-level rubric for [assignment]. Include criteria, excellent/good/satisfactory/needs improvement descriptions and feedback comments.'],
+['Study Plan', 'Create a 2-week study plan for [course/topic]. Include daily tasks, revision checkpoints and self-test questions.'],
+['Paper Summary', 'Summarize this paper into research question, method, findings, limitations, key terms and possible follow-up study.'],
+['Writing Review', 'Review this draft for clarity, structure, evidence, repetition, tone and academic integrity risks. Give feedback before rewriting.'],
+['Research Question', 'Turn this broad topic into 5 focused research questions. For each, suggest variables, method, data source and ethical concerns.'],
+['Presentation Outline', 'Create a 7-slide presentation outline on [topic] with title, key message, visuals and speaker talking points.'],
+['Quiz Builder', 'Create 10 questions on [topic]: 4 MCQs, 3 short questions and 3 application questions. Include answers and difficulty level.'],
+['Verification', 'Check this AI output for possible errors, unsupported claims, missing sources, bias, privacy risk and unclear wording.']
+];
+function numberSlides(){slides.forEach((s,i)=>{const n=s.querySelector('.slide-no');if(n)n.textContent=(i+1)+'/'+slides.length;})}
+function fitActive(){const card=document.querySelector('.slide.active .slide-card');const fit=document.querySelector('.slide.active .fit');if(!card||!fit)return;fit.style.transform='scale(1)';fit.style.width='100%';fit.style.height='auto';const maxH=card.clientHeight-4;const maxW=card.clientWidth-4;const sh=fit.scrollHeight;const sw=fit.scrollWidth;let scale=Math.min(1,maxH/sh,maxW/sw);scale=Math.max(.72,scale);fit.style.transform=`scale(${scale})`;fit.style.width=(100/scale)+'%';}
+function show(n){idx=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle('active',i===idx));document.getElementById('count').textContent=(idx+1)+'/'+slides.length;document.getElementById('bar').style.width=((idx+1)/slides.length*100)+'%';history.replaceState(null,'','#slide-'+(idx+1));requestAnimationFrame(fitActive)}
+function nextSlide(){show(idx+1)} function prevSlide(){show(idx-1)}
+function toggleTheme(){document.body.classList.toggle('dark');localStorage.setItem('academic-ai-theme',document.body.classList.contains('dark')?'dark':'light');requestAnimationFrame(fitActive)}
+async function toggleFull(){try{if(!document.fullscreenElement){await document.documentElement.requestFullscreen()}else{await document.exitFullscreen()}setTimeout(fitActive,180)}catch(e){console.log(e)}}
+function openPrompts(force){const m=document.getElementById('promptModal');if(force===false)m.classList.remove('open');else m.classList.toggle('open')}
+function copyText(t){navigator.clipboard?.writeText(t)}
+function initPrompts(){document.getElementById('promptGrid').innerHTML=prompts.map((p,i)=>`<article onclick="copyText(prompts[${i}][1])"><b>${p[0]}</b><code>${p[1]}</code></article>`).join('')}
+window.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();nextSlide()} if(['ArrowLeft','PageUp','Backspace'].includes(e.key)){e.preventDefault();prevSlide()} if(e.key.toLowerCase()==='f')toggleFull(); if(e.key.toLowerCase()==='p')openPrompts(); if(e.key.toLowerCase()==='d')toggleTheme();});
+window.addEventListener('resize',fitActive);document.addEventListener('fullscreenchange',()=>setTimeout(fitActive,180));
+window.addEventListener('load',()=>{numberSlides();initPrompts();if(localStorage.getItem('academic-ai-theme')==='dark')document.body.classList.add('dark');const m=location.hash.match(/slide-(\d+)/);show(m?parseInt(m[1])-1:0)});
+</script>
+</body></html>
