@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="AI-Powered Research — a practical, step-by-step presentation by Dr. Wasim Ahmad Khan.">
+  <title>AI-Powered Research — Dr. Wasim Ahmad Khan</title>
+  <style>
+    :root {
+      --night:#071a21; --navy:#0b2935; --navy2:#123a48;
+      --paper:#f4f0e7; --paper2:#e7dece; --ink:#102d36;
+      --teal:#32b59f; --gold:#d1a347; --blue:#5d94b8; --red:#c96558;
+      --white:#fffdf8; --muted-light:#b4c8cf; --muted-dark:#58717a;
+      --line-light:rgba(255,255,255,.16); --line-dark:rgba(16,45,54,.16);
+      --body:clamp(16px,min(1.32vw,2.35vh),25px);
+      --small:clamp(12px,min(.86vw,1.53vh),17px);
+      --h1:clamp(46px,min(5.2vw,9.2vh),92px);
+      --h2:clamp(32px,min(2.95vw,5.25vh),56px);
+      --h3:clamp(19px,min(1.55vw,2.75vh),30px);
+    }
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0}
+    html{background:#02090d}
+    body{overflow:hidden;background:#02090d;color:var(--white);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:var(--body);line-height:1.38;text-rendering:geometricPrecision}
+    button{font:inherit;color:inherit}:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    .stage{width:100vw;height:100vh;display:grid;place-items:center}
+    .deck{position:relative;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);overflow:hidden;background:var(--night);box-shadow:0 28px 80px rgba(0,0,0,.4);container-type:size}
+    .progress{position:absolute;inset:0 0 auto;height:5px;z-index:50;background:rgba(255,255,255,.08)}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--gold));transition:width .35s ease}
+    .brand{position:absolute;top:2.2%;left:4.8%;right:4.8%;z-index:35;display:flex;justify-content:space-between;color:var(--muted-light);font-size:var(--small);letter-spacing:.12em;text-transform:uppercase;pointer-events:none}.brand .mark{display:inline-flex;align-items:center;gap:.7em}.brand .mark::before{content:"";width:2em;height:2px;background:var(--teal)}
+    .slide{position:absolute;inset:0;z-index:1;display:grid;grid-template-rows:auto 1fr auto;gap:3%;padding:7.6% 6% 5.4%;color:var(--white);background-color:var(--night);background-image:radial-gradient(circle at 100% 0%,rgba(50,181,159,.12),transparent 31%),linear-gradient(135deg,rgba(255,255,255,.025),transparent 45%);opacity:0;visibility:hidden;pointer-events:none;transform:translateX(2%);transition:opacity .35s ease,transform .4s ease,visibility 0s linear .4s}
+    .slide.active{opacity:1;visibility:visible;pointer-events:auto;transform:none;z-index:2;transition-delay:0s}
+    .slide.light{color:var(--ink);background-color:var(--paper);background-image:radial-gradient(circle at 100% 0%,rgba(209,163,71,.13),transparent 30%),linear-gradient(135deg,rgba(255,255,255,.48),transparent 48%)}
+    .slide.light .muted{color:var(--muted-dark)}.slide.light .slide-footer{color:var(--muted-dark)}.slide.light .eyebrow{color:#187d6c}.slide.light .principle{color:#8a641f}
+    .slide-header{position:relative;z-index:2}.eyebrow{display:inline-flex;align-items:center;gap:.65em;margin-bottom:.35em;color:var(--teal);font-size:var(--small);font-weight:800;letter-spacing:.14em;text-transform:uppercase}.eyebrow::before{content:"";width:2.4em;height:2px;background:currentColor}
+    h1,h2,h3,p{margin-top:0}h1{margin-bottom:.22em;max-width:10em;font-size:var(--h1);line-height:.96;letter-spacing:-.055em;font-weight:760}h2{margin-bottom:0;max-width:100%;font-size:var(--h2);line-height:1.03;letter-spacing:-.04em;font-weight:730}h3{margin-bottom:.3em;font-size:var(--h3);line-height:1.12;letter-spacing:-.02em}
+    .subtitle{max-width:33em;color:var(--muted-light);font-size:clamp(20px,min(1.6vw,2.85vh),30px)}.muted{color:var(--muted-light)}.accent{color:var(--teal)}.gold{color:var(--gold)}.red{color:var(--red)}
+    .slide-body{position:relative;z-index:2;min-height:0}.slide-footer{position:relative;z-index:4;display:flex;justify-content:space-between;gap:2em;color:#7ea5af;font-size:var(--small);align-self:end}.principle{color:var(--gold);font-weight:800}
+    .reveal{opacity:0;transform:translateY(12px)}.active .reveal{animation:rise .55s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}@keyframes rise{to{opacity:1;transform:none}}
+    .kicker{color:var(--teal);font-size:var(--small);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+
+    /* generic card grids */
+    .cards{display:grid;gap:.7em;height:100%;align-content:stretch}
+    .c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}.c5{grid-template-columns:repeat(5,1fr)}
+    .card{display:grid;align-content:start;gap:.15em;padding:.95em 1em;border-top:5px solid var(--teal);background:rgba(255,255,255,.05)}
+    .card:nth-child(2n){border-color:var(--gold)}.card:nth-child(3n){border-color:var(--blue)}
+    .card p{margin:0;font-size:.92em;color:var(--muted-light)}
+    .slide.light .card{background:rgba(16,45,54,.055)}.slide.light .card p{color:var(--muted-dark)}
+    .card.bad{border-color:var(--red)}.card .x{font-size:1.7em;line-height:1;color:var(--red);font-weight:900}
+    .card .n{font-size:1.5em;line-height:1;font-weight:900;color:var(--teal)}.card:nth-child(2n) .n{color:var(--gold)}
+
+    /* two-column layouts with prompt */
+    .split{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5%;height:100%;min-height:0}
+    .split .left{display:grid;align-content:center;gap:.8em;min-height:0}
+    .point{padding:.6em .8em;border-left:4px solid var(--teal);background:rgba(255,255,255,.05)}
+    .point p{margin:0;font-size:.94em;color:var(--muted-light)}.point strong{color:var(--white)}
+    .slide.light .point{background:rgba(16,45,54,.05)}.slide.light .point p{color:var(--muted-dark)}.slide.light .point strong{color:var(--ink)}
+    .prompt{display:grid;grid-template-rows:auto 1fr;min-height:0;border:1px solid rgba(50,181,159,.5);background:#04131a}
+    .prompt .prompt-head{display:flex;align-items:center;gap:.6em;padding:.5em .9em;border-bottom:1px solid rgba(50,181,159,.35);color:var(--teal);font-size:var(--small);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .prompt pre{margin:0;padding:.9em 1em;overflow:auto;white-space:pre-wrap;color:#dbe7eb;font:500 clamp(12px,min(1vw,1.8vh),18px)/1.55 ui-monospace,SFMono-Regular,Consolas,monospace}
+    .prompt .ph{color:var(--gold);font-weight:700}
+
+    /* good vs bad prompt */
+    .vs{display:grid;gap:.7em;height:100%;align-content:center}
+    .vs .box{padding:.85em 1em;border-left:5px solid var(--red);background:rgba(255,255,255,.05)}
+    .vs .box.good{border-color:var(--teal)}
+    .vs .box p{margin:.15em 0 0;font-size:.95em;color:var(--muted-light)}
+
+    /* journey */
+    .journey{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:1fr 1fr;gap:.65em;height:100%}
+    .step{position:relative;display:grid;align-content:start;gap:.1em;padding:.8em .9em;background:rgba(16,45,54,.055);border-left:5px solid #187d6c}
+    .step:nth-child(even){border-color:#a77c2d}
+    .step .sn{color:#187d6c;font-size:1.35em;font-weight:900}.step:nth-child(even) .sn{color:#a77c2d}
+    .step p{margin:0;font-size:.88em;color:var(--muted-dark)}
+
+    /* writing boundaries */
+    .writing{display:grid;grid-template-columns:1fr 1fr;gap:2.5%;height:100%}
+    .boundary{padding:1em 1.1em;background:rgba(16,45,54,.055);border-top:6px solid #187d6c;overflow:auto;min-height:0}
+    .boundary.no{border-color:var(--red)}
+    .items{display:grid;gap:.5em;margin-top:.7em}
+    .item{padding:.5em .7em;border-left:4px solid #187d6c;background:rgba(16,45,54,.045);font-size:.92em;color:var(--muted-dark)}
+    .item strong{color:var(--ink)}
+    .boundary.no .item{border-color:var(--red)}
+
+    /* cover */
+    .cover{padding-top:10.5%}.cover .slide-body{display:grid;grid-template-columns:1.28fr .72fr;align-items:center}.speaker{display:flex;align-items:center;gap:.9em;margin-top:1.6em}.speaker::before{content:"";width:3em;height:2px;background:var(--gold)}
+    .geometry{position:relative;justify-self:end;width:29cqw;aspect-ratio:1;margin-right:-3cqw}.geometry::before,.geometry::after{content:"";position:absolute;inset:5%;border:1px solid rgba(255,255,255,.16);transform:rotate(22.5deg)}.geometry::after{inset:24%;border-color:rgba(50,181,159,.55);transform:rotate(45deg)}.geometry .core{position:absolute;inset:34%;border-radius:50%;background:var(--gold);box-shadow:0 0 4cqw rgba(209,163,71,.22)}.geometry .dot{position:absolute;width:1.1cqw;aspect-ratio:1;border-radius:50%;background:var(--teal)}.geometry .d1{top:4%;left:48%}.geometry .d2{right:5%;top:49%;background:var(--gold)}.geometry .d3{left:8%;bottom:14%}
+
+    /* closing */
+    .principles{display:grid;grid-template-columns:repeat(5,1fr);gap:.7em;margin-bottom:1em}
+    .closing{max-width:26em;font-size:clamp(26px,min(2.6vw,4.6vh),48px);line-height:1.15;letter-spacing:-.03em}
+
+    /* minimal controls */
+    .controls{position:absolute;left:0;right:0;bottom:1.6%;z-index:60;display:flex;justify-content:center}
+    .control-group{display:flex;gap:.4em;align-items:center}
+    .control-btn{width:2.25em;height:2.25em;display:grid;place-items:center;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(7,26,33,.88);color:#c4d6dc;cursor:pointer}
+    .control-btn:hover{color:white;background:var(--navy2)}.control-btn:disabled{opacity:.3;cursor:default}
+    .counter{min-width:5em;text-align:center;color:#8ba5ae;font-size:var(--small);font-variant-numeric:tabular-nums}
+
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}.reveal{opacity:1;transform:none}}
+    @media print{@page{size:13.333in 7.5in;margin:0}html,body{width:auto;height:auto;overflow:visible;background:white}.stage{display:block;width:13.333in;height:auto;place-items:normal;overflow:visible;background:white}.deck{display:block;width:13.333in;height:auto;container-type:normal;overflow:visible;box-shadow:none;background:white}.progress,.brand,.controls{display:none!important}.slide{position:relative!important;inset:auto!important;display:grid!important;visibility:visible!important;opacity:1!important;transform:none!important;width:13.333in;height:7.5in;page-break-after:always;break-after:page;page-break-inside:avoid!important;break-inside:avoid-page!important;overflow:hidden!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.slide:last-of-type{page-break-after:auto;break-after:auto}.reveal{opacity:1!important;transform:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+  <main class="stage" aria-label="Presentation stage"><div class="deck" id="deck">
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+    <div class="brand" aria-hidden="true"><span class="mark">AI-Powered Research</span><span>Dr. Wasim Ahmad Khan</span></div>
+
+    <!-- 01 · Cover -->
+    <section class="slide cover active" data-title="AI-Powered Research" aria-label="Slide 1: AI-Powered Research">
+      <header class="slide-header"><div class="eyebrow reveal">A practical, step-by-step guide</div></header>
+      <div class="slide-body">
+        <div>
+          <h1 class="reveal" style="--d:.08s">AI-Powered<br>Research</h1>
+          <p class="subtitle reveal" style="--d:.16s">How to use AI tools at every stage of your research — with real prompts and real tools you can start using today.</p>
+          <div class="speaker reveal" style="--d:.24s"><strong>Dr. Wasim Ahmad Khan</strong></div>
+        </div>
+        <div class="geometry reveal" style="--d:.18s" aria-hidden="true"><span class="core"></span><span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span></div>
+      </div>
+      <footer class="slide-footer"><span>AI is your research assistant — not your replacement.</span><span class="principle">Work smarter, verify always</span></footer>
+    </section>
+
+    <!-- 02 · Roadmap -->
+    <section class="slide light" data-title="What we will learn today" aria-label="Slide 2: What we will learn today">
+      <header class="slide-header"><div class="eyebrow">Our roadmap</div><h2>What we will learn today</h2></header>
+      <div class="slide-body cards c5">
+        <article class="card reveal"><span class="n">1</span><h3>Understand AI</h3><p>What AI actually is, how it works inside, and which AI tools are the most famous and useful today.</p></article>
+        <article class="card reveal" style="--d:.05s"><span class="n">2</span><h3>Strengths &amp; limits</h3><p>What AI does very well in research — and the dangerous mistakes it makes that every researcher must know.</p></article>
+        <article class="card reveal" style="--d:.1s"><span class="n">3</span><h3>Prompting</h3><p>A simple 5-part recipe for asking AI questions the right way, so you get useful answers instead of vague ones.</p></article>
+        <article class="card reveal" style="--d:.15s"><span class="n">4</span><h3>Step by step</h3><p>Using AI through the whole research journey: choosing a topic, finding papers, reading, analysing data, and writing.</p></article>
+        <article class="card reveal" style="--d:.2s"><span class="n">5</span><h3>Hands-on practice</h3><p>You will try it yourself, live, using ready-made topics and prompts — and share what you find.</p></article>
+      </div>
+      <footer class="slide-footer"><span>Everything in this session is practical — you can repeat every step at home.</span><span class="principle">Learn it → try it → use it</span></footer>
+    </section>
+
+    <!-- 03 · What is AI -->
+    <section class="slide" data-title="What is AI and how does it work?" aria-label="Slide 3: What is AI and how does it work">
+      <header class="slide-header"><div class="eyebrow">01 · Understand AI</div><h2>What is AI, and how does it actually work?</h2></header>
+      <div class="slide-body cards c3">
+        <article class="card reveal"><span class="kicker">It has read a lot</span><h3>Trained on huge text</h3><p>Tools like ChatGPT, Claude and Gemini are called <strong style="color:var(--white)">Large Language Models (LLMs)</strong>. They have been trained on a massive amount of text — books, articles, websites and code — so they have "seen" how humans explain almost every subject.</p></article>
+        <article class="card reveal" style="--d:.08s"><span class="kicker gold">It predicts words</span><h3>It does not "look up" answers</h3><p>When you ask a question, the AI does not search a database of facts. It <strong style="color:var(--white)">predicts the most likely next words</strong>, one by one, based on patterns it learned. That is why its answers are so fluent and natural.</p></article>
+        <article class="card reveal" style="--d:.16s"><span class="kicker">The consequence</span><h3>Fluent — but sometimes wrong</h3><p>Because it predicts instead of retrieving, it is excellent at <strong style="color:var(--white)">explaining, summarising, translating and drafting</strong> — but it can also confidently write things that are not true. This is called <strong style="color:var(--red)">hallucination</strong>.</p></article>
+      </div>
+      <footer class="slide-footer"><span>Remember this one idea: AI produces likely text, not verified truth.</span><span class="principle">Fluent ≠ correct</span></footer>
+    </section>
+
+    <!-- 04 · Famous AI tools -->
+    <section class="slide light" data-title="The famous AI assistants" aria-label="Slide 4: The famous AI assistants">
+      <header class="slide-header"><div class="eyebrow">02 · Understand AI</div><h2>The famous AI assistants you should know</h2></header>
+      <div class="slide-body cards c3">
+        <article class="card reveal"><span class="kicker">OpenAI</span><h3>ChatGPT</h3><p>The most popular all-rounder. Very good for explanations, brainstorming ideas, improving writing, and general research questions. Free version available; the paid version is stronger.</p></article>
+        <article class="card reveal" style="--d:.05s"><span class="kicker">Anthropic</span><h3>Claude</h3><p>Excellent with long documents. You can give it a full research paper or a whole thesis chapter and discuss it in detail. Known for careful, well-structured answers.</p></article>
+        <article class="card reveal" style="--d:.1s"><span class="kicker">Google</span><h3>Gemini</h3><p>Google's AI assistant. Works well with images and videos, connects with Google apps, and powers NotebookLM — a special research tool we will see later.</p></article>
+        <article class="card reveal" style="--d:.15s"><span class="kicker">Microsoft</span><h3>Copilot</h3><p>Built into Word, Excel, PowerPoint and Windows. Useful when you want AI help directly inside the documents and spreadsheets you already work in.</p></article>
+        <article class="card reveal" style="--d:.2s"><span class="kicker">AI + Search</span><h3>Perplexity</h3><p>An AI-powered search engine. It answers your question <em>and shows clickable sources</em> for every claim — very useful when you need answers you can check.</p></article>
+        <article class="card reveal" style="--d:.25s"><span class="kicker">Free option</span><h3>DeepSeek</h3><p>A free chatbot that became famous for strong reasoning and coding ability. A good option when you need a capable AI without paying for a subscription.</p></article>
+      </div>
+      <footer class="slide-footer"><span>You do not need all of them — pick one main assistant and learn it well.</span><span class="principle">One tool used well beats five tools used poorly</span></footer>
+    </section>
+
+    <!-- 05 · What AI can do -->
+    <section class="slide" data-title="What AI can do for a researcher" aria-label="Slide 5: What AI can do for a researcher">
+      <header class="slide-header"><div class="eyebrow">03 · Strengths</div><h2>What AI can do for you as a researcher</h2></header>
+      <div class="slide-body cards c4">
+        <article class="card reveal"><span class="kicker">Learn</span><h3>A patient teacher</h3><p>It can explain any difficult concept in simple words, give examples from your own field, and answer your questions again and again — without ever getting tired or judging you.</p></article>
+        <article class="card reveal" style="--d:.06s"><span class="kicker gold">Save time</span><h3>A fast assistant</h3><p>It can summarise long documents, organise messy notes, translate text between languages, and prepare first drafts in seconds — work that normally takes hours.</p></article>
+        <article class="card reveal" style="--d:.12s"><span class="kicker">Analyse</span><h3>A data &amp; code helper</h3><p>It can suggest the right statistical test, write analysis code for SPSS, Python, R or Excel, and explain every step of the analysis in plain language.</p></article>
+        <article class="card reveal" style="--d:.18s"><span class="kicker">Improve</span><h3>An honest critic</h3><p>It can review your proposal or draft, point out weak arguments and missing pieces, and suggest improvements — before a real supervisor or reviewer sees it.</p></article>
+      </div>
+      <footer class="slide-footer"><span>In every role, AI suggests — and you decide.</span><span class="principle">AI proposes · the researcher disposes</span></footer>
+    </section>
+
+    <!-- 06 · What AI gets wrong -->
+    <section class="slide light" data-title="Where AI goes wrong" aria-label="Slide 6: Where AI goes wrong — be careful">
+      <header class="slide-header"><div class="eyebrow">04 · Limits</div><h2>Where AI goes wrong — be careful</h2></header>
+      <div class="slide-body cards c4">
+        <article class="card bad reveal"><span class="x">×</span><h3>It invents references</h3><p>Ask it for "10 papers on your topic" and it may confidently list papers, authors and journals <strong>that do not exist</strong>. Every reference must be checked in Google Scholar before you use it.</p></article>
+        <article class="card bad reveal" style="--d:.06s"><span class="x">×</span><h3>It is not a live database</h3><p>A basic chatbot does not search real journals or the internet — and its knowledge stops at a cut-off date. For real papers, use the research tools we will see shortly.</p></article>
+        <article class="card bad reveal" style="--d:.12s"><span class="x">×</span><h3>Confidence ≠ correctness</h3><p>AI sounds equally sure when it is right and when it is wrong. Its confident tone is a writing style, not a signal of truth — never judge an answer by how certain it sounds.</p></article>
+        <article class="card bad reveal" style="--d:.18s"><span class="x">×</span><h3>It takes no responsibility</h3><p>If a mistake reaches your thesis or paper, the responsibility is yours alone. "The AI told me so" is not a defence in front of a supervisor, examiner or journal.</p></article>
+      </div>
+      <footer class="slide-footer"><span>None of these problems stops you from using AI — they tell you HOW to use it.</span><span class="principle">Rule №1: verify everything before it enters your research</span></footer>
+    </section>
+
+    <!-- 07 · Prompt recipe -->
+    <section class="slide" data-title="The prompt recipe" aria-label="Slide 7: How to talk to AI — the prompt recipe">
+      <header class="slide-header"><div class="eyebrow">05 · Prompting</div><h2>How to talk to AI: the 5-part prompt recipe</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><strong>1 · Role</strong> — Tell the AI who it should be: <em>"You are an experienced research supervisor…"</em></p></div>
+          <div class="point"><p><strong>2 · Context</strong> — Tell it who you are and what you are doing: <em>"I am a Master's student in education, new to research…"</em></p></div>
+          <div class="point"><p><strong>3 · Task</strong> — Say exactly what you want: explain, compare, list, summarise, review, suggest.</p></div>
+          <div class="point"><p><strong>4 · Format</strong> — Say how you want the answer: a table, 5 bullet points, simple words, with examples.</p></div>
+          <div class="point"><p><strong>5 · Follow up</strong> — Never stop at the first answer. Say "explain it more simply", "give another example", or "what is wrong with this answer?"</p></div>
+        </div>
+        <div class="vs reveal" style="--d:.12s">
+          <div class="box"><span class="kicker red">Weak prompt</span><p>"Tell me about research methodology."</p><p class="muted" style="font-size:.85em">Result: a long, generic essay that helps nobody.</p></div>
+          <div class="box good"><span class="kicker">Strong prompt</span><p>"You are a research supervisor. I am a Master's student in education, completely new to research. Explain the difference between qualitative and quantitative research in simple words, in a short table, with one example of each from education."</p><p class="muted" style="font-size:.85em">Result: a focused, usable answer at your level.</p></div>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>The quality of the answer depends on the quality of the question.</span><span class="principle">Good prompt in → good answer out</span></footer>
+    </section>
+
+    <!-- 08 · Research journey -->
+    <section class="slide light" data-title="The research journey" aria-label="Slide 8: The research journey — where AI helps">
+      <header class="slide-header"><div class="eyebrow">06 · The big picture</div><h2>The research journey — AI can help at every step</h2></header>
+      <div class="slide-body journey">
+        <div class="step reveal"><span class="sn">1</span><h3>Choose a topic</h3><p>Brainstorm ideas, explore directions, and find what genuinely interests you.</p></div>
+        <div class="step reveal" style="--d:.03s"><span class="sn">2</span><h3>Learn the basics</h3><p>Understand the key concepts and theories of your area before going deep.</p></div>
+        <div class="step reveal" style="--d:.06s"><span class="sn">3</span><h3>Ask a clear question</h3><p>Turn a broad topic into one focused, answerable research question.</p></div>
+        <div class="step reveal" style="--d:.09s"><span class="sn">4</span><h3>Find the literature</h3><p>Search, collect and organise the papers already written on your question.</p></div>
+        <div class="step reveal" style="--d:.12s"><span class="sn">5</span><h3>Read &amp; summarise</h3><p>Understand what each paper found, how, and with what limitations.</p></div>
+        <div class="step reveal" style="--d:.15s"><span class="sn">6</span><h3>Collect &amp; analyse data</h3><p>Gather your data and find the patterns and relationships inside it.</p></div>
+        <div class="step reveal" style="--d:.18s"><span class="sn">7</span><h3>Write</h3><p>Turn your results into a clear, well-structured thesis or paper.</p></div>
+        <div class="step reveal" style="--d:.21s"><span class="sn">8</span><h3>Share &amp; defend</h3><p>Present, submit, publish — and answer questions about your work.</p></div>
+      </div>
+      <footer class="slide-footer"><span>The next slides walk through these steps one by one, with a ready-to-use prompt for each.</span><span class="principle">One journey · AI support at every stage</span></footer>
+    </section>
+
+    <!-- 09 · Step 1: Learn a topic -->
+    <section class="slide" data-title="Learn any topic with AI" aria-label="Slide 9: Learn any new topic with AI">
+      <header class="slide-header"><div class="eyebrow">07 · Steps 1–2 · Topic &amp; learning</div><h2>Learn any new topic with AI</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><strong>Start simple.</strong> Ask AI to explain the concept as if you are completely new to it. If the answer is still difficult, say "explain it even more simply."</p></div>
+          <div class="point"><p><strong>Ask for examples.</strong> An example from your own field (education, business, health…) makes an abstract idea concrete and memorable.</p></div>
+          <div class="point"><p><strong>Let it quiz you.</strong> Ask the AI to test you with questions. Answering them shows you what you actually understood.</p></div>
+          <div class="point"><p><strong>The real test:</strong> close the chat and explain the concept in your own words. If you cannot, you have read an answer — but not learned it yet.</p></div>
+        </div>
+        <div class="prompt reveal" style="--d:.12s">
+          <div class="prompt-head">Copy this prompt — change the [topic]</div>
+          <pre>Explain <span class="ph">[multiple regression]</span> in simple words,
+as if I am completely new to statistics.
+
+Then:
+1. Give one example of it from
+   <span class="ph">[education research]</span>.
+2. List the 3 most common mistakes
+   beginners make with it.
+3. Ask me 3 questions to test my
+   understanding — and wait for my answers.</pre>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>Works for any concept: sampling, validity, ANOVA, thematic analysis, literature review…</span><span class="principle">Learn WITH AI — don't just read FROM it</span></footer>
+    </section>
+
+    <!-- 10 · Step 2: Research question -->
+    <section class="slide light" data-title="From broad topic to research question" aria-label="Slide 10: From a broad topic to a focused research question">
+      <header class="slide-header"><div class="eyebrow">08 · Step 3 · Your question</div><h2>From a broad topic to a focused research question</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><span class="kicker red">Too broad</span><br><strong>"Social media and students."</strong><br>You cannot study everything about this — who? what effect? measured how? where?</p></div>
+          <div class="point"><p><span class="kicker">Focused</span><br><strong>"How does daily TikTok use affect the sleep quality of university students in Lahore?"</strong><br>Now it is clear who is studied, what is measured, and where — this can actually be researched.</p></div>
+          <div class="point"><p><strong>AI's job here:</strong> generate many possible questions quickly, so you can compare them and pick the one that is interesting AND realistic for your time and resources.</p></div>
+        </div>
+        <div class="prompt reveal" style="--d:.12s">
+          <div class="prompt-head">Copy this prompt — change the [topic]</div>
+          <pre>My broad topic is
+<span class="ph">[social media and university students]</span>.
+
+1. Suggest 6 focused research questions
+   from this topic.
+2. For each question, tell me:
+   • who will be studied,
+   • what exactly will be measured,
+   • whether it is realistic for a
+     6-month student project.
+3. Tell me which ONE question you would
+   choose, and why.</pre>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>AI suggests the options — but YOU choose the question, because you will live with it.</span><span class="principle">A clear question is half the research</span></footer>
+    </section>
+
+    <!-- 11 · Step 3: Find papers - research tools -->
+    <section class="slide" data-title="Famous research tools for finding papers" aria-label="Slide 11: Famous research tools for finding papers">
+      <header class="slide-header"><div class="eyebrow">09 · Step 4 · Literature</div><h2>Finding papers: the famous research tools</h2></header>
+      <div class="slide-body cards c4">
+        <article class="card reveal"><span class="kicker">Start here</span><h3>Google Scholar</h3><p>The universal starting point. Search papers, see how often each is cited, and follow "Cited by" to newer work. Free.</p></article>
+        <article class="card reveal" style="--d:.04s"><span class="kicker">AI search</span><h3>Semantic Scholar</h3><p>A free, AI-powered academic search engine. Understands meaning, not just keywords, and shows short AI summaries of papers.</p></article>
+        <article class="card reveal" style="--d:.08s"><span class="kicker">Ask a question</span><h3>Elicit</h3><p>Type your research question — it finds relevant papers and arranges their findings into a comparison table for you.</p></article>
+        <article class="card reveal" style="--d:.12s"><span class="kicker">Evidence check</span><h3>Consensus</h3><p>Ask a question like "Does X improve Y?" — it answers using published studies and shows how many agree or disagree.</p></article>
+        <article class="card reveal" style="--d:.16s"><span class="kicker">Explore</span><h3>ResearchRabbit</h3><p>Give it one good paper — it maps all the related papers around it, like a "Spotify for research papers". Free.</p></article>
+        <article class="card reveal" style="--d:.2s"><span class="kicker">Visual map</span><h3>Connected Papers</h3><p>Draws a visual graph of how papers on your topic connect to each other — great for seeing the key works at a glance.</p></article>
+        <article class="card reveal" style="--d:.24s"><span class="kicker">Trust check</span><h3>Scite</h3><p>Shows whether later studies <em>supported</em> or <em>contradicted</em> a paper's claims — not just how many times it was cited.</p></article>
+        <article class="card reveal" style="--d:.28s"><span class="kicker gold">Good habit</span><h3>Keep a search log</h3><p>Note the tool, the keywords, and the date each time you search. Later you can repeat, extend, and defend your search.</p></article>
+      </div>
+      <footer class="slide-footer"><span>Chatbots invent references — these tools find REAL papers. Use the right tool for this job.</span><span class="principle">Real papers come from real databases</span></footer>
+    </section>
+
+    <!-- 12 · Step 4: Read & summarise -->
+    <section class="slide light" data-title="Read and summarise papers faster" aria-label="Slide 12: Read and summarise papers faster">
+      <header class="slide-header"><div class="eyebrow">10 · Step 5 · Reading</div><h2>Read and summarise papers faster</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><strong>NotebookLM (Google, free).</strong> Upload your PDFs — papers, notes, reports. Ask questions and it answers <em>only from your files</em>, showing exactly which source and passage it used. It can even create a podcast-style audio discussion of your papers.</p></div>
+          <div class="point"><p><strong>ChatPDF &amp; SciSpace.</strong> Upload one paper and chat with it: "What was the sample size?", "Which method did they use?", "What are the limitations?"</p></div>
+          <div class="point"><p><strong>Why the prompt on the right is safe:</strong> asking for page numbers and "Not reported" forces the AI to stay inside the real paper instead of filling gaps with imagination.</p></div>
+        </div>
+        <div class="prompt reveal" style="--d:.12s">
+          <div class="prompt-head">Copy this prompt — attach the paper's PDF</div>
+          <pre>I am attaching a research paper.
+Summarise it in a table with these rows:
+
+• Aim of the study
+• Method and design
+• Sample (who and how many)
+• Key findings
+• Limitations
+
+Rules:
+– For every row, mention the page number
+  where you found the information.
+– If something is not mentioned in the
+  paper, write "Not reported".
+– Do not add anything from outside
+  this paper.</pre>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>Summaries speed up reading — but for papers central to your work, always read the original.</span><span class="principle">Summaries guide you · sources convince you</span></footer>
+    </section>
+
+    <!-- 13 · Step 5: Data & code -->
+    <section class="slide" data-title="Analyse data and get code help" aria-label="Slide 13: Analyse your data and get code help">
+      <header class="slide-header"><div class="eyebrow">11 · Step 6 · Analysis</div><h2>Analyse your data — with AI as your guide</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><strong>Describe your data first.</strong> Tell the AI your columns, data types and sample size. The more it knows about your data, the better its advice.</p></div>
+          <div class="point"><p><strong>Ask "which test?" before "give me code".</strong> Choosing the right statistical test is the real decision — the code comes after.</p></div>
+          <div class="point"><p><strong>Ask for explanations with every step.</strong> AI can teach you SPSS, Python, R or Excel while helping you — demand "explain in simple words" every time.</p></div>
+          <div class="point"><p><strong>Never report what you cannot explain.</strong> Run everything yourself, check the output makes sense, and be ready to defend every number.</p></div>
+        </div>
+        <div class="prompt reveal" style="--d:.12s">
+          <div class="prompt-head">Copy this prompt — describe YOUR data</div>
+          <pre>I have an Excel file of <span class="ph">[200 university
+students]</span> with these columns:
+<span class="ph">[age, gender, daily_screen_hours, GPA]</span>.
+
+I want to check whether
+<span class="ph">[daily screen hours]</span> is related to <span class="ph">[GPA]</span>.
+
+1. Which statistical test is suitable,
+   and why — in simple words?
+2. Give me step-by-step instructions
+   to run it in <span class="ph">[SPSS]</span>.
+3. How do I check the assumptions of
+   this test before trusting the result?
+4. How should I report the result in
+   my thesis?</pre>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>The same prompt works for Python, R, or Excel — just change the tool's name.</span><span class="principle">Understand first · report second</span></footer>
+    </section>
+
+    <!-- 14 · Step 6: Writing -->
+    <section class="slide light" data-title="Writing with AI — allowed vs not allowed" aria-label="Slide 14: Writing with AI — what is fine and what is not">
+      <header class="slide-header"><div class="eyebrow">12 · Step 7 · Writing</div><h2>Writing with AI: what is fine — and what is not</h2></header>
+      <div class="slide-body writing">
+        <article class="boundary reveal"><span class="kicker">Fine — and encouraged</span><h3>Let AI improve the FORM of your writing</h3>
+          <div class="items">
+            <div class="item"><strong>Fix grammar and flow</strong> — correct mistakes and make sentences smoother (tools like Grammarly and Paperpal specialise in this).</div>
+            <div class="item"><strong>Improve structure</strong> — reorganise a chapter, suggest better headings, tighten a long paragraph.</div>
+            <div class="item"><strong>Adapt and translate</strong> — turn a chapter into a conference abstract, simplify for a general audience, translate drafts.</div>
+            <div class="item"><strong>Format references</strong> — arrange your (real, verified) references into APA or another style.</div>
+          </div>
+        </article>
+        <article class="boundary no reveal" style="--d:.12s"><span class="kicker red">Not allowed — ever</span><h3>Never let AI invent the SUBSTANCE</h3>
+          <div class="items">
+            <div class="item"><strong>No AI-written thesis</strong> — submitting AI text as your own thinking is plagiarism and is easily suspected by examiners.</div>
+            <div class="item"><strong>No unverified references</strong> — using a citation you never opened and checked yourself.</div>
+            <div class="item"><strong>No analysis you don't understand</strong> — presenting AI-generated results you cannot explain or defend.</div>
+            <div class="item"><strong>No hidden use</strong> — most universities and journals now require you to declare significant AI use. Follow their policy.</div>
+          </div>
+        </article>
+      </div>
+      <footer class="slide-footer"><span>Simple test: could you defend every sentence, face-to-face, without the AI?</span><span class="principle">AI polishes the words · you own the ideas</span></footer>
+    </section>
+
+    <!-- 15 · Golden rules -->
+    <section class="slide" data-title="Five golden rules" aria-label="Slide 15: Five golden rules for safe AI use">
+      <header class="slide-header"><div class="eyebrow">13 · Safe use</div><h2>Five golden rules for using AI in research</h2></header>
+      <div class="slide-body cards c5">
+        <article class="card reveal"><span class="n">1</span><h3>Verify everything</h3><p>Every fact, number and reference from AI must be checked against a real source before it enters your work. No exceptions.</p></article>
+        <article class="card reveal" style="--d:.05s"><span class="n">2</span><h3>Protect your data</h3><p>Do not upload private, sensitive or unpublished data (interviews, patient data, unpublished results) into public AI tools without permission.</p></article>
+        <article class="card reveal" style="--d:.1s"><span class="n">3</span><h3>Disclose honestly</h3><p>Check your university's and target journal's AI policy, and declare significant AI use the way they require.</p></article>
+        <article class="card reveal" style="--d:.15s"><span class="n">4</span><h3>Stay the author</h3><p>AI drafts and suggests; you decide. Every idea, claim and conclusion in your work must be one you understand and chose.</p></article>
+        <article class="card reveal" style="--d:.2s"><span class="n">5</span><h3>Keep learning yourself</h3><p>If your understanding disappears the moment the chat closes, you learned nothing. Use AI to build skill — not to avoid building it.</p></article>
+      </div>
+      <footer class="slide-footer"><span>These rules are what separate an AI-powered researcher from an AI-dependent one.</span><span class="principle">Use the power · keep the judgement</span></footer>
+    </section>
+
+    <!-- 16 · Practice part 1 -->
+    <section class="slide light" data-title="Practice — build your question" aria-label="Slide 16: Practice part 1 — build your research question">
+      <header class="slide-header"><div class="eyebrow">14 · Your turn · Part 1</div><h2>Practice: build your research question</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><strong>Step 1 —</strong> Open any AI assistant on your phone or laptop: ChatGPT, Claude, Gemini, or Copilot.</p></div>
+          <div class="point"><p><strong>Step 2 —</strong> Choose one topic from this list, or use your own:</p>
+            <div class="items" style="margin-top:.5em">
+              <div class="item">Social media and students' sleep</div>
+              <div class="item">Online learning vs classroom learning</div>
+              <div class="item">Mobile phone use and family relationships</div>
+              <div class="item">AI tools and students' study habits</div>
+              <div class="item">Climate change awareness among young people</div>
+            </div>
+          </div>
+          <div class="point"><p><strong>Step 3 —</strong> Run the prompt on the right with your topic, read the 6 questions it gives you, and choose the one you like most.</p></div>
+        </div>
+        <div class="prompt reveal" style="--d:.12s">
+          <div class="prompt-head">Prompt A — type this, insert your topic</div>
+          <pre>My broad topic is <span class="ph">[your topic here]</span>.
+
+1. Suggest 6 focused research questions
+   from this topic.
+2. For each one, tell me who would be
+   studied and what would be measured.
+3. Mark which questions are realistic
+   for a small student project.
+
+Then ask me which question I like,
+and help me improve its wording.</pre>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>Take a few minutes — then we'll hear some of your questions out loud.</span><span class="principle">Don't accept the first answer — push back and refine</span></footer>
+    </section>
+
+    <!-- 17 · Practice part 2 -->
+    <section class="slide" data-title="Practice — find a real paper" aria-label="Slide 17: Practice part 2 — find a real paper">
+      <header class="slide-header"><div class="eyebrow">15 · Your turn · Part 2</div><h2>Practice: find a real paper on your question</h2></header>
+      <div class="slide-body split">
+        <div class="left reveal">
+          <div class="point"><p><strong>Step 1 —</strong> Take the research question you just chose and run Prompt B on the right. It gives you ready-made search keywords.</p></div>
+          <div class="point"><p><strong>Step 2 —</strong> Open <strong style="color:var(--white)">Google Scholar</strong> (scholar.google.com) or <strong style="color:var(--white)">Elicit</strong> (elicit.com) and paste one of the search strings.</p></div>
+          <div class="point"><p><strong>Step 3 —</strong> Pick ONE paper that looks relevant. Note its title, authors and year — this is a real, verifiable source.</p></div>
+          <div class="point"><p><strong>Step 4 (bonus) —</strong> If the paper's PDF is available, upload it to ChatPDF or NotebookLM and try the summary-table prompt from earlier.</p></div>
+        </div>
+        <div class="prompt reveal" style="--d:.12s">
+          <div class="prompt-head">Prompt B — paste your question</div>
+          <pre>My research question is:
+<span class="ph">[paste your chosen question here]</span>
+
+1. Give me 6 search keywords and phrases
+   for finding academic papers on this.
+2. Combine them into 2 ready-made search
+   strings I can paste into Google Scholar.
+3. Which tool would suit this search best —
+   Google Scholar, Elicit, or Semantic
+   Scholar — and why?</pre>
+        </div>
+      </div>
+      <footer class="slide-footer"><span>Be ready to share: your question + one real paper you found.</span><span class="principle">AI made the keywords · the database found the paper · you judged it</span></footer>
+    </section>
+
+    <!-- 18 · Takeaways -->
+    <section class="slide" data-title="Key takeaways" aria-label="Slide 18: Key takeaways and questions">
+      <header class="slide-header"><div class="eyebrow">16 · Key takeaways</div><h2>Five things to take home</h2></header>
+      <div class="slide-body">
+        <div class="principles">
+          <div class="card reveal"><span class="n">01</span><h3>AI is your assistant, not your replacement</h3></div>
+          <div class="card reveal" style="--d:.04s"><span class="n">02</span><h3>A good prompt gets a good answer</h3></div>
+          <div class="card reveal" style="--d:.08s"><span class="n">03</span><h3>Verify before you trust</h3></div>
+          <div class="card reveal" style="--d:.12s"><span class="n">04</span><h3>Right tool for the right step</h3></div>
+          <div class="card reveal" style="--d:.16s"><span class="n">05</span><h3>You own the final work</h3></div>
+        </div>
+        <p class="closing reveal" style="--d:.22s">Start small this week: pick <span class="accent">one step</span> of your research and try <span class="gold">one prompt</span> from today.</p>
+      </div>
+      <footer class="slide-footer"><span>Dr. Wasim Ahmad Khan</span><span class="principle">Thank you · Questions?</span></footer>
+    </section>
+
+    <nav class="controls" aria-label="Presentation controls"><div class="control-group"><button class="control-btn" id="prev" type="button" aria-label="Previous slide">←</button><span class="counter" id="counter" aria-live="polite">01 / 18</span><button class="control-btn" id="next" type="button" aria-label="Next slide">→</button></div></nav>
+  </div></main>
+
+  <script>
+    (()=>{'use strict';
+    const slides=[...document.querySelectorAll('.slide')],counter=document.getElementById('counter'),bar=document.getElementById('progressBar'),prev=document.getElementById('prev'),next=document.getElementById('next');
+    let current=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1),10)||1)-1)),touchX=0;
+    const pad=n=>String(n).padStart(2,'0');
+    function show(i){i=Math.max(0,Math.min(slides.length-1,i));slides.forEach((s,n)=>{s.classList.toggle('active',n===i);s.setAttribute('aria-hidden',n===i?'false':'true');if('inert'in s)s.inert=n!==i});current=i;counter.textContent=`${pad(i+1)} / ${pad(slides.length)}`;bar.style.width=`${((i+1)/slides.length)*100}%`;prev.disabled=i===0;next.disabled=i===slides.length-1;history.replaceState(null,'',`#${i+1}`);document.title=`${pad(i+1)} · ${slides[i].dataset.title} — AI-Powered Research`}
+    const goNext=()=>current<slides.length-1&&show(current+1),goPrev=()=>current>0&&show(current-1);
+    prev.addEventListener('click',goPrev);next.addEventListener('click',goNext);
+    document.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();goNext()}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();goPrev()}else if(e.key==='Home')show(0);else if(e.key==='End')show(slides.length-1);else if(e.key.toLowerCase()==='f'){try{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}catch{}}});
+    window.addEventListener('hashchange',()=>{const i=(parseInt(location.hash.slice(1),10)||1)-1;if(i!==current)show(i)});
+    const deck=document.getElementById('deck');
+    deck.addEventListener('touchstart',e=>touchX=e.changedTouches[0].screenX,{passive:true});
+    deck.addEventListener('touchend',e=>{const d=e.changedTouches[0].screenX-touchX;if(Math.abs(d)>55)d<0?goNext():goPrev()},{passive:true});
+    show(current)})();
+  </script>
+</body>
+</html>
